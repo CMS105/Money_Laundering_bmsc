@@ -77,23 +77,23 @@ export default function SpatialCard({
         }}
         className={`relative rounded-xl overflow-hidden backdrop-blur-xl border transition-colors ${
           selected
-            ? 'border-white/30 bg-[#141824] shadow-[0_12px_32px_-8px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.22)]'
-            : 'border-white/[0.07] bg-[#0E1016]/90 hover:border-white/[0.14] shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6),inset_0_1px_0_0_rgba(255,255,255,0.08)]'
+            ? 'border-[#75A99A]/50 bg-[#253F4D] shadow-[0_12px_32px_-8px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(117,169,154,0.3)] ring-1 ring-[#75A99A]/30'
+            : 'border-[#284250] bg-[#1E3541]/90 hover:border-[#75A99A]/30 hover:bg-[#1E3541] shadow-[0_8px_24px_-8px_rgba(18,34,42,0.6),inset_0_1px_0_0_rgba(232,229,218,0.06)]'
         } ${className}`}
       >
-        {/* Mouse Tracking Radial Specular Border Glow */}
+        {/* Mouse Tracking Radial Specular Border Glow with Muted Teal sheen */}
         {isHovered && interactive && (
           <div
             className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-100"
             style={{
-              background: `radial-gradient(400px circle at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(255, 255, 255, 0.08), transparent 60%)`,
+              background: `radial-gradient(400px circle at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(117, 169, 154, 0.12), transparent 60%)`,
             }}
           />
         )}
 
         {/* Selected subtle aura */}
         {selected && (
-          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-white/[0.04] to-transparent" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-[#75A99A]/[0.08] to-transparent" />
         )}
 
         {/* Card Content */}
@@ -102,4 +102,3 @@ export default function SpatialCard({
     </div>
   );
 }
-

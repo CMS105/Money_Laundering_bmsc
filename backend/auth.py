@@ -131,3 +131,4 @@ def revoke_session(token: str) -> bool:
         del ACTIVE_SESSIONS[token]
         return True
     return False
+

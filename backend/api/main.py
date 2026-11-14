@@ -508,4 +508,11 @@ def get_system_settings():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    print("\n========================================================")
+    print(" LaunderyLens Financial Crime Intelligence API Engine")
+    print(" Local Endpoint : http://localhost:8000")
+    print(" Swagger Docs   : http://localhost:8000/docs")
+    print(" Alternate IP   : http://127.0.0.1:8000")
+    print(" (Note: In Windows web browsers, do not navigate to 0.0.0.0)")
+    print("========================================================\n")
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

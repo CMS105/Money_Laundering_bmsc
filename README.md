@@ -9,7 +9,7 @@
 [![NetworkX](https://img.shields.io/badge/Graph-NetworkX-blue?style=flat)](https://networkx.org/)
 [![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn-orange?style=flat&logo=scikitlearn)](https://scikit-learn.org/)
 
-**LaunderyLens** is a production-grade, multi-source Anti-Money Laundering (AML) and Financial Crime Intelligence platform designed for compliance officers, forensic investigators, and law enforcement agencies. Engineered with a restrained, dark-navy financial intelligence design system (`#0B1220`), it models interbank financial transactions as a **temporal, directed, weighted multi-graph**, combining Graph Data Science (GDS), unsupervised anomaly isolation, supervised machine learning, explainable AI (XAI), and real-time law enforcement watchlist tracking.
+**LaunderyLens** is a production-grade, multi-source Anti-Money Laundering (AML) and Financial Crime Intelligence platform designed for compliance officers, forensic investigators, and law enforcement agencies. Engineered with an institutional 60:30:10 design system (60% Deep Warm Navy `#172B35`, 30% Soft Ivory `#E8E5DA`, 10% Muted Teal `#75A99A`), it models interbank financial transactions as a **temporal, directed, weighted multi-graph**, combining Graph Data Science (GDS), unsupervised anomaly isolation, supervised machine learning, explainable AI (XAI), and real-time law enforcement watchlist tracking.
 
 ---
 

@@ -199,57 +199,57 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0B1220] p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#263449]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#284250]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#E5E7EB] tracking-wide uppercase">
+            <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase">
               Financial Transaction Ledger &amp; Surveillance Monitor
             </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#75A99A]/15 text-[#75A99A] border border-[#75A99A]/30">
               {filtered.length} Displayed
             </span>
           </div>
-          <p className="text-xs text-[#94A3B8] font-mono mt-1">
+          <p className="text-xs text-[#82918E] font-mono mt-1">
             Real-time interbank transaction surveillance · Multi-currency audit trail · Machine learning threat scoring
           </p>
         </div>
 
         <button
           onClick={handleExportCsv}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-md bg-[#172337] hover:bg-[#263449] border border-[#263449] text-xs font-mono font-bold text-[#E5E7EB] transition-colors"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-md bg-[#253F4D] hover:bg-[#284250] border border-[#284250] text-xs font-mono font-bold text-[#E8E5DA] transition-colors"
         >
-          <Download className="w-3.5 h-3.5 text-[#38BDF8]" />
+          <Download className="w-3.5 h-3.5 text-[#75A99A]" />
           <span>Export Audit CSV</span>
         </button>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 rounded-xl bg-[#111C2E] border border-[#263449]">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 rounded-xl bg-[#1E3541] border border-[#284250]">
         {/* Search */}
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#82918E] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search TxID, account, entity..."
-            className="w-full bg-[#0B1220] border border-[#263449] focus:border-[#38BDF8] rounded-md pl-9 pr-3 py-1.5 text-xs font-mono text-[#E5E7EB] placeholder-[#64748B] outline-none"
+            className="w-full bg-[#172B35] border border-[#284250] focus:border-[#75A99A] rounded-md pl-9 pr-3 py-1.5 text-xs font-mono text-[#E8E5DA] placeholder-[#82918E] outline-none"
           />
         </div>
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="text-[#64748B] text-[11px]">Risk Filter:</span>
+          <span className="text-[#82918E] text-[11px]">Risk Filter:</span>
           {['ALL', 'CRITICAL', 'HIGH', 'NORMAL'].map((lvl) => (
             <button
               key={lvl}
               onClick={() => setRiskFilter(lvl)}
               className={`px-2.5 py-1 rounded text-[10px] font-bold border transition-colors ${
                 riskFilter === lvl
-                  ? 'bg-[#172337] text-[#38BDF8] border-[#38BDF8]/50'
-                  : 'bg-[#0B1220] text-[#94A3B8] border-[#263449] hover:text-white'
+                  ? 'bg-[#253F4D] text-[#75A99A] border-[#75A99A]/50'
+                  : 'bg-[#172B35] text-[#82918E] border-[#284250] hover:text-white'
               }`}
             >
               {lvl}
@@ -259,11 +259,11 @@ export default function TransactionsPage() {
       </div>
 
       {/* Transactions Table */}
-      <div className="p-5 rounded-xl bg-[#111C2E] border border-[#263449] shadow-sm">
+      <div className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="border-b border-[#263449] text-[#64748B] text-[10px] uppercase">
+              <tr className="border-b border-[#284250] text-[#82918E] text-[10px] uppercase">
                 <th className="pb-2.5">Tx ID &amp; Time</th>
                 <th className="pb-2.5">Originator Account</th>
                 <th className="pb-2.5">Beneficiary Account</th>
@@ -274,47 +274,47 @@ export default function TransactionsPage() {
                 <th className="pb-2.5 text-right">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#263449]">
+            <tbody className="divide-y divide-[#284250]">
               {filtered.map((tx) => (
-                <tr key={tx.tx_id} className="hover:bg-[#172337]/50 transition-colors">
+                <tr key={tx.tx_id} className="hover:bg-[#253F4D]/50 transition-colors">
                   <td className="py-3">
-                    <span className="font-bold text-[#38BDF8] block">{tx.tx_id}</span>
-                    <span className="text-[10px] text-[#64748B]">{tx.timestamp}</span>
+                    <span className="font-bold text-[#75A99A] block">{tx.tx_id}</span>
+                    <span className="text-[10px] text-[#82918E]">{tx.timestamp}</span>
                   </td>
                   <td className="py-3">
-                    <span className="font-bold text-[#E5E7EB] block">{tx.source_name}</span>
-                    <span className="text-[11px] text-[#94A3B8]">{tx.source_account}</span>
-                    <span className="text-[10px] text-[#64748B] block">{tx.source_bank}</span>
+                    <span className="font-bold text-[#E8E5DA] block">{tx.source_name}</span>
+                    <span className="text-[11px] text-[#82918E]">{tx.source_account}</span>
+                    <span className="text-[10px] text-[#82918E] block">{tx.source_bank}</span>
                   </td>
                   <td className="py-3">
-                    <span className="font-bold text-[#E5E7EB] block">{tx.target_name}</span>
-                    <span className="text-[11px] text-[#94A3B8]">{tx.target_account}</span>
-                    <span className="text-[10px] text-[#64748B] block">{tx.target_bank}</span>
+                    <span className="font-bold text-[#E8E5DA] block">{tx.target_name}</span>
+                    <span className="text-[11px] text-[#82918E]">{tx.target_account}</span>
+                    <span className="text-[10px] text-[#82918E] block">{tx.target_bank}</span>
                   </td>
-                  <td className="py-3 font-bold text-[#E5E7EB] tabular-nums">
+                  <td className="py-3 font-bold text-[#E8E5DA] tabular-nums">
                     {formatAmount(tx.amount_usd)}
                   </td>
-                  <td className="py-3 text-[#94A3B8] text-[11px]">
+                  <td className="py-3 text-[#82918E] text-[11px]">
                     {tx.payment_format}
                   </td>
-                  <td className="py-3 text-[#E5E7EB]">
+                  <td className="py-3 text-[#E8E5DA]">
                     {tx.typology}
                   </td>
                   <td className="py-3">
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                         tx.risk_level === 'CRITICAL'
-                          ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
+                          ? 'bg-[#C75B55]/10 text-[#C75B55] border-[#C75B55]/30'
                           : tx.risk_level === 'HIGH'
-                          ? 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30'
-                          : 'bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/30'
+                          ? 'bg-[#D5A24F]/10 text-[#D5A24F] border-[#D5A24F]/30'
+                          : 'bg-[#4D9477]/10 text-[#4D9477] border-[#4D9477]/30'
                       }`}
                     >
                       {tx.risk_level} ({tx.risk_score.toFixed(1)}%)
                     </span>
                   </td>
                   <td className="py-3 text-right">
-                    <span className="text-[10px] text-[#94A3B8] bg-[#0B1220] px-2 py-0.5 rounded border border-[#263449]">
+                    <span className="text-[10px] text-[#82918E] bg-[#172B35] px-2 py-0.5 rounded border border-[#284250]">
                       {tx.status}
                     </span>
                   </td>

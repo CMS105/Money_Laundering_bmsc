@@ -72,18 +72,18 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       if (typology === 'CYCLIC_ROUND_TRIPPING') {
         const total = clusterNodes.length;
         const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
-        const radius = 240;
-        const centerX = 440;
-        const centerY = 270;
+        const radius = 260;
+        const centerX = 480;
+        const centerY = 280;
         x = centerX + radius * Math.cos(angle);
         y = centerY + radius * Math.sin(angle);
       } else if (typology === 'FAN_OUT_IN') {
         const role = (n.role || '').toLowerCase();
         if (role === 'entry') {
-          x = 80;
+          x = 60;
           y = 260;
         } else if (role === 'exit') {
-          x = 880;
+          x = 940;
           y = 260;
         } else {
           const muleNodes = clusterNodes.filter(
@@ -91,18 +91,18 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           );
           const muleIndex = muleNodes.findIndex((m) => m.id === n.id);
           const totalMules = muleNodes.length;
-          const spacing = 190;
+          const spacing = 220;
           const startY = 260 - ((totalMules - 1) * spacing) / 2;
-          x = 480;
+          x = 500;
           y = startY + (muleIndex >= 0 ? muleIndex : index) * spacing;
         }
       } else if (typology === 'MULE_CHAIN') {
-        const spacing = 360;
+        const spacing = 380;
         x = 80 + index * spacing;
-        y = 240 + (index % 2 === 1 ? 70 : -50);
+        y = 240 + (index % 2 === 1 ? 80 : -40);
       } else {
-        x = 100 + (index % 3) * 360;
-        y = 120 + Math.floor(index / 3) * 220;
+        x = 100 + (index % 3) * 380;
+        y = 120 + Math.floor(index / 3) * 240;
       }
 
       return {
@@ -137,7 +137,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
         type: MarkerType.ArrowClosed,
         width: 14,
         height: 14,
-        color: idx + 1 <= currentStep ? '#F8FAFC' : '#475569',
+        color: idx + 1 <= currentStep ? '#75A99A' : '#4D6877',
       },
     }));
 
@@ -167,10 +167,10 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
 
   if (!cluster) {
     return (
-      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-[#08090D] text-slate-500">
+      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-[#12222A] text-[#82918E]">
         <div className="text-center space-y-2">
-          <Network className="w-10 h-10 mx-auto text-slate-700 animate-pulse" />
-          <p className="text-sm font-medium font-mono text-slate-500">Select a cluster from the left panel to inspect graph</p>
+          <Network className="w-10 h-10 mx-auto text-[#75A99A]/50 animate-pulse" />
+          <p className="text-sm font-medium font-mono text-[#82918E]">Select a cluster from the left panel to inspect graph topology</p>
         </div>
       </main>
     );
@@ -180,13 +180,13 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
   const currentEdge = cluster.edges[currentStep - 1] || cluster.edges[0];
 
   return (
-    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-[#08090D] flex flex-col overflow-hidden canvas-recessed-well">
+    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-[#12222A] flex flex-col overflow-hidden">
       {/* Top Architectural Command Pill */}
       <div className="absolute top-3.5 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
         {/* Active Cluster Pill */}
-        <div className="pointer-events-auto flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#0E1016]/95 border border-white/[0.08] shadow-[0_12px_28px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl">
+        <div className="pointer-events-auto flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#1E3541]/95 border border-[#284250] shadow-[0_12px_28px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(232,229,218,0.1)] backdrop-blur-xl">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-mono font-bold text-[#F8FAFC]">
+            <span className="text-xs font-mono font-bold text-[#E8E5DA]">
               {cluster.cluster_id}
             </span>
             <span className={`text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded border ${meta.bgBadge}`}>
@@ -194,32 +194,32 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
             </span>
           </div>
 
-          <div className="h-3 w-px bg-white/10" />
+          <div className="h-3 w-px bg-[#284250]" />
 
-          <div className="text-xs font-mono font-bold text-slate-200 tabular-nums">
+          <div className="text-xs font-mono font-bold text-[#E8E5DA] tabular-nums">
             {formatAmount(cluster.total_volume, true)}
           </div>
 
-          <div className="h-3 w-px bg-white/10" />
+          <div className="h-3 w-px bg-[#284250]" />
 
-          <div className="text-[10px] text-[#8B95A5] font-mono tabular-nums">
+          <div className="text-[10px] text-[#82918E] font-mono tabular-nums">
             {cluster.nodes.length} Nodes · {cluster.edges.length} Hops
           </div>
         </div>
 
         {/* Legend */}
-        <div className="pointer-events-auto flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#0E1016]/95 border border-white/[0.08] shadow-[0_12px_28px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl text-[11px] text-slate-300">
+        <div className="pointer-events-auto flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#1E3541]/95 border border-[#284250] shadow-[0_12px_28px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(232,229,218,0.1)] backdrop-blur-xl text-[11px] text-[#E8E5DA]">
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.7)]" />
-            <span className="text-[10px] font-mono text-slate-300">Origin / Entry</span>
+            <span className="w-2 h-2 rounded-full bg-[#4D9477] shadow-[0_0_6px_rgba(77,148,119,0.7)]" />
+            <span className="text-[10px] font-mono text-[#E8E5DA]">Origin / Entry</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.7)]" />
-            <span className="text-[10px] font-mono text-slate-300">Mule Conduit</span>
+            <span className="w-2 h-2 rounded-full bg-[#D5A24F] shadow-[0_0_6px_rgba(213,162,79,0.7)]" />
+            <span className="text-[10px] font-mono text-[#E8E5DA]">Mule Conduit</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_6px_rgba(239,68,68,0.7)]" />
-            <span className="text-[10px] font-mono text-slate-300">Sink / Exit</span>
+            <span className="w-2 h-2 rounded-full bg-[#C75B55] shadow-[0_0_6px_rgba(199,91,85,0.7)]" />
+            <span className="text-[10px] font-mono text-[#E8E5DA]">Sink / Exit</span>
           </div>
         </div>
       </div>
@@ -243,54 +243,54 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           defaultEdgeOptions={{
             type: 'transactionEdge',
           }}
-          className="bg-[#08090D]"
+          className="bg-[#12222A]"
           style={{ width: '100%', height: '100%' }}
         >
           <Background
             variant={BackgroundVariant.Dots}
             gap={24}
             size={1.2}
-            color="rgba(255, 255, 255, 0.05)"
+            color="rgba(117, 169, 154, 0.12)"
           />
           <Controls
-            className="!bg-[#0E1016] !border-white/[0.08] !rounded-lg !shadow-2xl overflow-hidden [&>button]:!bg-[#0E1016] [&>button]:!border-white/[0.06] [&>button]:!fill-slate-300 hover:[&>button]:!bg-white/[0.06]"
+            className="!bg-[#1E3541] !border-[#284250] !rounded-lg !shadow-2xl overflow-hidden [&>button]:!bg-[#1E3541] [&>button]:!border-[#284250] [&>button]:!fill-[#E8E5DA] hover:[&>button]:!bg-[#253F4D]"
           />
           <MiniMap
             nodeColor={(node) => {
               const role = (node.data?.role as string) || '';
-              if (role === 'entry') return '#10B981';
-              if (role === 'exit') return '#EF4444';
-              return '#F59E0B';
+              if (role === 'entry') return '#4D9477';
+              if (role === 'exit') return '#C75B55';
+              return '#D5A24F';
             }}
-            maskColor="rgba(8, 9, 13, 0.85)"
-            className="!bg-[#0E1016] !border !border-white/[0.08] !rounded-lg overflow-hidden !shadow-2xl"
+            maskColor="rgba(18, 34, 42, 0.85)"
+            className="!bg-[#1E3541] !border !border-[#284250] !rounded-lg overflow-hidden !shadow-2xl"
           />
         </ReactFlow>
       </div>
 
       {/* Floating Glassmorphic Temporal Scrubber Dock */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-xl pointer-events-auto">
-        <div className="rounded-xl p-2.5 bg-[#0E1016]/95 border border-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_0_0_rgba(255,255,255,0.12)] backdrop-blur-2xl space-y-2">
+        <div className="rounded-xl p-2.5 bg-[#1E3541]/95 border border-[#284250] shadow-[0_20px_50px_rgba(18,34,42,0.85),inset_0_1px_0_0_rgba(232,229,218,0.12)] backdrop-blur-2xl space-y-2">
           {/* Top Scrubber Row: Controls + Timestamp Info */}
           <div className="flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => setCurrentStep(1)}
-                className="p-1.5 rounded-md hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-md hover:bg-[#253F4D] text-[#82918E] hover:text-[#E8E5DA] transition-colors cursor-pointer"
                 title="Reset to Step 1"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
-                className="p-1.5 rounded-md hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-md hover:bg-[#253F4D] text-[#82918E] hover:text-[#E8E5DA] transition-colors cursor-pointer"
                 title="Previous Hop"
               >
                 <SkipBack className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="p-1.5 rounded-md bg-white text-black hover:bg-slate-200 transition-colors cursor-pointer shadow-sm"
+                className="p-1.5 rounded-md bg-[#75A99A] text-[#172B35] font-bold hover:bg-[#8BBDB0] transition-colors cursor-pointer shadow-sm"
                 title={isPlaying ? 'Pause Playback' : 'Replay Money Trail'}
               >
                 {isPlaying ? (
@@ -301,7 +301,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
               </button>
               <button
                 onClick={() => setCurrentStep((prev) => Math.min(totalSteps, prev + 1))}
-                className="p-1.5 rounded-md hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-md hover:bg-[#253F4D] text-[#82918E] hover:text-[#E8E5DA] transition-colors cursor-pointer"
                 title="Next Hop"
               >
                 <SkipForward className="w-3.5 h-3.5" />
@@ -309,13 +309,13 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
             </div>
 
             {/* Current Step Readout */}
-            <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-slate-300">
-              <span className="font-bold text-white">
+            <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-[#E8E5DA]">
+              <span className="font-bold text-[#E8E5DA]">
                 Step {currentStep} / {totalSteps}
               </span>
-              <span className="text-slate-600">·</span>
-              <div className="flex items-center gap-1 text-[#8B95A5]">
-                <Clock className="w-3 h-3 text-amber-400" />
+              <span className="text-[#82918E]">·</span>
+              <div className="flex items-center gap-1 text-[#82918E]">
+                <Clock className="w-3 h-3 text-[#D5A24F]" />
                 <span>
                   {currentEdge ? `${currentEdge.hop_delay_mins.toFixed(1)}m transit` : '0m'}
                 </span>
@@ -323,7 +323,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
             </div>
 
             {/* Amount at Current Hop */}
-            <div className="text-[11px] font-mono font-bold text-emerald-400 tabular-nums">
+            <div className="text-[11px] font-mono font-bold text-[#4D9477] tabular-nums">
               {currentEdge ? formatAmount(currentEdge.amount, true) : '$0'}
             </div>
           </div>
@@ -337,14 +337,14 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
               step={1}
               value={currentStep}
               onChange={(e) => setCurrentStep(parseInt(e.target.value, 10))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-white"
+              className="w-full h-1.5 bg-[#253F4D] rounded-lg appearance-none cursor-pointer accent-[#75A99A]"
             />
             {/* Precision Tick Marks */}
-            <div className="flex justify-between px-1 pt-1 text-[8px] font-mono text-slate-600">
+            <div className="flex justify-between px-1 pt-1 text-[8px] font-mono text-[#82918E]">
               {Array.from({ length: totalSteps }).map((_, i) => (
                 <span
                   key={i}
-                  className={i + 1 <= currentStep ? 'text-slate-300 font-bold' : ''}
+                  className={i + 1 <= currentStep ? 'text-[#E8E5DA] font-bold' : ''}
                 >
                   T{i + 1}
                 </span>

@@ -1,92 +1,179 @@
 @import "tailwindcss";
 
 :root {
-  --bg-main: #0B1220;
-  --bg-sidebar: #0F172A;
-  --bg-card: #111C2E;
-  --bg-elevated: #172337;
-  --border-card: #263449;
-  --border-subtle: rgba(38, 52, 73, 0.8);
-  --border-highlight: rgba(56, 189, 248, 0.25);
-  --text-primary: #E5E7EB;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --accent-primary: #38BDF8;
-  --status-success: #22C55E;
-  --status-warning: #F59E0B;
-  --status-critical: #EF4444;
+  /* =========================================================================
+     60:30:10 COLOR SYSTEM (WARM NAVY, SOFT IVORY, MUTED TEAL)
+     ========================================================================= */
+  /* 60% Primary Foundation: Deep Warm Navy */
+  --color-primary: #172B35;
+  --color-primary-surface: #1E3541;
+  --color-primary-elevated: #253F4D;
+  --color-primary-hover: #2C4959;
+  --color-primary-dark: #12222A;
 
-  /* Backward compatibility tokens */
-  --bg-void: #0B1220;
-  --surface-panel: #111C2E;
-  --surface-elevated: #172337;
-  --text-platinum: #E5E7EB;
-  --text-steel: #94A3B8;
-  --status-amber: #F59E0B;
-  --status-crimson: #EF4444;
-  --status-emerald: #22C55E;
-  --accent-cyan: #38BDF8;
+  /* 30% Secondary Foundation: Soft Ivory & Supporting Neutrals */
+  --color-secondary: #E8E5DA;
+  --color-secondary-surface: #F5F3EC;
+  --color-secondary-muted: #82918E;
+  --color-secondary-subtle: #A3B3AF;
+  --color-secondary-border: #D1D5CE;
+
+  /* 10% Accent: Muted Teal (Interactive Highlights & Selected States) */
+  --color-accent: #75A99A;
+  --color-accent-hover: #8BBDB0;
+  --color-accent-subtle: rgba(117, 169, 154, 0.15);
+  --color-accent-border: rgba(117, 169, 154, 0.35);
+
+  /* Semantic Intelligence Signals (Strictly Non-Decorative) */
+  --color-success: #4D9477;
+  --color-warning: #D5A24F;
+  --color-critical: #C75B55;
+  --color-info: #6F9DB3;
+
+  /* Structural Borders */
+  --border-dark: #284250;
+  --border-dark-subtle: rgba(232, 229, 218, 0.08);
+  --border-dark-highlight: rgba(117, 169, 154, 0.3);
+
+  /* Typography Variables (Fallback defaults) */
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', Menlo, Monaco, Consolas, monospace;
+
+  /* Legacy Backward-Compatibility Mapping */
+  --bg-main: #172B35;
+  --bg-sidebar: #12222A;
+  --bg-card: #1E3541;
+  --bg-elevated: #253F4D;
+  --border-card: #284250;
+  --border-subtle: rgba(232, 229, 218, 0.08);
+  --border-highlight: rgba(117, 169, 154, 0.3);
+  --text-primary: #E8E5DA;
+  --text-secondary: #82918E;
+  --text-muted: #82918E;
+  --accent-primary: #75A99A;
+  --status-success: #4D9477;
+  --status-warning: #D5A24F;
+  --status-critical: #C75B55;
+  --bg-void: #172B35;
+  --surface-panel: #1E3541;
+  --surface-elevated: #253F4D;
+  --text-platinum: #E8E5DA;
+  --text-steel: #82918E;
+  --status-amber: #D5A24F;
+  --status-crimson: #C75B55;
+  --status-emerald: #4D9477;
+  --accent-cyan: #75A99A;
 }
 
 body {
-  background-color: #0B1220;
-  color: #E5E7EB;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #172B35;
+  color: #E8E5DA;
+  font-family: var(--font-sans);
   overflow: hidden;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(232, 229, 218, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
-/* Enforce tabular figures on financial & metric values */
+/* Tabular figures for all financial & metric numbers */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
 }
 
-/* Linear & Palantir style subtle spatial elevation */
-.spatial-panel {
-  background: #0E1016;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(20px);
+/* Warm Navy Panel Elevation */
+.panel-warm {
+  background: #1E3541;
+  border: 1px solid #284250;
+  box-shadow: inset 0 1px 0 0 rgba(232, 229, 218, 0.06), 0 10px 25px -8px rgba(18, 34, 42, 0.6);
 }
 
-.spatial-card {
-  background: #13161F;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.6);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+.card-warm {
+  background: #1E3541;
+  border: 1px solid #284250;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.spatial-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), 0 16px 36px -12px rgba(0, 0, 0, 0.85);
+.card-warm:hover {
+  border-color: rgba(117, 169, 154, 0.4);
+  box-shadow: inset 0 1px 0 0 rgba(232, 229, 218, 0.08), 0 8px 20px -6px rgba(18, 34, 42, 0.7);
 }
 
-/* Recessed metallic pill */
-.metallic-pill {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 0 rgba(0, 0, 0, 0.4);
+/* Soft Ivory Secondary Sheet Card */
+.card-ivory {
+  background: #E8E5DA;
+  color: #172B35;
+  border: 1px solid #D1D5CE;
+  box-shadow: 0 4px 16px -4px rgba(23, 43, 53, 0.12);
 }
 
-/* High-craft hairline scrollbars */
+/* Muted Teal Primary Interactive Button */
+.btn-primary {
+  background-color: #75A99A;
+  color: #172B35;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-primary:hover {
+  background-color: #8BBDB0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(117, 169, 154, 0.25);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid #75A99A;
+  outline-offset: 2px;
+}
+
+/* Restrained Secondary Navy Button */
+.btn-secondary {
+  background-color: #253F4D;
+  color: #E8E5DA;
+  border: 1px solid #284250;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #2C4959;
+  border-color: #75A99A;
+  color: #FFFFFF;
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid #75A99A;
+  outline-offset: 2px;
+}
+
+/* Muted Pill Token */
+.token-pill {
+  background: rgba(232, 229, 218, 0.05);
+  border: 1px solid rgba(232, 229, 218, 0.12);
+  color: #E8E5DA;
+}
+
+/* Hairline scrollbars with warm neutral tone */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(8, 9, 13, 0.8);
+  background: rgba(23, 43, 53, 0.8);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(130, 145, 142, 0.35);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(117, 169, 154, 0.6);
 }
 
 /* React Flow Visual Depth Styles */
@@ -98,14 +185,14 @@ body {
   width: 8px !important;
   height: 8px !important;
   border-radius: 50% !important;
-  background-color: #38bdf8 !important;
-  border: 2px solid #08090D !important;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6) !important;
+  background-color: #75A99A !important;
+  border: 2px solid #172B35 !important;
+  box-shadow: 0 0 6px rgba(117, 169, 154, 0.6) !important;
 }
 
 .react-flow__edge-path {
   stroke-dasharray: 6 3;
-  animation: dashdraw 1.2s linear infinite;
+  animation: dashdraw 1.6s linear infinite;
 }
 
 @keyframes dashdraw {
@@ -117,7 +204,15 @@ body {
   }
 }
 
-/* Recessed canvas well vignette */
-.canvas-recessed-well {
-  box-shadow: inset 0 0 80px 20px rgba(0, 0, 0, 0.85), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+/* Respect user's reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .react-flow__edge-path {
+    animation: none !important;
+  }
 }

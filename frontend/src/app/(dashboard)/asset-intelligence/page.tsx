@@ -115,19 +115,19 @@ export default function AssetIntelligencePage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0B1220] p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#263449]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#284250]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#E5E7EB] tracking-wide uppercase">
+            <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase">
               Asset-Based &amp; Trade-Based Laundering Intelligence
             </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#4D9477]/15 text-[#4D9477] border border-[#4D9477]/30">
               High-Value Physical Asset Tracing
             </span>
           </div>
-          <p className="text-xs text-[#94A3B8] font-mono mt-1">
+          <p className="text-xs text-[#82918E] font-mono mt-1">
             24K Gold bullion conversion · Offshore real estate SPVs · Beneficial ownership obfuscation
           </p>
         </div>
@@ -140,78 +140,78 @@ export default function AssetIntelligencePage() {
           return (
             <div
               key={asset.asset_id}
-              className="p-5 rounded-xl bg-[#111C2E] border border-[#263449] shadow-sm space-y-4 flex flex-col justify-between"
+              className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm space-y-4 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-[#172337] border border-[#263449] flex items-center justify-center text-[#38BDF8]">
-                      <Icon className="w-4 h-4 text-[#38BDF8]" />
+                    <div className="w-9 h-9 rounded-lg bg-[#253F4D] border border-[#284250] flex items-center justify-center text-[#75A99A]">
+                      <Icon className="w-4 h-4 text-[#75A99A]" />
                     </div>
                     <div>
-                      <span className="text-[10px] font-mono font-bold text-[#38BDF8] uppercase">
+                      <span className="text-[10px] font-mono font-bold text-[#75A99A] uppercase">
                         {asset.category}
                       </span>
-                      <h2 className="text-sm font-bold text-[#E5E7EB]">
+                      <h2 className="text-sm font-bold text-[#E8E5DA]">
                         {asset.title}
                       </h2>
                     </div>
                   </div>
 
-                  <span className="text-xs font-mono font-bold text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/30 px-2 py-0.5 rounded shrink-0">
+                  <span className="text-xs font-mono font-bold text-[#C75B55] bg-[#C75B55]/10 border border-[#C75B55]/30 px-2 py-0.5 rounded shrink-0">
                     {asset.risk_score.toFixed(1)}% Threat
                   </span>
                 </div>
 
-                <p className="text-xs text-[#94A3B8] font-mono mb-3">
+                <p className="text-xs text-[#82918E] font-mono mb-3">
                   📍 {asset.location}
                 </p>
 
                 {/* Valuation Cards */}
-                <div className="grid grid-cols-3 gap-2.5 p-3 rounded-lg bg-[#0B1220] border border-[#263449] mb-3 text-xs font-mono">
+                <div className="grid grid-cols-3 gap-2.5 p-3 rounded-lg bg-[#172B35] border border-[#284250] mb-3 text-xs font-mono">
                   <div>
-                    <span className="text-[10px] text-[#64748B] block">Declared Price</span>
-                    <span className="text-xs font-bold text-[#E5E7EB] tabular-nums block mt-0.5">
+                    <span className="text-[10px] text-[#82918E] block">Declared Price</span>
+                    <span className="text-xs font-bold text-[#E8E5DA] tabular-nums block mt-0.5">
                       {formatAmount(asset.declared_value_usd)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#64748B] block">Fair Market Estimate</span>
-                    <span className="text-xs font-bold text-[#38BDF8] tabular-nums block mt-0.5">
+                    <span className="text-[10px] text-[#82918E] block">Fair Market Estimate</span>
+                    <span className="text-xs font-bold text-[#75A99A] tabular-nums block mt-0.5">
                       {formatAmount(asset.market_appraisal_usd)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#64748B] block">Cash Component %</span>
-                    <span className="text-xs font-bold text-[#EF4444] tabular-nums block mt-0.5">
+                    <span className="text-[10px] text-[#82918E] block">Cash Component %</span>
+                    <span className="text-xs font-bold text-[#C75B55] tabular-nums block mt-0.5">
                       {asset.cash_component_pct}% Cash
                     </span>
                   </div>
                 </div>
 
                 {/* Entity Details */}
-                <div className="space-y-1.5 text-xs font-mono text-[#94A3B8]">
+                <div className="space-y-1.5 text-xs font-mono text-[#82918E]">
                   <p>
-                    <strong className="text-[#E5E7EB]">Acquiring Entity:</strong> {asset.purchaser_entity}
+                    <strong className="text-[#E8E5DA]">Acquiring Entity:</strong> {asset.purchaser_entity}
                   </p>
                   <p>
-                    <strong className="text-[#E5E7EB]">Ultimate Beneficial Owner (UBO):</strong>{' '}
-                    <span className="text-[#EF4444] font-semibold">{asset.ubo_individual}</span>
+                    <strong className="text-[#E8E5DA]">Ultimate Beneficial Owner (UBO):</strong>{' '}
+                    <span className="text-[#C75B55] font-semibold">{asset.ubo_individual}</span>
                   </p>
                   <p>
-                    <strong className="text-[#E5E7EB]">Linked Funding Account:</strong>{' '}
-                    <span className="text-[#38BDF8]">{asset.funding_bank_account}</span>
+                    <strong className="text-[#E8E5DA]">Linked Funding Account:</strong>{' '}
+                    <span className="text-[#75A99A]">{asset.funding_bank_account}</span>
                   </p>
                 </div>
               </div>
 
               {/* Red Flag Alert Box */}
-              <div className="p-3 rounded-lg bg-[#EF4444]/10 border border-[#EF4444]/25 text-xs text-[#EF4444] font-mono">
+              <div className="p-3 rounded-lg bg-[#C75B55]/10 border border-[#C75B55]/25 text-xs text-[#C75B55] font-mono">
                 <p className="font-bold mb-0.5 flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   Forensic Red Flag:
                 </p>
-                <p className="text-[11px] leading-relaxed text-[#E5E7EB]">{asset.red_flag}</p>
+                <p className="text-[11px] leading-relaxed text-[#E8E5DA]">{asset.red_flag}</p>
               </div>
             </div>
           );

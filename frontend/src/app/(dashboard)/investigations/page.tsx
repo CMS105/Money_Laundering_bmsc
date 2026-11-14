@@ -105,7 +105,7 @@ export default function InvestigationsPage() {
   };
 
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden bg-[#0B1220] text-[#E5E7EB] font-sans">
+    <div className="flex flex-col h-full w-full overflow-hidden bg-[#172B35] text-[#E8E5DA] font-sans">
       {/* Top KPI Scoreboard & Demo Controls */}
       <TopKpiBar
         metrics={metrics}
@@ -119,8 +119,8 @@ export default function InvestigationsPage() {
 
       {/* Floating Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-[#111C2E] border border-[#38BDF8] shadow-2xl text-xs font-bold text-[#E5E7EB] backdrop-blur-xl animate-in slide-in-from-bottom-5 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-[#1E3541] border border-[#75A99A] shadow-2xl text-xs font-mono font-bold text-[#E8E5DA] backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200">
+          <CheckCircle2 className="w-4 h-4 text-[#4D9477] shrink-0" />
           <span>{toastMessage.text}</span>
         </div>
       )}
@@ -144,3 +144,4 @@ export default function InvestigationsPage() {
     </div>
   );
 }
+
