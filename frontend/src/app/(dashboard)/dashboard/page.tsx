@@ -3,22 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  TrendingUp,
-  AlertTriangle,
+  ArrowRight,
   ArrowUpRight,
-  Database,
   Radio,
   Users,
   Globe2,
   Building2,
-  FileText,
-  ArrowRight,
+  Receipt,
 } from 'lucide-react';
 import { useCurrency } from '@/context/CurrencyContext';
-import StatusMark from '@/components/react-bits/StatusMark';
-import DotGridBackground from '@/components/react-bits/DotGridBackground';
-import ClickSpark from '@/components/react-bits/ClickSpark';
-import FadeContent from '@/components/react-bits/FadeContent';
 
 interface DashboardData {
   total_monitored_volume_usd: number;
@@ -100,6 +93,7 @@ const FALLBACK_DASHBOARD: DashboardData = {
 export default function DashboardPage() {
   const { formatAmount } = useCurrency();
   const [data, setData] = useState<DashboardData>(FALLBACK_DASHBOARD);
+  const [activeChartPoint, setActiveChartPoint] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/v1/dashboard')
@@ -110,349 +104,460 @@ export default function DashboardPage() {
       .catch(() => {});
   }, []);
 
+  // Compute SVG coordinates for the interactive liquidity flow chart
+  const points = data.volume_trends_30d;
+  const maxVal = Math.max(...points.map((p) => p.licit_usd + p.flagged_usd)) * 1.15;
+  const chartHeight = 160;
+  const chartWidth = 540;
+
+  const totalPointsStr = points
+    .map((p, i) => {
+      const x = (i / (points.length - 1)) * chartWidth;
+      const y = chartHeight - ((p.licit_usd + p.flagged_usd) / maxVal) * chartHeight;
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+  const flaggedPointsStr = points
+    .map((p, i) => {
+      const x = (i / (points.length - 1)) * chartWidth;
+      const y = chartHeight - (p.flagged_usd / maxVal) * chartHeight;
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+  const activePoint =
+    activeChartPoint !== null ? points[activeChartPoint] : points[points.length - 1];
+
   return (
-    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 lg:p-8 space-y-6 select-none relative">
-      <DotGridBackground />
-
-      <FadeContent direction="down" durationMs={250}>
-        {/* Header Command Strip */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#284250]">
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase font-sans">
-                Financial Crime Intelligence Overview
-              </h1>
-              <StatusMark status="success" label="Surveillance Active" size="sm" />
+    <div className="flex-1 overflow-y-auto bg-[#09090B] p-6 lg:p-8 space-y-6 select-none font-sans">
+      {/* Top Architectural Command Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/[0.07]">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">
+              Forensic Intelligence Overview
+            </h1>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-medium text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>LIVE SURVEILLANCE ACTIVE</span>
             </div>
-            <p className="text-xs text-[#82918E] font-mono mt-1">
-              Temporal Graph Science · Explainable AI · Multi-Source Kaggle Ingestion Engine
-            </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <ClickSpark sparkColor="#75A99A" sparkCount={8}>
-              <Link
-                href="/investigations"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#75A99A] hover:bg-[#8BBDB0] text-xs font-bold text-[#172B35] transition-all shadow-md cursor-pointer font-sans"
-              >
-                <Radio className="w-4 h-4 text-[#172B35] shrink-0" />
-                <span>Launch Investigations Workbench</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#172B35]" />
-              </Link>
-            </ClickSpark>
-          </div>
+          <p className="text-xs text-[#71717A] font-mono mt-0.5">
+            Graph Data Science · Supervised Ensemble · FinCEN Form 111 Automated Generation
+          </p>
         </div>
-      </FadeContent>
 
-      {/* Primary KPI Grid (Miller's Law - 4 Clear Groups) */}
-      <FadeContent direction="up" delayMs={50} durationMs={300}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* KPI 1 */}
-          <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm hover:border-[#75A99A]/40 transition-colors">
-            <div className="flex items-center justify-between text-[#82918E] text-xs font-mono mb-2">
-              <span>Total Monitored Capital</span>
-              <Database className="w-4 h-4 text-[#75A99A]" />
-            </div>
-            <div className="text-2xl font-black text-[#E8E5DA] font-mono tabular-nums">
-              {formatAmount(data.total_monitored_volume_usd)}
-            </div>
-            <p className="text-[11px] text-[#A3B3AF] font-mono mt-1.5 flex items-center gap-1">
-              <span className="text-[#4D9477] font-semibold">4,820 Tx</span> across 684 Monitored Nodes
-            </p>
-          </div>
-
-          {/* KPI 2 */}
-          <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm hover:border-[#C75B55]/40 transition-colors">
-            <div className="flex items-center justify-between text-[#82918E] text-xs font-mono mb-2">
-              <span>Threat Severity Alerts</span>
-              <AlertTriangle className="w-4 h-4 text-[#C75B55]" />
-            </div>
-            <div className="text-2xl font-black text-[#C75B55] font-mono tabular-nums">
-              {data.active_high_risk_alerts} Alerts
-            </div>
-            <p className="text-[11px] text-[#A3B3AF] font-mono mt-1.5">
-              <span className="text-[#C75B55] font-semibold">14 Critical</span> · 18 Quarantined Conduits
-            </p>
-          </div>
-
-          {/* KPI 3 */}
-          <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm hover:border-[#4D9477]/40 transition-colors">
-            <div className="flex items-center justify-between text-[#82918E] text-xs font-mono mb-2">
-              <span>Hybrid ML Precision</span>
-              <TrendingUp className="w-4 h-4 text-[#4D9477]" />
-            </div>
-            <div className="text-2xl font-black text-[#4D9477] font-mono tabular-nums">
-              100.0%
-            </div>
-            <p className="text-[11px] text-[#A3B3AF] font-mono mt-1.5">
-              <span className="text-[#4D9477] font-semibold">0.0% False Positive Rate</span> · F1: 0.88
-            </p>
-          </div>
-
-          {/* KPI 4 */}
-          <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm hover:border-[#75A99A]/40 transition-colors">
-            <div className="flex items-center justify-between text-[#82918E] text-xs font-mono mb-2">
-              <span>Regulatory Filings</span>
-              <FileText className="w-4 h-4 text-[#75A99A]" />
-            </div>
-            <div className="text-2xl font-black text-[#75A99A] font-mono tabular-nums">
-              {data.fincen_sars_drafted} SARs
-            </div>
-            <p className="text-[11px] text-[#A3B3AF] font-mono mt-1.5">
-              <span className="text-[#75A99A] font-semibold">9 Form 111 Transmitted</span> to FinCEN / FIU
-            </p>
-          </div>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/investigations"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#FAFAFA] hover:bg-zinc-200 text-[#09090B] text-xs font-semibold tracking-tight transition-all shadow-sm cursor-pointer"
+          >
+            <Radio className="w-3.5 h-3.5 text-[#09090B]" />
+            <span>Launch Investigations Workbench</span>
+            <ArrowRight className="w-3.5 h-3.5 text-[#09090B]" />
+          </Link>
         </div>
-      </FadeContent>
+      </div>
 
-      {/* Middle Row: Volume Trends & Typology Distribution */}
-      <FadeContent direction="up" delayMs={100} durationMs={300}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 30-Day Volume & Alert Trend */}
-          <div className="lg:col-span-2 p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm flex flex-col justify-between">
+      {/* Unified Metric Strip (4 High-Craft Columns Divided by Hairlines) */}
+      <div className="card-fintech grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.07] overflow-hidden">
+        {/* Metric 1 */}
+        <div className="p-5 space-y-1">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] flex items-center justify-between">
+            <span>Total Monitored Capital</span>
+            <span className="text-[10px] text-zinc-500">IBM AML</span>
+          </div>
+          <div className="text-[28px] font-semibold text-[#FAFAFA] tracking-tight font-mono tabular-nums leading-none pt-1">
+            {formatAmount(data.total_monitored_volume_usd)}
+          </div>
+          <p className="text-xs text-[#71717A] pt-1">
+            <span className="text-zinc-300 font-mono font-medium">4,820</span> wire tx across <span className="text-zinc-300 font-mono font-medium">684</span> entities
+          </p>
+        </div>
+
+        {/* Metric 2 */}
+        <div className="p-5 space-y-1">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] flex items-center justify-between">
+            <span>Active Laundering Rings</span>
+            <span className="px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-mono font-semibold">
+              14 Critical
+            </span>
+          </div>
+          <div className="text-[28px] font-semibold text-[#EF4444] tracking-tight font-mono tabular-nums leading-none pt-1">
+            {data.active_high_risk_alerts} Alerts
+          </div>
+          <p className="text-xs text-[#71717A] pt-1">
+            <span className="text-rose-400 font-mono font-medium">18</span> conduit accounts in immediate quarantine
+          </p>
+        </div>
+
+        {/* Metric 3 */}
+        <div className="p-5 space-y-1">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] flex items-center justify-between">
+            <span>Hybrid ML Precision</span>
+            <span className="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono font-semibold">
+              +62% Lift
+            </span>
+          </div>
+          <div className="text-[28px] font-semibold text-[#10B981] tracking-tight font-mono tabular-nums leading-none pt-1">
+            100.0%
+          </div>
+          <p className="text-xs text-[#71717A] pt-1">
+            <span className="text-emerald-400 font-mono font-medium">0.0% FPR</span> · Macro F1-Score: 0.88
+          </p>
+        </div>
+
+        {/* Metric 4 */}
+        <div className="p-5 space-y-1">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] flex items-center justify-between">
+            <span>FinCEN SAR Filings</span>
+            <span className="text-[10px] font-mono text-zinc-500">31 CFR § 1020</span>
+          </div>
+          <div className="text-[28px] font-semibold text-[#FAFAFA] tracking-tight font-mono tabular-nums leading-none pt-1">
+            {data.fincen_sars_drafted} Cases
+          </div>
+          <p className="text-xs text-[#71717A] pt-1">
+            <span className="text-zinc-300 font-mono font-medium">9 Form 111 Transmitted</span> to FIU portal
+          </p>
+        </div>
+      </div>
+
+      {/* Middle Row: Institutional Liquidity Flow Chart & Typology Ledger */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Interactive SVG Liquidity Flow Chart */}
+        <div className="lg:col-span-2 card-fintech p-5 flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide font-sans">
-                    Surveillance Volume &amp; Attack Frequency Trend
-                  </h2>
-                  <p className="text-xs text-[#82918E] font-mono">
-                    Daily aggregate licit vs. illicit laundering transaction volume
-                  </p>
-                </div>
-                <span className="text-xs font-mono text-[#75A99A] bg-[#253F4D] px-2.5 py-1 rounded border border-[#284250]">
-                  Last 30 Days
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-[#FAFAFA]">
+                Surveillance Liquidity &amp; Flagged Illicit Flow
+              </h2>
+              <p className="text-xs text-[#71717A] font-mono mt-0.5">
+                30-day temporal cross-section: verified capital vs. laundering diversion
+              </p>
+            </div>
+            {activePoint && (
+              <div className="flex items-center gap-3 text-xs font-mono tabular-nums">
+                <span className="text-[#71717A]">{activePoint.day}:</span>
+                <span className="text-[#FAFAFA] font-medium">
+                  Licit: {formatAmount(activePoint.licit_usd, true)}
+                </span>
+                <span className="text-[#EF4444] font-semibold">
+                  Illicit: {formatAmount(activePoint.flagged_usd, true)}
                 </span>
               </div>
+            )}
+          </div>
 
-              {/* Bar Visualization */}
-              <div className="space-y-3 pt-2">
-                {data.volume_trends_30d.map((item, idx) => {
-                  const total = item.licit_usd + item.flagged_usd;
-                  const flagPct = (item.flagged_usd / total) * 100;
-                  return (
-                    <div key={idx} className="space-y-1">
-                      <div className="flex items-center justify-between text-xs font-mono text-[#82918E]">
-                        <span>{item.day}</span>
-                        <div className="flex items-center gap-3">
-                          <span className="text-[#E8E5DA]">
-                            Total: {formatAmount(total)}
-                          </span>
-                          <span className="text-[#C75B55] font-semibold">
-                            Flagged: {formatAmount(item.flagged_usd)} ({item.alerts} alerts)
-                          </span>
-                        </div>
-                      </div>
-                      <div className="w-full h-3 rounded bg-[#172B35] overflow-hidden flex border border-[#284250]/50">
-                        <div
-                          style={{ width: `${100 - flagPct}%` }}
-                          className="bg-[#75A99A]/40 h-full transition-all"
-                          title="Licit Volume"
-                        />
-                        <div
-                          style={{ width: `${flagPct}%` }}
-                          className="bg-[#C75B55] h-full transition-all"
-                          title="Illicit Flagged Volume"
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          {/* SVG Sparkline Stage */}
+          <div className="relative w-full overflow-hidden pt-2">
+            <svg
+              viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+              className="w-full h-44 overflow-visible"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <linearGradient id="flaggedGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#EF4444" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#EF4444" stopOpacity="0.0" />
+                </linearGradient>
+                <linearGradient id="totalGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#FAFAFA" stopOpacity="0.08" />
+                  <stop offset="100%" stopColor="#FAFAFA" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
 
-            <div className="flex items-center gap-6 pt-4 mt-4 border-t border-[#284250] text-xs font-mono text-[#82918E]">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded bg-[#75A99A]/40" />
-                <span>Verified Licit Flows</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded bg-[#C75B55]" />
-                <span>Quarantined Laundering Flows</span>
-              </div>
+              {/* Gridlines */}
+              <line x1="0" y1={chartHeight * 0.25} x2={chartWidth} y2={chartHeight * 0.25} stroke="#27272A" strokeDasharray="3 3" />
+              <line x1="0" y1={chartHeight * 0.5} x2={chartWidth} y2={chartHeight * 0.5} stroke="#27272A" strokeDasharray="3 3" />
+              <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="#27272A" strokeDasharray="3 3" />
+
+              {/* Total Volume Area & Line */}
+              <polygon
+                points={`0,${chartHeight} ${totalPointsStr} ${chartWidth},${chartHeight}`}
+                fill="url(#totalGradient)"
+              />
+              <polyline
+                fill="none"
+                stroke="#52525B"
+                strokeWidth="1.5"
+                points={totalPointsStr}
+              />
+
+              {/* Flagged Illicit Flow Area & Line */}
+              <polygon
+                points={`0,${chartHeight} ${flaggedPointsStr} ${chartWidth},${chartHeight}`}
+                fill="url(#flaggedGradient)"
+              />
+              <polyline
+                fill="none"
+                stroke="#EF4444"
+                strokeWidth="2"
+                points={flaggedPointsStr}
+              />
+
+              {/* Interactive Point Nodes */}
+              {points.map((p, i) => {
+                const x = (i / (points.length - 1)) * chartWidth;
+                const y = chartHeight - (p.flagged_usd / maxVal) * chartHeight;
+                const isHovered = activeChartPoint === i;
+
+                return (
+                  <g
+                    key={i}
+                    onMouseEnter={() => setActiveChartPoint(i)}
+                    className="cursor-pointer"
+                  >
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={isHovered ? 5 : 3.5}
+                      fill={isHovered ? '#FAFAFA' : '#EF4444'}
+                      stroke="#09090B"
+                      strokeWidth="2"
+                      className="transition-all"
+                    />
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* X-Axis Labels */}
+            <div className="flex justify-between text-[10px] font-mono text-[#71717A] pt-2 border-t border-white/[0.06]">
+              {points.map((p, i) => (
+                <span
+                  key={i}
+                  onMouseEnter={() => setActiveChartPoint(i)}
+                  className={`cursor-pointer transition-colors ${
+                    activeChartPoint === i ? 'text-white font-bold' : ''
+                  }`}
+                >
+                  {p.day}
+                </span>
+              ))}
             </div>
           </div>
 
-          {/* Typology Distribution Breakdown */}
-          <div className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm flex flex-col justify-between">
-            <div>
-              <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide font-sans mb-1">
+          {/* Chart Legend */}
+          <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] text-xs font-mono text-[#71717A]">
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-0.5 bg-[#52525B]" />
+                <span>Total Monitored Throughput</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-0.5 bg-[#EF4444]" />
+                <span className="text-rose-400">Quarantined Illicit Trajectory</span>
+              </div>
+            </div>
+            <span className="text-[11px] text-zinc-500">Hover node to inspect day</span>
+          </div>
+        </div>
+
+        {/* Dense Institutional Typology Ledger */}
+        <div className="card-fintech p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-[#FAFAFA]">
                 Typology Exposure
               </h2>
-              <p className="text-xs text-[#82918E] font-mono mb-4">
-                Laundering mechanics categorized by volume &amp; risk
-              </p>
-
-              <div className="space-y-3">
-                {data.typology_distribution.map((t, idx) => (
-                  <div key={idx} className="p-3 rounded-lg bg-[#172B35] border border-[#284250]">
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-bold text-[#E8E5DA] font-sans">{t.typology}</span>
-                      <span className="font-mono text-[#C75B55] font-bold">
-                        {t.risk_pct}% Risk
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs font-mono text-[#82918E]">
-                      <span>{t.count} Active Rings</span>
-                      <span className="text-[#75A99A] font-semibold">{formatAmount(t.volume_usd)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <span className="text-[10px] font-mono text-zinc-500">
+                5 Primary Motifs
+              </span>
             </div>
-
-            <Link
-              href="/investigations"
-              className="mt-4 w-full py-2 px-3 rounded bg-[#253F4D] hover:bg-[#2C4959] border border-[#284250] text-center text-xs font-mono text-[#75A99A] hover:text-[#8BBDB0] flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <span>Inspect All Active Rings on Canvas</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-      </FadeContent>
-
-      {/* Bottom Section: Watchlist Entities & Fast Action Links */}
-      <FadeContent direction="up" delayMs={150} durationMs={300}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Watchlist Entities Table */}
-          <div className="lg:col-span-2 p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide font-sans">
-                  High-Priority Suspect Entities Under Active Surveillance
-                </h2>
-                <p className="text-xs text-[#82918E] font-mono">
-                  Accounts exhibiting anomalous topological centrality and high pass-through ratios
-                </p>
-              </div>
-              <Link
-                href="/investigations"
-                className="text-xs font-mono text-[#75A99A] hover:underline"
-              >
-                View in Workbench →
-              </Link>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-mono">
-                <thead>
-                  <tr className="border-b border-[#284250] text-[#82918E] text-[10px] uppercase">
-                    <th className="pb-2">Account ID</th>
-                    <th className="pb-2">Entity Name</th>
-                    <th className="pb-2">Typology Role</th>
-                    <th className="pb-2">Bank &amp; Jurisdiction</th>
-                    <th className="pb-2 text-right">Risk Score</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#284250]">
-                  {data.recent_high_risk_entities.map((entity, idx) => (
-                    <tr key={idx} className="hover:bg-[#253F4D]/60 transition-colors">
-                      <td className="py-2.5 font-bold text-[#75A99A]">
-                        {entity.account_id}
-                      </td>
-                      <td className="py-2.5 text-[#E8E5DA]">
-                        {entity.name}
-                      </td>
-                      <td className="py-2.5 text-[#A3B3AF]">
-                        {entity.typology}
-                      </td>
-                      <td className="py-2.5 text-[#82918E]">
-                        {entity.bank} ({entity.jurisdiction})
-                      </td>
-                      <td className="py-2.5 text-right font-bold text-[#C75B55]">
-                        {entity.risk_score.toFixed(1)}%
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Intelligence Modules Direct Routing */}
-          <div className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm space-y-3">
-            <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide font-sans mb-1">
-              Specialized Intelligence Portals
-            </h2>
-            <p className="text-xs text-[#82918E] font-mono mb-3">
-              Access domain-specific investigation engines
+            <p className="text-xs text-[#71717A] mb-3">
+              Laundering structures ranked by capital concentration
             </p>
 
-            <Link
-              href="/mule-intelligence"
-              className="flex items-center justify-between p-3 rounded-lg bg-[#172B35] hover:bg-[#253F4D] border border-[#284250] transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Users className="w-4 h-4 text-[#D5A24F]" />
-                <div>
-                  <p className="text-xs font-bold text-[#E8E5DA] group-hover:text-white font-sans">
-                    Mule Network Intelligence
-                  </p>
-                  <p className="text-[10px] text-[#82918E] font-mono">
-                    Pass-through velocity &amp; funnel hubs
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82918E] group-hover:text-[#75A99A]" />
-            </Link>
+            <div className="divide-y divide-white/[0.06]">
+              {data.typology_distribution.map((t, idx) => (
+                <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-[#FAFAFA] truncate">
+                      {t.typology}
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] font-mono text-[#71717A] mt-0.5">
+                      <span>{t.count} Rings</span>
+                      <span>·</span>
+                      <span className="text-rose-400 tabular-nums">{t.risk_pct}% Threat</span>
+                    </div>
+                  </div>
 
-            <Link
-              href="/cross-border"
-              className="flex items-center justify-between p-3 rounded-lg bg-[#172B35] hover:bg-[#253F4D] border border-[#284250] transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Globe2 className="w-4 h-4 text-[#75A99A]" />
-                <div>
-                  <p className="text-xs font-bold text-[#E8E5DA] group-hover:text-white font-sans">
-                    Cross-Border Routing
-                  </p>
-                  <p className="text-[10px] text-[#82918E] font-mono">
-                    INR → AED → USD foreign exchange
-                  </p>
+                  <div className="text-right shrink-0">
+                    <div className="font-mono font-medium text-[#FAFAFA] tabular-nums">
+                      {formatAmount(t.volume_usd, true)}
+                    </div>
+                    <Link
+                      href="/investigations"
+                      className="text-[10px] font-mono text-zinc-400 hover:text-white flex items-center justify-end gap-0.5 mt-0.5 group"
+                    >
+                      <span>Inspect</span>
+                      <ArrowUpRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82918E] group-hover:text-[#75A99A]" />
-            </Link>
+              ))}
+            </div>
+          </div>
 
-            <Link
-              href="/asset-intelligence"
-              className="flex items-center justify-between p-3 rounded-lg bg-[#172B35] hover:bg-[#253F4D] border border-[#284250] transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Building2 className="w-4 h-4 text-[#4D9477]" />
-                <div>
-                  <p className="text-xs font-bold text-[#E8E5DA] group-hover:text-white font-sans">
-                    Asset-Based AML
-                  </p>
-                  <p className="text-[10px] text-[#82918E] font-mono">
-                    24K Gold bullion &amp; prime real estate
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82918E] group-hover:text-[#75A99A]" />
-            </Link>
+          <Link
+            href="/investigations"
+            className="mt-4 w-full py-2 px-3 rounded bg-[#18181B] hover:bg-[#27272A] border border-white/[0.08] text-center text-xs font-mono font-medium text-[#FAFAFA] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <span>Launch Graph Visualizer</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </div>
 
+      {/* Bottom Section: High-Priority Entities & Specialized Intelligence */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Watchlist Entities Table */}
+        <div className="lg:col-span-2 card-fintech p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-[#FAFAFA]">
+                High-Priority Suspect Entities Under Intercept
+              </h2>
+              <p className="text-xs text-[#71717A] font-mono mt-0.5">
+                Accounts exhibiting anomalous topological centrality and high pass-through ratios
+              </p>
+            </div>
             <Link
-              href="/reports"
-              className="flex items-center justify-between p-3 rounded-lg bg-[#172B35] hover:bg-[#253F4D] border border-[#284250] transition-colors group"
+              href="/investigations"
+              className="text-xs font-mono text-zinc-400 hover:text-white"
             >
-              <div className="flex items-center gap-3">
-                <FileText className="w-4 h-4 text-[#6F9DB3]" />
-                <div>
-                  <p className="text-xs font-bold text-[#E8E5DA] group-hover:text-white font-sans">
-                    Regulatory SAR Center
-                  </p>
-                  <p className="text-[10px] text-[#82918E] font-mono">
-                    FinCEN Form 111 XML &amp; PDF reports
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82918E] group-hover:text-[#75A99A]" />
+              Workbench →
             </Link>
           </div>
+
+          <div className="overflow-x-auto pt-1">
+            <table className="w-full text-left text-xs font-mono">
+              <thead>
+                <tr className="border-b border-white/[0.08] text-[#71717A] text-[10px] uppercase">
+                  <th className="pb-2 font-normal">Account ID</th>
+                  <th className="pb-2 font-normal">Entity Name</th>
+                  <th className="pb-2 font-normal">Typology Role</th>
+                  <th className="pb-2 font-normal">Bank &amp; Jurisdiction</th>
+                  <th className="pb-2 font-normal text-right">Risk Score</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.05]">
+                {data.recent_high_risk_entities.map((entity, idx) => (
+                  <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-2.5 font-bold text-white tabular-nums">
+                      {entity.account_id}
+                    </td>
+                    <td className="py-2.5 text-[#FAFAFA] font-sans font-medium">
+                      {entity.name}
+                    </td>
+                    <td className="py-2.5 text-[#71717A]">
+                      {entity.typology}
+                    </td>
+                    <td className="py-2.5 text-[#71717A]">
+                      {entity.bank} ({entity.jurisdiction})
+                    </td>
+                    <td className="py-2.5 text-right font-bold text-[#EF4444] tabular-nums">
+                      {entity.risk_score.toFixed(1)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </FadeContent>
+
+        {/* Specialized Domain Portals */}
+        <div className="card-fintech p-5 space-y-3 flex flex-col justify-between">
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-[#FAFAFA]">
+              Specialized Sub-Engines
+            </h2>
+            <p className="text-xs text-[#71717A] font-mono mt-0.5 mb-3">
+              Domain-specific forensic pipelines
+            </p>
+
+            <div className="space-y-2">
+              <Link
+                href="/mule-intelligence"
+                className="flex items-center justify-between p-2.5 rounded bg-[#09090B] hover:bg-[#18181B] border border-white/[0.06] transition-colors group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Users className="w-3.5 h-3.5 text-[#71717A]" />
+                  <div>
+                    <p className="text-xs font-medium text-[#FAFAFA] font-sans">
+                      Mule Network Intelligence
+                    </p>
+                    <p className="text-[10px] text-[#71717A] font-mono">
+                      Sub-15m transit latency &amp; funnel hubs
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-3 h-3 text-[#71717A] group-hover:text-white transition-colors" />
+              </Link>
+
+              <Link
+                href="/cross-border"
+                className="flex items-center justify-between p-2.5 rounded bg-[#09090B] hover:bg-[#18181B] border border-white/[0.06] transition-colors group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Globe2 className="w-3.5 h-3.5 text-[#71717A]" />
+                  <div>
+                    <p className="text-xs font-medium text-[#FAFAFA] font-sans">
+                      Cross-Border Corridors
+                    </p>
+                    <p className="text-[10px] text-[#71717A] font-mono">
+                      INR → AED → USD FX layering checks
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-3 h-3 text-[#71717A] group-hover:text-white transition-colors" />
+              </Link>
+
+              <Link
+                href="/asset-intelligence"
+                className="flex items-center justify-between p-2.5 rounded bg-[#09090B] hover:bg-[#18181B] border border-white/[0.06] transition-colors group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Building2 className="w-3.5 h-3.5 text-[#71717A]" />
+                  <div>
+                    <p className="text-xs font-medium text-[#FAFAFA] font-sans">
+                      Asset &amp; Bullion Forensics
+                    </p>
+                    <p className="text-[10px] text-[#71717A] font-mono">
+                      Gold bar &amp; luxury property conversion
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-3 h-3 text-[#71717A] group-hover:text-white transition-colors" />
+              </Link>
+
+              <Link
+                href="/transactions"
+                className="flex items-center justify-between p-2.5 rounded bg-[#09090B] hover:bg-[#18181B] border border-white/[0.06] transition-colors group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Receipt className="w-3.5 h-3.5 text-[#71717A]" />
+                  <div>
+                    <p className="text-xs font-medium text-[#FAFAFA] font-sans">
+                      Transaction Audit Ledger
+                    </p>
+                    <p className="text-[10px] text-[#71717A] font-mono">
+                      Query, filter &amp; CSV export
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-3 h-3 text-[#71717A] group-hover:text-white transition-colors" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-[#71717A]">
+            <span>Model Version: GDS-Hybrid 2.4</span>
+            <span className="text-[#10B981]">Precision: 100%</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

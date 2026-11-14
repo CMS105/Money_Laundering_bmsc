@@ -16,7 +16,7 @@ export default function SpatialCard({
   className = '',
   onClick,
   selected = false,
-  tiltIntensity = 2.5,
+  tiltIntensity = 2,
   interactive = true,
 }: SpatialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -32,8 +32,8 @@ export default function SpatialCard({
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      const normX = (x / rect.width) * 2 - 1; // -1 to 1
-      const normY = (y / rect.height) * 2 - 1; // -1 to 1
+      const normX = (x / rect.width) * 2 - 1;
+      const normY = (y / rect.height) * 2 - 1;
 
       setRotateX(-normY * tiltIntensity);
       setRotateY(normX * tiltIntensity);
@@ -58,10 +58,7 @@ export default function SpatialCard({
   }, [interactive]);
 
   return (
-    <div
-      style={{ perspective: '1000px' }}
-      className="relative select-none"
-    >
+    <div style={{ perspective: '1000px' }} className="relative select-none">
       <div
         ref={cardRef}
         onClick={onClick}
@@ -73,30 +70,29 @@ export default function SpatialCard({
           transformStyle: 'preserve-3d',
           transition: isHovered
             ? 'transform 0.08s ease-out'
-            : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease',
+            : 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease',
         }}
-        className={`relative rounded-xl overflow-hidden backdrop-blur-xl border transition-colors ${
+        className={`relative rounded-md overflow-hidden transition-colors ${
           selected
-            ? 'border-[#75A99A]/50 bg-[#253F4D] shadow-[0_12px_32px_-8px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(117,169,154,0.3)] ring-1 ring-[#75A99A]/30'
-            : 'border-[#284250] bg-[#1E3541]/90 hover:border-[#75A99A]/30 hover:bg-[#1E3541] shadow-[0_8px_24px_-8px_rgba(18,34,42,0.6),inset_0_1px_0_0_rgba(232,229,218,0.06)]'
+            ? 'bg-[#18181B] border-t border-white/30 border-x border-b border-white/15 shadow-[0_8px_24px_rgba(0,0,0,0.8)]'
+            : 'bg-[#111114] border-t border-white/[0.10] border-x border-b border-white/[0.05] hover:border-white/[0.15] shadow-sm'
         } ${className}`}
       >
-        {/* Mouse Tracking Radial Specular Border Glow with Muted Teal sheen */}
+        {/* Subtle top-specular sheen */}
         {isHovered && interactive && (
           <div
             className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-100"
             style={{
-              background: `radial-gradient(400px circle at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(117, 169, 154, 0.12), transparent 60%)`,
+              background: `radial-gradient(350px circle at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(255, 255, 255, 0.06), transparent 65%)`,
             }}
           />
         )}
 
         {/* Selected subtle aura */}
         {selected && (
-          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-[#75A99A]/[0.08] to-transparent" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-white/[0.02]" />
         )}
 
-        {/* Card Content */}
         <div className="relative z-10">{children}</div>
       </div>
     </div>

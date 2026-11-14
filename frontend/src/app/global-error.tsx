@@ -11,20 +11,20 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen w-full flex items-center justify-center bg-[#172B35] text-[#E8E5DA] p-6 font-sans">
-        <div className="w-full max-w-md p-8 rounded-xl bg-[#1E3541] border border-[#284250] shadow-2xl text-center">
-          <h1 className="text-lg font-bold text-[#E8E5DA] mb-2">
+      <body className="min-h-screen w-full flex items-center justify-center bg-[#09090B] text-[#FAFAFA] p-6 font-sans">
+        <div className="w-full max-w-md p-8 rounded-md bg-[#111114] border border-[rgba(255,255,255,0.08)] shadow-2xl text-center">
+          <h1 className="text-lg font-bold text-[#FAFAFA] mb-2">
             Workspace Recovery Needed
           </h1>
-          <p className="text-xs text-[#82918E] mb-6">
+          <p className="text-xs text-[#71717A] mb-6">
             A critical root application error occurred. Click below to recover the session.
           </p>
           <button
             onClick={() => reset()}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#75A99A] hover:bg-[#8BBDB0] text-xs font-bold text-[#172B35] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#FAFAFA] hover:bg-[#8BBDB0] text-xs font-bold text-[#09090B] transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>Restart LaunderyLens Session</span>
+            <span>Restart LaunderLens Session</span>
           </button>
         </div>
       </body>

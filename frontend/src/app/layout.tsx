@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Manrope, IBM_Plex_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import '@xyflow/react/dist/style.css';
 import "./globals.css";
 import { CurrencyProvider } from "../context/CurrencyContext";
 import { AuthProvider } from "../context/AuthContext";
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const jetbrainsMono = JetBrains_Mono({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-mono',
@@ -20,8 +20,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LaunderyLens — Financial Crime Intelligence & Anti-Money Laundering Platform",
-  description: "Enterprise Graph Data Science, Temporal Network Analytics & FinCEN Form 111 Intelligence",
+  title: "LaunderLens — Institutional Financial Crime Intelligence Platform",
+  description: "Enterprise Graph Data Science, Temporal Network Analytics & FinCEN Form 111 Forensics modeled after Linear & Stripe Radar",
   icons: {
     icon: '/favicon.ico',
   },
@@ -33,8 +33,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`h-full ${manrope.variable} ${ibmPlexMono.variable}`}>
-      <body className="h-full flex flex-col antialiased bg-[#172B35] text-[#E8E5DA] selection:bg-[#75A99A]/30 selection:text-[#E8E5DA]">
+    <html lang="en" className={`h-full ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className="h-full flex flex-col antialiased bg-[#09090B] text-[#FAFAFA] selection:bg-white/20 selection:text-white font-sans">
         <AuthProvider>
           <CurrencyProvider>
             {children}

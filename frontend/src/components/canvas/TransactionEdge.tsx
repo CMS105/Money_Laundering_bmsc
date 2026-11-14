@@ -51,8 +51,8 @@ const TransactionEdge = ({
         path={edgePath}
         markerEnd={markerEnd}
         style={{
-          strokeWidth: 2,
-          stroke: '#4D6877',
+          strokeWidth: 1.5,
+          stroke: '#52525B',
           opacity: 0.85,
           ...style,
         }}
@@ -64,16 +64,16 @@ const TransactionEdge = ({
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: 'all',
           }}
-          className="nodrag nopan z-10 flex flex-col items-center gap-0.5 rounded-lg border border-[#284250] bg-[#1E3541]/95 px-2.5 py-1 shadow-[0_8px_20px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(232,229,218,0.1)] backdrop-blur-xl hover:border-[#75A99A]/50 hover:scale-105 transition-all cursor-default select-none"
+          className="nodrag nopan z-10 flex flex-col items-center gap-0.5 rounded border border-white/[0.1] bg-[#0C0C0E]/95 px-2 py-0.5 shadow-md backdrop-blur-md hover:border-white/25 hover:scale-105 transition-all cursor-default select-none"
         >
-          <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#E8E5DA] font-mono tabular-nums">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#FAFAFA] font-mono tabular-nums">
             <span>{formatAmount(amount, true)}</span>
-            <span className="text-[9px] font-medium text-[#82918E] px-1 py-0.2 rounded bg-[#253F4D] border border-[#284250]">
+            <span className="text-[8px] font-medium text-[#71717A] px-1 py-0.1 rounded bg-white/[0.04] border border-white/[0.06]">
               {paymentFormat}
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-[#82918E] font-mono tabular-nums">
-            <Clock className="w-2.5 h-2.5 text-[#D5A24F]" />
+          <div className="flex items-center gap-1 text-[9px] text-[#71717A] font-mono tabular-nums">
+            <Clock className="w-2.5 h-2.5 text-amber-400" />
             <span>{delay.toFixed(1)}m transit</span>
           </div>
         </div>

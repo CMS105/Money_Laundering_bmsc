@@ -141,27 +141,27 @@ export default function MuleIntelligencePage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#09090B] p-6 space-y-6">
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-[#1E3541] border border-[#75A99A] shadow-2xl text-xs font-mono text-[#E8E5DA]">
-          <CheckCircle2 className="w-4 h-4 text-[#4D9477]" />
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-[#111114] border border-[#FAFAFA] shadow-2xl text-xs font-mono text-[#FAFAFA]">
+          <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
           <span>{toast}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#284250]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase">
+            <h1 className="text-xl font-black text-[#FAFAFA] tracking-wide uppercase">
               Money Mule &amp; Conduit Account Intelligence
             </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#C75B55]/15 text-[#C75B55] border border-[#C75B55]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/30">
               5 Flagged Networks
             </span>
           </div>
-          <p className="text-xs text-[#82918E] font-mono mt-1">
+          <p className="text-xs text-[#71717A] font-mono mt-1">
             Rapid pass-through detection · Dwell latency analysis · Funnel hub isolation
           </p>
         </div>
@@ -169,45 +169,45 @@ export default function MuleIntelligencePage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250]">
-          <p className="text-xs font-mono text-[#82918E]">Average Pass-Through Ratio</p>
-          <p className="text-2xl font-black font-mono text-[#C75B55] mt-1 tabular-nums">97.3%</p>
-          <p className="text-[11px] text-[#82918E] font-mono mt-1">&lt; 3% capital retained on account</p>
+        <div className="p-4 rounded-md bg-[#111114] border border-[#27272A]">
+          <p className="text-xs font-mono text-[#71717A]">Average Pass-Through Ratio</p>
+          <p className="text-2xl font-black font-mono text-[#EF4444] mt-1 tabular-nums">97.3%</p>
+          <p className="text-[11px] text-[#71717A] font-mono mt-1">&lt; 3% capital retained on account</p>
         </div>
-        <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250]">
-          <p className="text-xs font-mono text-[#82918E]">Average Dwell Latency</p>
-          <p className="text-2xl font-black font-mono text-[#D5A24F] mt-1 tabular-nums">8.4 mins</p>
-          <p className="text-[11px] text-[#82918E] font-mono mt-1">Immediate liquidation into crypto/offshore</p>
+        <div className="p-4 rounded-md bg-[#111114] border border-[#27272A]">
+          <p className="text-xs font-mono text-[#71717A]">Average Dwell Latency</p>
+          <p className="text-2xl font-black font-mono text-[#F59E0B] mt-1 tabular-nums">8.4 mins</p>
+          <p className="text-[11px] text-[#71717A] font-mono mt-1">Immediate liquidation into crypto/offshore</p>
         </div>
-        <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250]">
-          <p className="text-xs font-mono text-[#82918E]">Quarantined Conduits</p>
-          <p className="text-2xl font-black font-mono text-[#4D9477] mt-1 tabular-nums">
+        <div className="p-4 rounded-md bg-[#111114] border border-[#27272A]">
+          <p className="text-xs font-mono text-[#71717A]">Quarantined Conduits</p>
+          <p className="text-2xl font-black font-mono text-[#10B981] mt-1 tabular-nums">
             {mules.filter((m) => m.quarantine_status === 'QUARANTINED').length} / {mules.length}
           </p>
-          <p className="text-[11px] text-[#82918E] font-mono mt-1">Under statutory debit freeze</p>
+          <p className="text-[11px] text-[#71717A] font-mono mt-1">Under statutory debit freeze</p>
         </div>
-        <div className="p-4 rounded-xl bg-[#1E3541] border border-[#284250]">
-          <p className="text-xs font-mono text-[#82918E]">Total Intercepted Conduit Flow</p>
-          <p className="text-2xl font-black font-mono text-[#75A99A] mt-1 tabular-nums">
+        <div className="p-4 rounded-md bg-[#111114] border border-[#27272A]">
+          <p className="text-xs font-mono text-[#71717A]">Total Intercepted Conduit Flow</p>
+          <p className="text-2xl font-black font-mono text-[#FAFAFA] mt-1 tabular-nums">
             {formatAmount(mules.reduce((acc, m) => acc + m.total_inflow_usd, 0))}
           </p>
-          <p className="text-[11px] text-[#82918E] font-mono mt-1">Aggregated across 5 detected rings</p>
+          <p className="text-[11px] text-[#71717A] font-mono mt-1">Aggregated across 5 detected rings</p>
         </div>
       </div>
 
       {/* Mule Accounts Table */}
-      <div className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm">
-        <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide mb-1">
+      <div className="p-5 rounded-md bg-[#111114] border border-[#27272A] shadow-sm">
+        <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-wide mb-1">
           Identified Money Mule Profiles &amp; Surveillance Status
         </h2>
-        <p className="text-xs text-[#82918E] font-mono mb-4">
+        <p className="text-xs text-[#71717A] font-mono mb-4">
           Ranked by pass-through velocity and law enforcement priority notice
         </p>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="border-b border-[#284250] text-[#82918E] text-[10px] uppercase">
+              <tr className="border-b border-[#27272A] text-[#71717A] text-[10px] uppercase">
                 <th className="pb-2">Mule ID / Account</th>
                 <th className="pb-2">Beneficiary &amp; Bank</th>
                 <th className="pb-2">Pass-Through %</th>
@@ -219,42 +219,42 @@ export default function MuleIntelligencePage() {
                 <th className="pb-2 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#284250]">
+            <tbody className="divide-y divide-[#27272A]">
               {mules.map((mule) => (
-                <tr key={mule.mule_id} className="hover:bg-[#253F4D]/50 transition-colors">
+                <tr key={mule.mule_id} className="hover:bg-[#18181B]/50 transition-colors">
                   <td className="py-3">
-                    <span className="font-bold text-[#75A99A] block">{mule.mule_id}</span>
-                    <span className="text-[11px] text-[#82918E]">{mule.account_id}</span>
+                    <span className="font-bold text-[#FAFAFA] block">{mule.mule_id}</span>
+                    <span className="text-[11px] text-[#71717A]">{mule.account_id}</span>
                   </td>
                   <td className="py-3">
-                    <span className="font-bold text-[#E8E5DA] block">{mule.beneficiary_name}</span>
-                    <span className="text-[11px] text-[#82918E]">{mule.bank}</span>
+                    <span className="font-bold text-[#FAFAFA] block">{mule.beneficiary_name}</span>
+                    <span className="text-[11px] text-[#71717A]">{mule.bank}</span>
                   </td>
-                  <td className="py-3 font-bold text-[#C75B55] tabular-nums">
+                  <td className="py-3 font-bold text-[#EF4444] tabular-nums">
                     {mule.pass_through_ratio.toFixed(1)}%
                   </td>
-                  <td className="py-3 text-[#D5A24F] tabular-nums">
+                  <td className="py-3 text-[#F59E0B] tabular-nums">
                     {mule.dwell_time_mins} mins
                   </td>
                   <td className="py-3 tabular-nums">
-                    <span className="text-[#4D9477] block">+{formatAmount(mule.total_inflow_usd)}</span>
-                    <span className="text-[#C75B55] block">-{formatAmount(mule.total_outflow_usd)}</span>
+                    <span className="text-[#10B981] block">+{formatAmount(mule.total_inflow_usd)}</span>
+                    <span className="text-[#EF4444] block">-{formatAmount(mule.total_outflow_usd)}</span>
                   </td>
-                  <td className="py-3 text-[#82918E]">
+                  <td className="py-3 text-[#71717A]">
                     In: {mule.counterparty_in_count} | Out: {mule.counterparty_out_count}
                   </td>
                   <td className="py-3">
-                    <span className="text-[10px] font-bold text-[#C75B55] bg-[#C75B55]/10 border border-[#C75B55]/30 px-1.5 py-0.5 rounded block w-fit">
+                    <span className="text-[10px] font-bold text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/30 px-1.5 py-0.5 rounded block w-fit">
                       {mule.police_flag}
                     </span>
-                    <span className="text-[10px] text-[#82918E] block mt-0.5">{mule.linked_syndicate}</span>
+                    <span className="text-[10px] text-[#71717A] block mt-0.5">{mule.linked_syndicate}</span>
                   </td>
                   <td className="py-3">
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                         mule.quarantine_status === 'QUARANTINED'
-                          ? 'bg-[#C75B55]/10 text-[#C75B55] border-[#C75B55]/30'
-                          : 'bg-[#D5A24F]/10 text-[#D5A24F] border-[#D5A24F]/30'
+                          ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
+                          : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30'
                       }`}
                     >
                       {mule.quarantine_status}
@@ -265,8 +265,8 @@ export default function MuleIntelligencePage() {
                       onClick={() => handleToggleQuarantine(mule.account_id)}
                       className={`px-2.5 py-1 rounded text-[11px] font-bold transition-colors cursor-pointer border ${
                         mule.quarantine_status === 'QUARANTINED'
-                          ? 'bg-[#253F4D] text-[#82918E] border-[#284250] hover:text-white'
-                          : 'bg-[#C75B55]/20 text-[#C75B55] border-[#C75B55]/40 hover:bg-[#C75B55]/30'
+                          ? 'bg-[#18181B] text-[#71717A] border-[#27272A] hover:text-white'
+                          : 'bg-[#EF4444]/20 text-[#EF4444] border-[#EF4444]/40 hover:bg-[#EF4444]/30'
                       }`}
                     >
                       {mule.quarantine_status === 'QUARANTINED' ? 'Unfreeze' : 'Quarantine'}

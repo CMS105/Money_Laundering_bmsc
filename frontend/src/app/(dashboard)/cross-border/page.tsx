@@ -129,19 +129,19 @@ export default function CrossBorderPage() {
   }, []);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#09090B] p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#284250]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase">
+            <h1 className="text-xl font-black text-[#FAFAFA] tracking-wide uppercase">
               Cross-Border &amp; Multi-Currency Routing Intelligence
             </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#75A99A]/15 text-[#75A99A] border border-[#75A99A]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FAFAFA]/15 text-[#FAFAFA] border border-[#FAFAFA]/30">
               4 Active Corridors
             </span>
           </div>
-          <p className="text-xs text-[#82918E] font-mono mt-1">
+          <p className="text-xs text-[#71717A] font-mono mt-1">
             INR → AED → USD foreign exchange telemetry · FATF Enhanced Due Diligence · SWIFT MT103 routing
           </p>
         </div>
@@ -152,20 +152,20 @@ export default function CrossBorderPage() {
         {routes.map((route) => (
           <div
             key={route.route_id}
-            className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm space-y-4"
+            className="p-5 rounded-md bg-[#111114] border border-[#27272A] shadow-sm space-y-4"
           >
             {/* Top row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#284250] pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#27272A] pb-3">
               <div className="flex items-center gap-3">
-                <span className="text-xs font-mono font-bold text-[#75A99A] bg-[#253F4D] px-2 py-0.5 rounded border border-[#284250]">
+                <span className="text-xs font-mono font-bold text-[#FAFAFA] bg-[#18181B] px-2 py-0.5 rounded border border-[#27272A]">
                   {route.route_id}
                 </span>
-                <span className="text-sm font-bold text-[#E8E5DA]">
+                <span className="text-sm font-bold text-[#FAFAFA]">
                   {route.typology}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-[#C75B55] bg-[#C75B55]/10 border border-[#C75B55]/30 px-2 py-0.5 rounded">
+                <span className="text-xs font-mono font-bold text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/30 px-2 py-0.5 rounded">
                   {route.risk_score.toFixed(1)}% Threat Score
                 </span>
               </div>
@@ -174,45 +174,45 @@ export default function CrossBorderPage() {
             {/* 3-Hop Multi-Currency Visual Chain */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
               {/* Origin */}
-              <div className="p-3 rounded-lg bg-[#172B35] border border-[#284250]">
-                <p className="text-[10px] uppercase font-mono text-[#82918E]">Originating Node</p>
-                <p className="text-xs font-bold text-[#E8E5DA] mt-0.5">{route.origin_city}, {route.origin_country}</p>
-                <p className="text-[11px] text-[#82918E] font-mono">{route.origin_bank}</p>
-                <p className="text-xs font-bold text-[#4D9477] font-mono mt-2 tabular-nums">
+              <div className="p-3 rounded-lg bg-[#09090B] border border-[#27272A]">
+                <p className="text-[10px] uppercase font-mono text-[#71717A]">Originating Node</p>
+                <p className="text-xs font-bold text-[#FAFAFA] mt-0.5">{route.origin_city}, {route.origin_country}</p>
+                <p className="text-[11px] text-[#71717A] font-mono">{route.origin_bank}</p>
+                <p className="text-xs font-bold text-[#10B981] font-mono mt-2 tabular-nums">
                   {route.source_currency} {route.source_amount.toLocaleString()}
                 </p>
               </div>
 
               {/* Intermediary Hop */}
-              <div className="p-3 rounded-lg bg-[#172B35] border border-[#284250]">
-                <p className="text-[10px] uppercase font-mono text-[#D5A24F]">Intermediary Offshore Conduit</p>
-                <p className="text-xs font-bold text-[#E8E5DA] mt-0.5">{route.intermediary_country}</p>
-                <p className="text-[11px] text-[#82918E] font-mono">{route.intermediary_bank}</p>
-                <p className="text-xs font-bold text-[#D5A24F] font-mono mt-2 tabular-nums">
+              <div className="p-3 rounded-lg bg-[#09090B] border border-[#27272A]">
+                <p className="text-[10px] uppercase font-mono text-[#F59E0B]">Intermediary Offshore Conduit</p>
+                <p className="text-xs font-bold text-[#FAFAFA] mt-0.5">{route.intermediary_country}</p>
+                <p className="text-[11px] text-[#71717A] font-mono">{route.intermediary_bank}</p>
+                <p className="text-xs font-bold text-[#F59E0B] font-mono mt-2 tabular-nums">
                   {route.intermediary_currency} {route.intermediary_amount.toLocaleString()}
                 </p>
               </div>
 
               {/* Destination */}
-              <div className="p-3 rounded-lg bg-[#172B35] border border-[#284250]">
-                <p className="text-[10px] uppercase font-mono text-[#C75B55]">Destination Liquidation Sink</p>
-                <p className="text-xs font-bold text-[#E8E5DA] mt-0.5">{route.destination_city}, {route.destination_country}</p>
-                <p className="text-[11px] text-[#82918E] font-mono">{route.destination_bank}</p>
-                <p className="text-xs font-bold text-[#75A99A] font-mono mt-2 tabular-nums">
+              <div className="p-3 rounded-lg bg-[#09090B] border border-[#27272A]">
+                <p className="text-[10px] uppercase font-mono text-[#EF4444]">Destination Liquidation Sink</p>
+                <p className="text-xs font-bold text-[#FAFAFA] mt-0.5">{route.destination_city}, {route.destination_country}</p>
+                <p className="text-[11px] text-[#71717A] font-mono">{route.destination_bank}</p>
+                <p className="text-xs font-bold text-[#FAFAFA] font-mono mt-2 tabular-nums">
                   {route.destination_currency} {route.destination_amount.toLocaleString()}
                 </p>
               </div>
             </div>
 
             {/* Compliance Telemetry Footer */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-xs font-mono text-[#82918E]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-xs font-mono text-[#71717A]">
               <div className="flex items-center gap-2">
-                <span className="text-[#C75B55] font-bold">FATF Assessment:</span>
-                <span className="text-[#E8E5DA]">{route.fatf_jurisdiction_risk}</span>
+                <span className="text-[#EF4444] font-bold">FATF Assessment:</span>
+                <span className="text-[#FAFAFA]">{route.fatf_jurisdiction_risk}</span>
               </div>
               <div className="flex items-center gap-4">
-                <span>FX Spread Discrepancy: <strong className="text-[#D5A24F]">{route.fx_spread_anomaly_pct}%</strong></span>
-                <span>Transit Window: <strong className="text-[#E8E5DA]">{route.transit_duration_hours} hours</strong></span>
+                <span>FX Spread Discrepancy: <strong className="text-[#F59E0B]">{route.fx_spread_anomaly_pct}%</strong></span>
+                <span>Transit Window: <strong className="text-[#FAFAFA]">{route.transit_duration_hours} hours</strong></span>
               </div>
             </div>
           </div>

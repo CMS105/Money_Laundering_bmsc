@@ -127,19 +127,19 @@ export default function NetworkAnalysisPage() {
   const gm = data.graph_metrics;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#09090B] p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#284250]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase">
+            <h1 className="text-xl font-black text-[#FAFAFA] tracking-wide uppercase">
               Network Science &amp; Graph Topology Engine
             </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#75A99A]/15 text-[#75A99A] border border-[#75A99A]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FAFAFA]/15 text-[#FAFAFA] border border-[#FAFAFA]/30">
               NetworkX Digraph
             </span>
           </div>
-          <p className="text-xs text-[#82918E] font-mono mt-1">
+          <p className="text-xs text-[#71717A] font-mono mt-1">
             Betweenness centrality choke-points · Louvain modularity communities · Temporal cycle detection
           </p>
         </div>
@@ -147,53 +147,53 @@ export default function NetworkAnalysisPage() {
 
       {/* Graph Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Nodes</p>
-          <p className="text-lg font-black text-[#E8E5DA] font-mono mt-0.5">{gm.node_count}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Nodes</p>
+          <p className="text-lg font-black text-[#FAFAFA] font-mono mt-0.5">{gm.node_count}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Edges</p>
-          <p className="text-lg font-black text-[#75A99A] font-mono mt-0.5">{gm.edge_count}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Edges</p>
+          <p className="text-lg font-black text-[#FAFAFA] font-mono mt-0.5">{gm.edge_count}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Avg Degree</p>
-          <p className="text-lg font-black text-[#E8E5DA] font-mono mt-0.5">{gm.average_degree}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Avg Degree</p>
+          <p className="text-lg font-black text-[#FAFAFA] font-mono mt-0.5">{gm.average_degree}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Density</p>
-          <p className="text-lg font-black text-[#E8E5DA] font-mono mt-0.5">{gm.graph_density}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Density</p>
+          <p className="text-lg font-black text-[#FAFAFA] font-mono mt-0.5">{gm.graph_density}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Clustering Coeff</p>
-          <p className="text-lg font-black text-[#4D9477] font-mono mt-0.5">{gm.clustering_coefficient}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Clustering Coeff</p>
+          <p className="text-lg font-black text-[#10B981] font-mono mt-0.5">{gm.clustering_coefficient}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Communities</p>
-          <p className="text-lg font-black text-[#D5A24F] font-mono mt-0.5">{gm.number_of_communities}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Communities</p>
+          <p className="text-lg font-black text-[#F59E0B] font-mono mt-0.5">{gm.number_of_communities}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">Diameter</p>
-          <p className="text-lg font-black text-[#E8E5DA] font-mono mt-0.5">{gm.diameter}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">Diameter</p>
+          <p className="text-lg font-black text-[#FAFAFA] font-mono mt-0.5">{gm.diameter}</p>
         </div>
-        <div className="p-3 rounded-lg bg-[#1E3541] border border-[#284250] text-center">
-          <p className="text-[10px] text-[#82918E] font-mono uppercase">SCC Components</p>
-          <p className="text-lg font-black text-[#C75B55] font-mono mt-0.5">{gm.strongly_connected_components}</p>
+        <div className="p-3 rounded-lg bg-[#111114] border border-[#27272A] text-center">
+          <p className="text-[10px] text-[#71717A] font-mono uppercase">SCC Components</p>
+          <p className="text-lg font-black text-[#EF4444] font-mono mt-0.5">{gm.strongly_connected_components}</p>
         </div>
       </div>
 
       {/* Centrality Choke-Points Table */}
-      <div className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm">
-        <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide mb-1">
+      <div className="p-5 rounded-md bg-[#111114] border border-[#27272A] shadow-sm">
+        <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-wide mb-1">
           Top Betweenness Centrality Choke-Points &amp; Hub Nodes
         </h2>
-        <p className="text-xs text-[#82918E] font-mono mb-4">
+        <p className="text-xs text-[#71717A] font-mono mb-4">
           Nodes bridging disconnected banking components—critical points for transaction intercept
         </p>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="border-b border-[#284250] text-[#82918E] text-[10px] uppercase">
+              <tr className="border-b border-[#27272A] text-[#71717A] text-[10px] uppercase">
                 <th className="pb-2.5">Account ID</th>
                 <th className="pb-2.5">Entity Name</th>
                 <th className="pb-2.5">Betweenness Centrality</th>
@@ -203,28 +203,28 @@ export default function NetworkAnalysisPage() {
                 <th className="pb-2.5 text-right">Risk Score</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#284250]">
+            <tbody className="divide-y divide-[#27272A]">
               {data.top_centrality_nodes.map((node) => (
-                <tr key={node.account_id} className="hover:bg-[#253F4D]/50 transition-colors">
-                  <td className="py-3 font-bold text-[#75A99A]">
+                <tr key={node.account_id} className="hover:bg-[#18181B]/50 transition-colors">
+                  <td className="py-3 font-bold text-[#FAFAFA]">
                     {node.account_id}
                   </td>
-                  <td className="py-3 font-bold text-[#E8E5DA]">
+                  <td className="py-3 font-bold text-[#FAFAFA]">
                     {node.name}
                   </td>
-                  <td className="py-3 font-bold text-[#D5A24F] tabular-nums">
+                  <td className="py-3 font-bold text-[#F59E0B] tabular-nums">
                     {node.betweenness_centrality.toFixed(4)}
                   </td>
-                  <td className="py-3 text-[#4D9477] tabular-nums">
+                  <td className="py-3 text-[#10B981] tabular-nums">
                     {node.pagerank.toFixed(4)}
                   </td>
-                  <td className="py-3 text-[#82918E]">
+                  <td className="py-3 text-[#71717A]">
                     In: {node.in_degree} | Out: {node.out_degree}
                   </td>
-                  <td className="py-3 text-[#E8E5DA]">
+                  <td className="py-3 text-[#FAFAFA]">
                     {node.role}
                   </td>
-                  <td className="py-3 text-right font-bold text-[#C75B55]">
+                  <td className="py-3 text-right font-bold text-[#EF4444]">
                     {node.risk_score.toFixed(1)}%
                   </td>
                 </tr>
@@ -235,33 +235,33 @@ export default function NetworkAnalysisPage() {
       </div>
 
       {/* Communities Table */}
-      <div className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm">
-        <h2 className="text-sm font-bold text-[#E8E5DA] uppercase tracking-wide mb-1">
+      <div className="p-5 rounded-md bg-[#111114] border border-[#27272A] shadow-sm">
+        <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-wide mb-1">
           Louvain Modularity Communities &amp; Laundering Rings
         </h2>
-        <p className="text-xs text-[#82918E] font-mono mb-4">
+        <p className="text-xs text-[#71717A] font-mono mb-4">
           Isolated subgraphs with dense internal connectivity and high reciprocal flow
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.communities.map((comm) => (
-            <div key={comm.id} className="p-4 rounded-lg bg-[#172B35] border border-[#284250] space-y-2">
+            <div key={comm.id} className="p-4 rounded-lg bg-[#09090B] border border-[#27272A] space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-[#75A99A] font-bold">Community #{comm.id}</span>
+                <span className="text-[#FAFAFA] font-bold">Community #{comm.id}</span>
                 <span
                   className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${
                     comm.risk_level === 'CRITICAL'
-                      ? 'bg-[#C75B55]/10 text-[#C75B55] border-[#C75B55]/30'
-                      : 'bg-[#D5A24F]/10 text-[#D5A24F] border-[#D5A24F]/30'
+                      ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
+                      : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30'
                   }`}
                 >
                   {comm.risk_level}
                 </span>
               </div>
-              <p className="text-xs font-bold text-[#E8E5DA]">{comm.name}</p>
-              <div className="flex items-center justify-between text-xs font-mono text-[#82918E] pt-1 border-t border-[#284250]">
+              <p className="text-xs font-bold text-[#FAFAFA]">{comm.name}</p>
+              <div className="flex items-center justify-between text-xs font-mono text-[#71717A] pt-1 border-t border-[#27272A]">
                 <span>{comm.size} Entities</span>
-                <span className="text-[#75A99A] font-bold">{formatAmount(comm.total_volume_usd)}</span>
+                <span className="text-[#FAFAFA] font-bold">{formatAmount(comm.total_volume_usd)}</span>
               </div>
             </div>
           ))}

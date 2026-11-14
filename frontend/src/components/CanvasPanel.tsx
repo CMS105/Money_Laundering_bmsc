@@ -64,7 +64,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
     const clusterNodes = cluster.nodes;
     const clusterEdges = cluster.edges;
     const typology = cluster.typology;
-    // Topology-specific layout coordinate calculation with generous clearance
+
     const calculatedNodes: Node[] = clusterNodes.map((n, index) => {
       let x = 200;
       let y = 200;
@@ -135,9 +135,9 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       },
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        width: 14,
-        height: 14,
-        color: idx + 1 <= currentStep ? '#75A99A' : '#4D6877',
+        width: 12,
+        height: 12,
+        color: idx + 1 <= currentStep ? '#FAFAFA' : '#52525B',
       },
     }));
 
@@ -167,10 +167,10 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
 
   if (!cluster) {
     return (
-      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-[#12222A] text-[#82918E]">
+      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-[#09090B] text-[#71717A]">
         <div className="text-center space-y-2">
-          <Network className="w-10 h-10 mx-auto text-[#75A99A]/50 animate-pulse" />
-          <p className="text-sm font-medium font-mono text-[#82918E]">Select a cluster from the left panel to inspect graph topology</p>
+          <Network className="w-8 h-8 mx-auto text-zinc-600 animate-pulse" />
+          <p className="text-xs font-mono text-[#71717A]">Select a cluster from the ledger to inspect graph topology</p>
         </div>
       </main>
     );
@@ -180,51 +180,51 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
   const currentEdge = cluster.edges[currentStep - 1] || cluster.edges[0];
 
   return (
-    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-[#12222A] flex flex-col overflow-hidden">
-      {/* Top Architectural Command Pill */}
-      <div className="absolute top-3.5 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-[#09090B] flex flex-col overflow-hidden font-sans">
+      {/* Top Floating Command Pill */}
+      <div className="absolute top-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
         {/* Active Cluster Pill */}
-        <div className="pointer-events-auto flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#1E3541]/95 border border-[#284250] shadow-[0_12px_28px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(232,229,218,0.1)] backdrop-blur-xl">
+        <div className="pointer-events-auto flex items-center gap-2.5 px-3 py-1.5 rounded-md bg-[#0C0C0E]/95 border border-white/[0.08] shadow-lg backdrop-blur-md">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-mono font-bold text-[#E8E5DA]">
+            <span className="text-xs font-mono font-bold text-[#FAFAFA]">
               {cluster.cluster_id}
             </span>
-            <span className={`text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded border ${meta.bgBadge}`}>
+            <span className="text-[9px] font-mono font-semibold uppercase px-1.5 py-0.2 rounded bg-[#18181B] text-zinc-300 border border-white/[0.08]">
               {meta.label}
             </span>
           </div>
 
-          <div className="h-3 w-px bg-[#284250]" />
+          <div className="h-3 w-px bg-white/[0.08]" />
 
-          <div className="text-xs font-mono font-bold text-[#E8E5DA] tabular-nums">
+          <div className="text-xs font-mono font-semibold text-[#FAFAFA] tabular-nums">
             {formatAmount(cluster.total_volume, true)}
           </div>
 
-          <div className="h-3 w-px bg-[#284250]" />
+          <div className="h-3 w-px bg-white/[0.08]" />
 
-          <div className="text-[10px] text-[#82918E] font-mono tabular-nums">
+          <div className="text-[10px] text-[#71717A] font-mono tabular-nums">
             {cluster.nodes.length} Nodes · {cluster.edges.length} Hops
           </div>
         </div>
 
         {/* Legend */}
-        <div className="pointer-events-auto flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#1E3541]/95 border border-[#284250] shadow-[0_12px_28px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(232,229,218,0.1)] backdrop-blur-xl text-[11px] text-[#E8E5DA]">
+        <div className="pointer-events-auto flex items-center gap-3 px-3 py-1.5 rounded-md bg-[#0C0C0E]/95 border border-white/[0.08] shadow-lg backdrop-blur-md text-[10px] font-mono text-zinc-400">
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#4D9477] shadow-[0_0_6px_rgba(77,148,119,0.7)]" />
-            <span className="text-[10px] font-mono text-[#E8E5DA]">Origin / Entry</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>Origin</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#D5A24F] shadow-[0_0_6px_rgba(213,162,79,0.7)]" />
-            <span className="text-[10px] font-mono text-[#E8E5DA]">Mule Conduit</span>
+            <span className="w-2 h-2 rounded-full bg-amber-400" />
+            <span>Mule</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#C75B55] shadow-[0_0_6px_rgba(199,91,85,0.7)]" />
-            <span className="text-[10px] font-mono text-[#E8E5DA]">Sink / Exit</span>
+            <span className="w-2 h-2 rounded-full bg-rose-400" />
+            <span>Sink</span>
           </div>
         </div>
       </div>
 
-      {/* React Flow Interactive Canvas Wrapper */}
+      {/* React Flow Interactive Stage */}
       <div
         className="flex-1 min-h-0 w-full h-full min-h-[500px] relative"
         style={{ width: '100%', height: '100%', minHeight: '500px' }}
@@ -243,65 +243,65 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           defaultEdgeOptions={{
             type: 'transactionEdge',
           }}
-          className="bg-[#12222A]"
+          className="bg-[#09090B]"
           style={{ width: '100%', height: '100%' }}
         >
           <Background
             variant={BackgroundVariant.Dots}
-            gap={24}
-            size={1.2}
-            color="rgba(117, 169, 154, 0.12)"
+            gap={20}
+            size={1}
+            color="#1F1F23"
           />
           <Controls
-            className="!bg-[#1E3541] !border-[#284250] !rounded-lg !shadow-2xl overflow-hidden [&>button]:!bg-[#1E3541] [&>button]:!border-[#284250] [&>button]:!fill-[#E8E5DA] hover:[&>button]:!bg-[#253F4D]"
+            className="!bg-[#0C0C0E] !border-white/[0.08] !rounded-md !shadow-xl overflow-hidden [&>button]:!bg-[#0C0C0E] [&>button]:!border-white/[0.06] [&>button]:!fill-[#FAFAFA] hover:[&>button]:!bg-white/[0.06]"
           />
           <MiniMap
             nodeColor={(node) => {
               const role = (node.data?.role as string) || '';
-              if (role === 'entry') return '#4D9477';
-              if (role === 'exit') return '#C75B55';
-              return '#D5A24F';
+              if (role === 'entry') return '#10B981';
+              if (role === 'exit') return '#EF4444';
+              return '#F59E0B';
             }}
-            maskColor="rgba(18, 34, 42, 0.85)"
-            className="!bg-[#1E3541] !border !border-[#284250] !rounded-lg overflow-hidden !shadow-2xl"
+            maskColor="rgba(9, 9, 11, 0.85)"
+            className="!bg-[#0C0C0E] !border !border-white/[0.08] !rounded-md overflow-hidden !shadow-xl"
           />
         </ReactFlow>
       </div>
 
       {/* Floating Glassmorphic Temporal Scrubber Dock */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-xl pointer-events-auto">
-        <div className="rounded-xl p-2.5 bg-[#1E3541]/95 border border-[#284250] shadow-[0_20px_50px_rgba(18,34,42,0.85),inset_0_1px_0_0_rgba(232,229,218,0.12)] backdrop-blur-2xl space-y-2">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[90%] max-w-lg pointer-events-auto">
+        <div className="rounded-md p-2.5 backdrop-blur-md bg-zinc-950/80 border border-white/10 shadow-2xl space-y-2">
           {/* Top Scrubber Row: Controls + Timestamp Info */}
           <div className="flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <button
                 onClick={() => setCurrentStep(1)}
-                className="p-1.5 rounded-md hover:bg-[#253F4D] text-[#82918E] hover:text-[#E8E5DA] transition-colors cursor-pointer"
+                className="p-1 rounded hover:bg-white/[0.06] text-[#71717A] hover:text-[#FAFAFA] transition-colors cursor-pointer"
                 title="Reset to Step 1"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
-                className="p-1.5 rounded-md hover:bg-[#253F4D] text-[#82918E] hover:text-[#E8E5DA] transition-colors cursor-pointer"
+                className="p-1 rounded hover:bg-white/[0.06] text-[#71717A] hover:text-[#FAFAFA] transition-colors cursor-pointer"
                 title="Previous Hop"
               >
                 <SkipBack className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="p-1.5 rounded-md bg-[#75A99A] text-[#172B35] font-bold hover:bg-[#8BBDB0] transition-colors cursor-pointer shadow-sm"
-                title={isPlaying ? 'Pause Playback' : 'Replay Money Trail'}
+                className="p-1.5 rounded bg-[#FAFAFA] text-[#09090B] font-semibold hover:bg-zinc-200 transition-colors cursor-pointer shadow-sm"
+                title={isPlaying ? 'Pause' : 'Replay Trail'}
               >
                 {isPlaying ? (
-                  <Pause className="w-3.5 h-3.5 fill-current" />
+                  <Pause className="w-3 h-3 fill-current" />
                 ) : (
-                  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                  <Play className="w-3 h-3 fill-current ml-0.5" />
                 )}
               </button>
               <button
                 onClick={() => setCurrentStep((prev) => Math.min(totalSteps, prev + 1))}
-                className="p-1.5 rounded-md hover:bg-[#253F4D] text-[#82918E] hover:text-[#E8E5DA] transition-colors cursor-pointer"
+                className="p-1 rounded hover:bg-white/[0.06] text-[#71717A] hover:text-[#FAFAFA] transition-colors cursor-pointer"
                 title="Next Hop"
               >
                 <SkipForward className="w-3.5 h-3.5" />
@@ -309,13 +309,13 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
             </div>
 
             {/* Current Step Readout */}
-            <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-[#E8E5DA]">
-              <span className="font-bold text-[#E8E5DA]">
+            <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-zinc-300">
+              <span className="font-semibold text-white">
                 Step {currentStep} / {totalSteps}
               </span>
-              <span className="text-[#82918E]">·</span>
-              <div className="flex items-center gap-1 text-[#82918E]">
-                <Clock className="w-3 h-3 text-[#D5A24F]" />
+              <span className="text-[#52525B]">·</span>
+              <div className="flex items-center gap-1 text-[#71717A]">
+                <Clock className="w-3 h-3 text-amber-400" />
                 <span>
                   {currentEdge ? `${currentEdge.hop_delay_mins.toFixed(1)}m transit` : '0m'}
                 </span>
@@ -323,13 +323,13 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
             </div>
 
             {/* Amount at Current Hop */}
-            <div className="text-[11px] font-mono font-bold text-[#4D9477] tabular-nums">
+            <div className="text-[11px] font-mono font-bold text-white tabular-nums">
               {currentEdge ? formatAmount(currentEdge.amount, true) : '$0'}
             </div>
           </div>
 
           {/* Scrubber Range Track with Precision Ticks */}
-          <div className="relative pt-1">
+          <div className="relative pt-0.5">
             <input
               type="range"
               min={1}
@@ -337,14 +337,14 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
               step={1}
               value={currentStep}
               onChange={(e) => setCurrentStep(parseInt(e.target.value, 10))}
-              className="w-full h-1.5 bg-[#253F4D] rounded-lg appearance-none cursor-pointer accent-[#75A99A]"
+              className="w-full h-1 bg-[#27272A] rounded appearance-none cursor-pointer accent-[#FAFAFA]"
             />
             {/* Precision Tick Marks */}
-            <div className="flex justify-between px-1 pt-1 text-[8px] font-mono text-[#82918E]">
+            <div className="flex justify-between px-0.5 pt-1 text-[8px] font-mono text-[#52525B]">
               {Array.from({ length: totalSteps }).map((_, i) => (
                 <span
                   key={i}
-                  className={i + 1 <= currentStep ? 'text-[#E8E5DA] font-bold' : ''}
+                  className={i + 1 <= currentStep ? 'text-zinc-300 font-semibold' : ''}
                 >
                   T{i + 1}
                 </span>

@@ -127,27 +127,27 @@ export default function DatasetsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#172B35] p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#09090B] p-6 space-y-6">
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-[#1E3541] border border-[#75A99A] shadow-2xl text-xs font-mono text-[#E8E5DA]">
-          <CheckCircle2 className="w-4 h-4 text-[#4D9477]" />
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-[#111114] border border-[#FAFAFA] shadow-2xl text-xs font-mono text-[#FAFAFA]">
+          <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
           <span>{toast}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#284250]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#E8E5DA] tracking-wide uppercase">
+            <h1 className="text-xl font-black text-[#FAFAFA] tracking-wide uppercase">
               Multi-Source Kaggle Dataset Catalog &amp; Ingestion Engine
             </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#4D9477]/15 text-[#4D9477] border border-[#4D9477]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
               5 Active Telemetry Datasets
             </span>
           </div>
-          <p className="text-xs text-[#82918E] font-mono mt-1">
+          <p className="text-xs text-[#71717A] font-mono mt-1">
             Core banking wires · Elliptic bitcoin forensic graph · SWIFT cross-border corridors · High-value real estate &amp; gold
           </p>
         </div>
@@ -158,26 +158,26 @@ export default function DatasetsPage() {
         {datasets.map((ds) => (
           <div
             key={ds.id}
-            className="p-5 rounded-xl bg-[#1E3541] border border-[#284250] shadow-sm space-y-4"
+            className="p-5 rounded-md bg-[#111114] border border-[#27272A] shadow-sm space-y-4"
           >
             {/* Top Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#284250] pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#27272A] pb-3">
               <div>
                 <div className="flex items-center gap-2.5">
-                  <span className="text-[10px] font-mono font-bold text-[#75A99A] bg-[#253F4D] px-2 py-0.5 rounded border border-[#284250]">
+                  <span className="text-[10px] font-mono font-bold text-[#FAFAFA] bg-[#18181B] px-2 py-0.5 rounded border border-[#27272A]">
                     {ds.category}
                   </span>
                   <span
                     className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                       ds.status === 'INGESTED_ACTIVE'
-                        ? 'bg-[#4D9477]/10 text-[#4D9477] border-[#4D9477]/30'
-                        : 'bg-[#75A99A]/10 text-[#75A99A] border-[#75A99A]/30'
+                        ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/30'
+                        : 'bg-[#FAFAFA]/10 text-[#FAFAFA] border-[#FAFAFA]/30'
                     }`}
                   >
                     {ds.status}
                   </span>
                 </div>
-                <h2 className="text-sm font-bold text-[#E8E5DA] mt-1.5">
+                <h2 className="text-sm font-bold text-[#FAFAFA] mt-1.5">
                   {ds.name}
                 </h2>
               </div>
@@ -185,7 +185,7 @@ export default function DatasetsPage() {
               <button
                 onClick={() => handleSync(ds)}
                 disabled={syncingId === ds.id}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#253F4D] hover:bg-[#284250] border border-[#284250] text-xs font-mono font-bold text-[#75A99A] transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-mono font-bold text-[#FAFAFA] transition-colors cursor-pointer shrink-0 disabled:opacity-50"
               >
                 <RefreshCw
                   className={`w-3.5 h-3.5 ${syncingId === ds.id ? 'animate-spin' : ''}`}
@@ -195,25 +195,25 @@ export default function DatasetsPage() {
             </div>
 
             {/* Source & Description */}
-            <p className="text-xs text-[#82918E] font-mono leading-relaxed">
+            <p className="text-xs text-[#71717A] font-mono leading-relaxed">
               {ds.description}
             </p>
 
-            <p className="text-[11px] text-[#82918E] font-mono">
-              Source: <strong className="text-[#82918E]">{ds.source}</strong> · License:{' '}
-              <strong className="text-[#82918E]">{ds.license}</strong>
+            <p className="text-[11px] text-[#71717A] font-mono">
+              Source: <strong className="text-[#71717A]">{ds.source}</strong> · License:{' '}
+              <strong className="text-[#71717A]">{ds.license}</strong>
             </p>
 
             {/* Schema Tag Badges */}
             <div>
-              <p className="text-[10px] font-mono uppercase text-[#82918E] mb-1.5 font-bold">
+              <p className="text-[10px] font-mono uppercase text-[#71717A] mb-1.5 font-bold">
                 Schema Fields Indexed:
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {ds.schema_fields.map((f, i) => (
                   <span
                     key={i}
-                    className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#172B35] border border-[#284250] text-[#E8E5DA]"
+                    className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#09090B] border border-[#27272A] text-[#FAFAFA]"
                   >
                     {f}
                   </span>
@@ -222,10 +222,10 @@ export default function DatasetsPage() {
             </div>
 
             {/* Telemetry Row */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#284250] text-xs font-mono text-[#82918E]">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#27272A] text-xs font-mono text-[#71717A]">
               <div>
                 Total Records:{' '}
-                <strong className="text-[#4D9477] tabular-nums">
+                <strong className="text-[#10B981] tabular-nums">
                   {ds.records_count.toLocaleString()}
                 </strong>{' '}
                 · File Size: <strong className="text-white">{ds.size_mb} MB</strong> · Format:{' '}

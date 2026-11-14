@@ -10,17 +10,15 @@ import {
   EyeOff,
   AlertCircle,
   KeyRound,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import LaunderyLensLogo from '@/components/react-bits/LaunderyLensLogo';
-import DotGridBackground from '@/components/react-bits/DotGridBackground';
-import StatusMark from '@/components/react-bits/StatusMark';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, demoLogin } = useAuth();
   const [email, setEmail] = useState('analyst@launderylens.ai');
-  const [password, setPassword] = useState('LaunderyLens@2026');
+  const [password, setPassword] = useState('LaunderLens@2026');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,81 +44,95 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#172B35] px-4 select-none relative overflow-hidden">
-      {/* Calm Warm Geometric Dot Grid Background */}
-      <DotGridBackground dotColor="rgba(232, 229, 218, 0.05)" spacing={24} />
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#09090B] px-4 select-none relative overflow-hidden font-sans">
+      {/* Background radial dot grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(#1F1F23_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-60" />
 
       {/* Main Authentication Card */}
-      <div className="relative z-10 w-full max-w-md bg-[#1E3541] border border-[#284250] rounded-xl shadow-[0_20px_40px_-15px_rgba(18,34,42,0.8),inset_0_1px_0_0_rgba(232,229,218,0.06)] p-8">
+      <div className="relative z-10 w-full max-w-sm card-fintech p-7 shadow-2xl">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <LaunderyLensLogo size="lg" showSubtitle={false} className="justify-center mb-3" />
-          <h1 className="text-xl font-extrabold tracking-wide text-[#E8E5DA] uppercase font-sans">
-            LaunderyLens
+          <div className="w-8 h-8 rounded bg-[#18181B] border border-white/[0.12] flex items-center justify-center text-white mx-auto mb-2.5 shadow-sm">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4 text-white"
+            >
+              <circle cx="12" cy="12" r="8" />
+              <line x1="12" y1="2" x2="12" y2="6" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+            </svg>
+          </div>
+          <h1 className="text-base font-semibold tracking-tight text-[#FAFAFA]">
+            LaunderLens
           </h1>
-          <p className="text-xs text-[#82918E] mt-1 font-mono">
-            Financial Crime Intelligence &amp; Investigation Platform
+          <p className="text-xs text-[#71717A] mt-0.5 font-mono">
+            Institutional Financial Crime Intelligence
           </p>
         </div>
 
         {/* Security Classification Banner */}
-        <div className="mb-6 p-3 rounded-lg bg-[#253F4D] border border-[#284250] text-center">
-          <div className="flex items-center justify-center gap-2">
-            <StatusMark status="active" label="Restricted Surveillance Access" size="sm" />
-          </div>
-          <p className="text-[11px] text-[#A3B3AF] mt-1 font-mono">
-            Authorized AML investigators &amp; FIU compliance officers only
-          </p>
+        <div className="mb-5 p-2 rounded bg-[#18181B] border border-white/[0.06] text-center flex items-center justify-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+          <span className="text-[10px] font-mono tracking-wider uppercase text-[#A1A1AA]">
+            Restricted Surveillance Access (L4)
+          </span>
         </div>
 
         {/* Accessible Error Alert */}
         {error && (
           <div
             role="alert"
-            className="mb-4 p-3 rounded-md bg-[#C75B55]/15 border border-[#C75B55]/40 flex items-center gap-2.5 text-xs text-[#E8E5DA] font-mono animate-in fade-in duration-200"
+            className="mb-4 p-2.5 rounded bg-rose-500/10 border border-rose-500/25 flex items-center gap-2 text-xs text-rose-300 font-mono"
           >
-            <AlertCircle className="w-4 h-4 text-[#C75B55] shrink-0" />
+            <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Credentials Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-wider text-[#A3B3AF] mb-1.5 font-mono">
-              Analyst Identifier / Work Email
+            <label className="block text-[10px] font-mono uppercase tracking-wider text-[#71717A] mb-1">
+              Analyst Identifier
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-[#82918E] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Mail className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="analyst@launderylens.ai"
-                className="w-full bg-[#172B35] border border-[#284250] focus:border-[#75A99A] focus:ring-1 focus:ring-[#75A99A] rounded-md pl-9 pr-3 py-2 text-xs font-mono text-[#E8E5DA] placeholder-[#82918E] outline-none transition-all"
+                className="w-full bg-[#09090B] border border-white/[0.08] focus:border-white/30 rounded pl-8 pr-3 py-1.5 text-xs font-mono text-[#FAFAFA] placeholder-[#52525B] outline-none transition-colors"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-wider text-[#A3B3AF] mb-1.5 font-mono">
-              Cryptographic Passphrase
+            <label className="block text-[10px] font-mono uppercase tracking-wider text-[#71717A] mb-1">
+              Passphrase
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#82918E] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••••••"
-                className="w-full bg-[#172B35] border border-[#284250] focus:border-[#75A99A] focus:ring-1 focus:ring-[#75A99A] rounded-md pl-9 pr-10 py-2 text-xs font-mono text-[#E8E5DA] placeholder-[#82918E] outline-none transition-all"
+                className="w-full bg-[#09090B] border border-white/[0.08] focus:border-white/30 rounded pl-8 pr-8 py-1.5 text-xs font-mono text-[#FAFAFA] placeholder-[#52525B] outline-none transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#82918E] hover:text-[#E8E5DA] transition-colors p-1 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#FAFAFA] transition-colors p-1 cursor-pointer"
                 aria-label={showPassword ? 'Hide passphrase' : 'Show passphrase'}
               >
                 {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -131,32 +143,30 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-md bg-[#75A99A] hover:bg-[#8BBDB0] text-xs font-bold text-[#172B35] transition-all cursor-pointer shadow-md disabled:opacity-50"
+            className="w-full mt-2 flex items-center justify-center gap-2 py-2 px-3 rounded bg-[#FAFAFA] hover:bg-zinc-200 text-xs font-semibold text-[#09090B] transition-all cursor-pointer shadow-sm disabled:opacity-50"
           >
-            <span>{isSubmitting ? 'Authenticating Session...' : 'Authenticate & Enter Surveillance'}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#172B35]" />
+            <span>{isSubmitting ? 'Authenticating...' : 'Authenticate Session'}</span>
+            <ArrowRight className="w-3.5 h-3.5 text-[#09090B]" />
           </button>
         </form>
 
         {/* Quick Demo Access Button */}
-        <div className="mt-5 pt-4 border-t border-[#284250] text-center">
-          <p className="text-[11px] text-[#82918E] mb-2 font-mono">
-            Pre-configured Lead Investigator Credentials:
-          </p>
+        <div className="mt-4 pt-3.5 border-t border-white/[0.07] text-center">
           <button
             type="button"
             onClick={handleInstantDemo}
-            className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded bg-[#172B35] hover:bg-[#253F4D] border border-[#284250] text-[11px] font-mono text-[#75A99A] hover:text-[#8BBDB0] transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded bg-[#18181B] hover:bg-[#27272A] border border-white/[0.07] text-[11px] font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
           >
-            <KeyRound className="w-3 h-3 text-[#75A99A]" />
-            <span>One-Click Instant Lead Investigator Login</span>
+            <KeyRound className="w-3 h-3 text-zinc-400" />
+            <span>Instant Lead Investigator Access</span>
           </button>
         </div>
 
         {/* Statutory Audit Notice */}
-        <p className="mt-6 text-[10px] text-center text-[#82918E] font-mono leading-relaxed">
-          System activity logged &amp; monitored pursuant to 31 U.S.C. § 5318(g) and BSA compliance guidelines.
-        </p>
+        <div className="mt-4 flex items-center justify-center gap-1.5 text-[9px] text-center text-[#52525B] font-mono">
+          <ShieldCheck className="w-3 h-3 text-[#52525B]" />
+          <span>31 U.S.C. § 5318(g) Safe Harbor Compliance</span>
+        </div>
       </div>
     </div>
   );
