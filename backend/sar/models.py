@@ -25,7 +25,7 @@ class SARReport(BaseModel):
     sar_id: str = Field(..., description="Unique SAR Filing ID")
     alert_id: str
     filing_date: str
-    filing_institution: str = "LaunderGraph National Bank AML Intelligence Unit"
+    filing_institution: str = "LaunderyLens Financial Intelligence Unit"
     primary_typology: str
     risk_score: float
     threat_level: str  # CRITICAL, HIGH, MEDIUM

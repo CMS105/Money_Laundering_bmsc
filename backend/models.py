@@ -1,5 +1,5 @@
 """
-LaunderGraph AML - SQLite Database Models
+LaunderyLens - SQLite Database Models
 Defines SQLAlchemy ORM tables for transactions, detected clusters, and SAR reports.
 """
 from datetime import datetime

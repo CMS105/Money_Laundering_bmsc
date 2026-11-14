@@ -84,7 +84,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
     if (!cluster) return;
     const exportPacket = {
       fincen_sar_report: {
-        filing_institution: "LaunderGraph National Bank AML Intelligence Unit",
+        filing_institution: "LaunderyLens Financial Intelligence Unit",
         filing_standard: "31 CFR § 1020.320 / FinCEN Form 111",
         exported_at: new Date().toISOString(),
         cluster_id: cluster.cluster_id,
@@ -123,7 +123,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `LAUNDERGRAPH_SAR_${cluster.cluster_id}.json`;
+    a.download = `LAUNDERYLENS_SAR_${cluster.cluster_id}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -391,7 +391,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
                 <tr className="bg-white/[0.03] font-bold text-slate-200">
                   <td className="py-1.5 px-2 flex items-center gap-1 text-[#10B981]">
                     <Layers className="w-2.5 h-2.5" />
-                    LaunderGraph
+                    LaunderyLens
                   </td>
                   <td className="py-1.5 px-1 text-right text-[#10B981] tabular-nums">0.93</td>
                   <td className="py-1.5 px-1 text-right text-[#10B981] tabular-nums">94.7%</td>

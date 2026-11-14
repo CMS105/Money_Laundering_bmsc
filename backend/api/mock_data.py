@@ -393,6 +393,7 @@ class AlertRepository:
         benchmark_3way = {
             "baseline": {"precision": self.metrics.baseline.precision, "recall": self.metrics.baseline.recall, "f1": self.metrics.baseline.f1, "fpr": self.metrics.baseline.false_positive_rate},
             "tabular_ml": {"precision": 1.0, "recall": 0.766, "f1": 0.868, "fpr": 0.0},
+            "launderylens_hybrid": {"precision": 1.0, "recall": 0.790, "f1": 0.882, "fpr": 0.0},
             "laundergraph_hybrid": {"precision": 1.0, "recall": 0.790, "f1": 0.882, "fpr": 0.0},
             "lifts": {"precision_lift_percent": 852.4, "recall_lift_percent": 38.5, "f1_lift_percent": 397.7, "fp_reduction_percent": 100.0},
         }

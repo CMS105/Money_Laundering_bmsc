@@ -183,7 +183,7 @@ class AMLFeatureEngineer:
         return X_hybrid, X_tabular, y, graph_stats
 
 
-class LaunderGraphHybridEngine:
+class LaunderyLensHybridEngine:
     """
     Two-Stage AML Machine Learning Engine:
     Stage 1: IsolationForest for unsupervised structural anomaly detection.
@@ -253,7 +253,7 @@ class LaunderGraphHybridEngine:
         self.rf_classifier.fit(X_augmented, y)
         probs = self.rf_classifier.predict_proba(X_augmented)[:, 1]
         y_pred_hybrid = (probs >= 0.45).astype(int)
-        metrics_hybrid = self._calc_metrics("LaunderGraph Hybrid Engine", y, y_pred_hybrid)
+        metrics_hybrid = self._calc_metrics("LaunderyLens Hybrid Engine", y, y_pred_hybrid)
 
         # Extract Global Feature Importances
         importances = self.rf_classifier.feature_importances_
@@ -279,6 +279,7 @@ class LaunderGraphHybridEngine:
             "models": {
                 "baseline": metrics_baseline,
                 "tabular_ml": metrics_tab,
+                "launderylens_hybrid": metrics_hybrid,
                 "laundergraph_hybrid": metrics_hybrid,
             },
             "comparative_lift": {
@@ -341,4 +342,9 @@ class LaunderGraphHybridEngine:
             "f1": round(float(f1), 4),
             "false_positive_rate": round(float(fpr), 4),
         }
+
+
+# Backward-compatibility alias
+LaunderGraphHybridEngine = LaunderyLensHybridEngine
+
 

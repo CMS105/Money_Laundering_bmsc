@@ -11,7 +11,7 @@ from .models import SARReport, TemporalTrailStep, XAIFeatureDriver
 class SARGenerator:
     """
     Generates regulatory-grade, FinCEN-compliant Suspicious Activity Reports (SAR)
-    for LaunderGraph AML with plain-language narrative summaries,
+    for LaunderyLens with plain-language narrative summaries,
     banking channel hops, and chronological money trails.
     """
 
@@ -58,7 +58,7 @@ class SARGenerator:
         # Synthetic FinCEN XML snippet
         xml_snippet = f"""<SuspiciousActivityReport id="{sar_id}">
   <ActivityDate>{filing_date}</ActivityDate>
-  <FilingInstitution>LaunderGraph National Bank AML Intelligence Unit</FilingInstitution>
+  <FilingInstitution>LaunderyLens Financial Intelligence Unit</FilingInstitution>
   <TypologyCategory>{typology_val}</TypologyCategory>
   <SuspiciousAmount Currency="USD">{total_vol:,.2f}</SuspiciousAmount>
   <SubjectCount>{len(alert.involved_accounts)}</SubjectCount>
@@ -80,7 +80,7 @@ class SARGenerator:
             sar_id=sar_id,
             alert_id=alert.alert_id,
             filing_date=filing_date,
-            filing_institution="LaunderGraph National Bank AML Intelligence Unit",
+            filing_institution="LaunderyLens Financial Intelligence Unit",
             primary_typology=typology_val,
             risk_score=alert.risk_score,
             threat_level=threat_level,
@@ -188,7 +188,7 @@ class SARGenerator:
             narrative = (
                 f"SUSPICIOUS ACTIVITY NARRATIVE — SMURFING / STRUCTURING SYNDICATE\n\n"
                 f"1. SUMMARY OF ACTIVITY:\n"
-                f"The LaunderGraph AML monitoring engine detected coordinated structuring activity classified as {direction} "
+                f"The LaunderyLens AML monitoring engine detected coordinated structuring activity classified as {direction} "
                 f"involving {len(alert.involved_accounts)} counterparties with an aggregate flow volume of ${total_vol:,.2f} USD "
                 f"transacted over a span of {time_hours:.1f} hours.\n\n"
                 f"2. MONEY TRAIL BREAKDOWN:\n"
@@ -222,7 +222,7 @@ class SARGenerator:
             narrative = (
                 f"SUSPICIOUS ACTIVITY NARRATIVE — RAPID PASS-THROUGH MULE CONDUIT\n\n"
                 f"1. SUMMARY OF ACTIVITY:\n"
-                f"LaunderGraph AML identified acute conduit behavior centered at account {mule}, involving {len(alert.involved_accounts)} "
+                f"LaunderyLens AML identified acute conduit behavior centered at account {mule}, involving {len(alert.involved_accounts)} "
                 f"counterparties and ${total_vol:,.2f} USD in rapid pass-through funds.\n\n"
                 f"2. MONEY TRAIL BREAKDOWN:\n"
                 f"Account {mule} received incoming funds and forwarded them to downstream destinations in approximately {latency_mins} minutes. "

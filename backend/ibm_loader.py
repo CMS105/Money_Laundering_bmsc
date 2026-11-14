@@ -1,5 +1,5 @@
 """
-LaunderGraph AML - Kaggle IBM AML Dataset Loader & Smart Subgraph Sampler
+LaunderyLens - Kaggle IBM AML Dataset Loader & Smart Subgraph Sampler
 Handles duplicate 'Account' columns safely, prefixes accounts with bank codes,
 and extracts dense forensic subgraphs for responsive visualization and ML.
 """

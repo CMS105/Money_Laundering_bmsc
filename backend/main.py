@@ -157,6 +157,20 @@ from backend.api.main import (
     ingest_transactions as ingest_v1_transactions,
     get_police_suspects as get_v1_police_suspects,
     get_suspect_transactions as get_v1_suspect_transactions,
+    login_analyst as login_v1_analyst,
+    get_current_analyst as get_v1_current_analyst,
+    logout_analyst as logout_v1_analyst,
+    get_dashboard_overview as get_v1_dashboard,
+    get_mule_intelligence as get_v1_mule_intelligence,
+    get_cross_border as get_v1_cross_border,
+    get_asset_intelligence as get_v1_asset_intelligence,
+    get_transactions as get_v1_transactions,
+    get_network_analysis as get_v1_network_analysis,
+    get_regulatory_reports as get_v1_reports,
+    get_model_performance as get_v1_model_performance,
+    get_datasets_catalog as get_v1_datasets,
+    trigger_dataset_ingest as trigger_v1_dataset_ingest,
+    get_system_settings as get_v1_settings,
 )
 from backend.api.schemas import (
     AnalysisResponse,
@@ -166,6 +180,21 @@ from backend.api.schemas import (
     IngestResponse,
     SuspectsResponse,
 )
+
+app.add_api_route("/api/v1/auth/login", login_v1_analyst, methods=["POST"])
+app.add_api_route("/api/v1/auth/me", get_v1_current_analyst, methods=["GET"])
+app.add_api_route("/api/v1/auth/logout", logout_v1_analyst, methods=["POST"])
+app.add_api_route("/api/v1/dashboard", get_v1_dashboard, methods=["GET"])
+app.add_api_route("/api/v1/mule-intelligence", get_v1_mule_intelligence, methods=["GET"])
+app.add_api_route("/api/v1/cross-border", get_v1_cross_border, methods=["GET"])
+app.add_api_route("/api/v1/asset-intelligence", get_v1_asset_intelligence, methods=["GET"])
+app.add_api_route("/api/v1/transactions", get_v1_transactions, methods=["GET"])
+app.add_api_route("/api/v1/network-analysis", get_v1_network_analysis, methods=["GET"])
+app.add_api_route("/api/v1/reports", get_v1_reports, methods=["GET"])
+app.add_api_route("/api/v1/model-performance", get_v1_model_performance, methods=["GET"])
+app.add_api_route("/api/v1/datasets", get_v1_datasets, methods=["GET"])
+app.add_api_route("/api/v1/datasets/{dataset_id}/ingest", trigger_v1_dataset_ingest, methods=["POST"])
+app.add_api_route("/api/v1/settings", get_v1_settings, methods=["GET"])
 
 app.add_api_route("/api/v1/analysis", get_v1_analysis, methods=["GET"], response_model=AnalysisResponse)
 app.add_api_route("/api/v1/explain/{cluster_id}", explain_v1_cluster, methods=["POST"], response_model=ExplainResponse)

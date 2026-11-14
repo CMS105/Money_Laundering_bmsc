@@ -1,5 +1,5 @@
 """
-LaunderGraph AML - SQLite Database Session & Repository Layer
+LaunderyLens - SQLite Database Session & Repository Layer
 Manages connection to aml_ledger.db and provides helper functions for persistence.
 """
 import os
