@@ -198,6 +198,53 @@ def explain_cluster(cluster_id: str, request_data: Optional[ExplainRequest] = No
     return explanation
 
 
+@app.get("/api/sar/{cluster_id}")
+@app.get("/api/v1/sar/{cluster_id}")
+def get_sar_for_cluster(cluster_id: str):
+    """Generates a regulatory SAR report with chronological trail and XAI red flags for a cluster."""
+    cluster = repo.get_cluster(cluster_id)
+    if not cluster:
+        raise HTTPException(status_code=404, detail=f"Cluster {cluster_id} not found")
+
+    threat_level = "CRITICAL" if cluster.risk_score >= 85 else ("HIGH" if cluster.risk_score >= 70 else "MEDIUM")
+    trail_steps = [
+        {
+            "step_number": i + 1,
+            "timestamp": edge.timestamp,
+            "source_account": edge.source,
+            "destination_account": edge.target,
+            "amount_usd": edge.amount,
+            "hop_latency_minutes": edge.hop_delay_mins,
+            "from_bank": edge.from_bank,
+            "to_bank": edge.to_bank,
+            "channel": edge.payment_format,
+        }
+        for i, edge in enumerate(cluster.edges)
+    ]
+
+    sar_data = {
+        "sar_id": f"SAR-2026-{cluster.cluster_id}",
+        "alert_id": cluster.cluster_id,
+        "filing_date": "2026-11-14 10:00:00 UTC",
+        "filing_institution": "LaunderyLens Financial Intelligence Unit",
+        "primary_typology": cluster.typology,
+        "risk_score": cluster.risk_score / 100.0 if cluster.risk_score > 1.0 else cluster.risk_score,
+        "threat_level": threat_level,
+        "suspect_accounts": [n.id for n in cluster.nodes],
+        "total_volume_usd": cluster.total_volume,
+        "transaction_count": len(cluster.edges),
+        "time_span_hours": round(cluster.dwell_time_mins / 60.0, 2),
+        "narrative_summary": cluster.ai_summary,
+        "chronological_trail": trail_steps,
+        "red_flag_indicators": [d.description for d in (cluster.xai_feature_drivers or [])],
+        "recommended_action": "Immediate regulatory freeze and filing under 31 CFR § 1020.320" if threat_level == "CRITICAL" else "Enhanced Due Diligence and internal AML review.",
+        "ml_probability": cluster.ml_probability or 0.95,
+        "isolation_score": cluster.isolation_score or 0.90,
+    }
+    return sar_data
+
+
+
 @app.post("/api/v1/inject", response_model=InjectResponse)
 @app.post("/v1/inject", response_model=InjectResponse)
 def inject_live_attack(payload: InjectRequest):

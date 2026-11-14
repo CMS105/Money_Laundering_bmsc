@@ -7,7 +7,7 @@ import numpy as np
 import polars as pl
 import networkx as nx
 from typing import Dict, List, Any, Tuple, Optional, Set
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sklearn.ensemble import IsolationForest, RandomForestClassifier
 from sklearn.metrics import precision_recall_fscore_support, confusion_matrix
@@ -136,7 +136,7 @@ class AMLFeatureEngineer:
             cross_b = 1.0 if from_banks[i] != to_banks[i] else 0.0
             curr_mis = 1.0 if currs[i] != recv_currs[i] else 0.0
             p_format_code = float(self.PAYMENT_FORMAT_MAP.get(formats[i], 0))
-            hour = float(datetime.utcfromtimestamp(ts).hour)
+            hour = float(datetime.fromtimestamp(ts, timezone.utc).hour)
 
             pr_u = pagerank.get(u, 0.0) * 1000.0
             pr_v = pagerank.get(v, 0.0) * 1000.0

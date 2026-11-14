@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 class TypologyType(str, Enum):
     NORMAL = "NORMAL"
     SMURFING = "SMURFING"
+    FAN_IN = "FAN_IN"
+    FAN_OUT = "FAN_OUT"
     ROUNDTRIP_CYCLE = "ROUNDTRIP_CYCLE"
     MULE_CHAIN = "MULE_CHAIN"
 
