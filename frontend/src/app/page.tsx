@@ -5,9 +5,9 @@ import TopKpiBar from '../components/TopKpiBar';
 import ClusterListPanel from '../components/ClusterListPanel';
 import CanvasPanel from '../components/CanvasPanel';
 import DossierPanel from '../components/DossierPanel';
-import { AlertCluster, ComparisonMetrics, AnalysisResponse } from '../types';
+import { AlertCluster, ComparisonMetrics, AnalysisResponse, SqliteStats } from '../types';
 import { fetchAnalysis, injectAttack, FALLBACK_DATA } from '../services/api';
-import { CheckCircle2, RefreshCw } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function WorkbenchPage() {
   const [metrics, setMetrics] = useState<ComparisonMetrics>(FALLBACK_DATA.metrics);
@@ -15,6 +15,8 @@ export default function WorkbenchPage() {
   const [selectedCluster, setSelectedCluster] = useState<AlertCluster | null>(
     FALLBACK_DATA.alerts[0] || null
   );
+  const [datasetSource, setDatasetSource] = useState<string>(FALLBACK_DATA.dataset_source || 'Dataset: IBM AML Benchmark');
+  const [sqliteStats, setSqliteStats] = useState<SqliteStats | undefined>(FALLBACK_DATA.sqlite_stats);
   const [isLoading, setIsLoading] = useState(true);
   const [isInjecting, setIsInjecting] = useState(false);
   const [toastMessage, setToastMessage] = useState<{
@@ -36,6 +38,8 @@ export default function WorkbenchPage() {
       if (data && data.alerts && data.alerts.length > 0) {
         setMetrics(data.metrics);
         setAlerts(data.alerts);
+        if (data.dataset_source) setDatasetSource(data.dataset_source);
+        if (data.sqlite_stats) setSqliteStats(data.sqlite_stats);
         setSelectedCluster((prev) => {
           if (!prev) return data.alerts[0];
           const exists = data.alerts.find((a) => a.cluster_id === prev.cluster_id);
@@ -83,6 +87,8 @@ export default function WorkbenchPage() {
       {/* Top KPI Scoreboard & Demo Controls */}
       <TopKpiBar
         metrics={metrics}
+        datasetSource={datasetSource}
+        sqliteStats={sqliteStats}
         onInject={handleInject}
         isInjecting={isInjecting}
       />
@@ -96,31 +102,20 @@ export default function WorkbenchPage() {
       )}
 
       {/* Main 3-Panel Workbench Body */}
-      <div
-        className="flex-1 min-h-0 flex overflow-hidden relative w-full h-full"
-        style={{ minHeight: 'calc(100vh - 80px)' }}
-      >
-        {isLoading ? (
-          <div className="flex-1 flex items-center justify-center bg-slate-950 text-slate-400 gap-2 font-mono text-xs">
-            <RefreshCw className="w-4 h-4 animate-spin text-cyan-400" />
-            <span>Connecting to AML Graph Detection Engine...</span>
-          </div>
-        ) : (
-          <>
-            {/* Left Panel: Risk-Ranked Suspicious Cluster Navigator */}
-            <ClusterListPanel
-              alerts={alerts}
-              selectedClusterId={selectedCluster?.cluster_id || ''}
-              onSelectCluster={(cluster) => setSelectedCluster(cluster)}
-            />
+      <div className="flex-1 min-h-0 flex overflow-hidden relative w-full h-full">
+        {/* Left Side: Risk-Ranked Cluster Feed */}
+        <ClusterListPanel
+          alerts={alerts}
+          selectedClusterId={selectedCluster?.cluster_id || null}
+          onSelectCluster={(cluster) => setSelectedCluster(cluster)}
+          isLoading={isLoading}
+        />
 
-            {/* Center Canvas: @xyflow/react Interactive Money-Trail Graph */}
-            <CanvasPanel cluster={selectedCluster} />
+        {/* Center Canvas: Interactive React Flow Graph Canvas */}
+        <CanvasPanel cluster={selectedCluster} />
 
-            {/* Right Panel: Plain-Language AI Money-Trail Dossier */}
-            <DossierPanel cluster={selectedCluster} />
-          </>
-        )}
+        {/* Right Side: Explainable AI Forensic Dossier */}
+        <DossierPanel cluster={selectedCluster} />
       </div>
     </div>
   );

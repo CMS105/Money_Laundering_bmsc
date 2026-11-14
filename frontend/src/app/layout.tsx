@@ -3,8 +3,8 @@ import '@xyflow/react/dist/style.css';
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BUILD BEYOND'26 — PS 2.1: Graph-Based Detection of Layered Money Laundering",
-  description: "Temporal Graph Engine AML Detection & Explainable AI Narrative Workbench",
+  title: "LaunderGraph AML — Graph Data Science & Anti-Money Laundering Platform",
+  description: "Temporal Graph Analytics, Machine Learning & FinCEN SAR Intelligence",
 };
 
 export default function RootLayout({

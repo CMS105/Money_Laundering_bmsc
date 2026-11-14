@@ -9,7 +9,14 @@ export interface PerformanceMetric {
 
 export interface ComparisonMetrics {
   baseline: PerformanceMetric;
+  tabular_ml?: PerformanceMetric;
   graph_engine: PerformanceMetric;
+}
+
+export interface XAIFeatureDriver {
+  feature: string;
+  weight: number;
+  description: string;
 }
 
 export interface GraphNode {
@@ -26,6 +33,9 @@ export interface GraphEdge {
   amount: number;
   timestamp: string;
   hop_delay_mins: number;
+  from_bank?: string;
+  to_bank?: string;
+  payment_format?: string;
 }
 
 export interface AlertCluster {
@@ -39,11 +49,23 @@ export interface AlertCluster {
   nodes: GraphNode[];
   edges: GraphEdge[];
   ai_summary: string;
+  ml_probability?: number;
+  isolation_score?: number;
+  xai_feature_drivers?: XAIFeatureDriver[];
+}
+
+export interface SqliteStats {
+  transactions: number;
+  detected_clusters: number;
+  sar_reports: number;
 }
 
 export interface AnalysisResponse {
   metrics: ComparisonMetrics;
   alerts: AlertCluster[];
+  dataset_source?: string;
+  sqlite_stats?: SqliteStats;
+  benchmark_3way?: Record<string, unknown>;
 }
 
 export interface InjectRequest {
@@ -65,4 +87,18 @@ export interface ExplainResponse {
   risk_level: string;
   recommended_actions: string[];
   confidence_score: number;
+  xai_feature_drivers?: XAIFeatureDriver[];
+}
+
+export interface SarReportRecord {
+  sar_id: string;
+  cluster_id: string;
+  threat_level: string;
+  narrative: string;
+  created_at: string;
+}
+
+export interface SarHistoryResponse {
+  total_sars: number;
+  reports: SarReportRecord[];
 }

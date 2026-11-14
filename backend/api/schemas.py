@@ -1,4 +1,4 @@
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Dict, Any
 from pydantic import BaseModel, Field
 
 
@@ -12,6 +12,13 @@ class PerformanceMetric(BaseModel):
 class ComparisonMetrics(BaseModel):
     baseline: PerformanceMetric
     graph_engine: PerformanceMetric
+    tabular_ml: Optional[PerformanceMetric] = None
+
+
+class XAIFeatureDriver(BaseModel):
+    feature: str
+    weight: float
+    description: str
 
 
 class GraphNode(BaseModel):
@@ -25,9 +32,12 @@ class GraphEdge(BaseModel):
     id: str = Field(..., description="Transaction identifier, e.g. TX_901")
     source: str = Field(..., description="Source account ID")
     target: str = Field(..., description="Target account ID")
-    amount: float = Field(..., description="Transaction amount in INR")
+    amount: float = Field(..., description="Transaction amount in INR/USD")
     timestamp: str = Field(..., description="ISO 8601 timestamp of transaction")
     hop_delay_mins: float = Field(..., description="Transit hop latency in minutes")
+    from_bank: Optional[str] = "000"
+    to_bank: Optional[str] = "000"
+    payment_format: Optional[str] = "Wire"
 
 
 class AlertCluster(BaseModel):
@@ -37,18 +47,24 @@ class AlertCluster(BaseModel):
         description="Laundering pattern typology: CYCLIC_ROUND_TRIPPING, FAN_OUT_IN, MULE_CHAIN",
     )
     risk_score: float = Field(..., description="Overall cluster risk score (0 to 100)")
-    total_volume: float = Field(..., description="Total volume laundered across cluster in INR")
+    total_volume: float = Field(..., description="Total volume laundered across cluster in INR/USD")
     dwell_time_mins: float = Field(..., description="Total dwell time across laundering hops in minutes")
     entry_node: str = Field(..., description="Entry origin account ID")
     exit_node: str = Field(..., description="Exit destination account ID")
     nodes: List[GraphNode] = Field(..., description="List of nodes participating in cluster")
     edges: List[GraphEdge] = Field(..., description="List of directed transaction edges")
     ai_summary: str = Field(..., description="Explainable AI narrative summary of money trail")
+    ml_probability: Optional[float] = 0.94
+    isolation_score: Optional[float] = 0.88
+    xai_feature_drivers: Optional[List[XAIFeatureDriver]] = None
 
 
 class AnalysisResponse(BaseModel):
     metrics: ComparisonMetrics
     alerts: List[AlertCluster]
+    dataset_source: Optional[str] = "Dataset: IBM AML Benchmark"
+    sqlite_stats: Optional[Dict[str, int]] = None
+    benchmark_3way: Optional[Dict[str, Any]] = None
 
 
 class InjectRequest(BaseModel):
@@ -81,3 +97,27 @@ class ExplainResponse(BaseModel):
     risk_level: str
     recommended_actions: List[str]
     confidence_score: float
+    xai_feature_drivers: Optional[List[XAIFeatureDriver]] = None
+
+
+class IngestTransactionItem(BaseModel):
+    timestamp: Optional[str] = None
+    from_bank: Optional[str] = "020"
+    source_account: str
+    to_bank: Optional[str] = "070"
+    target_account: str
+    amount: float
+    currency: Optional[str] = "USD"
+    payment_format: Optional[str] = "Wire"
+    is_laundering: Optional[bool] = False
+
+
+class IngestRequest(BaseModel):
+    transactions: List[IngestTransactionItem]
+
+
+class IngestResponse(BaseModel):
+    message: str
+    inserted_count: int
+    total_db_transactions: int
+    reanalyzed: bool

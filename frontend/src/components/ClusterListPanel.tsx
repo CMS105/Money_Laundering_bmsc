@@ -13,8 +13,9 @@ import { formatINR, getTypologyMeta } from '../lib/formatters';
 
 interface ClusterListPanelProps {
   alerts: AlertCluster[];
-  selectedClusterId: string;
+  selectedClusterId: string | null;
   onSelectCluster: (cluster: AlertCluster) => void;
+  isLoading?: boolean;
 }
 
 export default function ClusterListPanel({
@@ -141,15 +142,22 @@ export default function ClusterListPanel({
                   </div>
 
                   {/* Risk Score Pill */}
-                  <div
-                    className={`flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-bold ${
-                      isCritical
-                        ? 'bg-rose-500/15 text-rose-300 border-rose-500/40'
-                        : 'bg-amber-500/15 text-amber-300 border-amber-500/40'
-                    }`}
-                  >
-                    <Flame className="w-3 h-3 fill-current" />
-                    <span>{cluster.risk_score.toFixed(1)}</span>
+                  <div className="flex items-center gap-1.5">
+                    {cluster.ml_probability && (
+                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30" title="Supervised ML Laundering Probability">
+                        ML {(cluster.ml_probability * 100).toFixed(0)}%
+                      </span>
+                    )}
+                    <div
+                      className={`flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-bold ${
+                        isCritical
+                          ? 'bg-rose-500/15 text-rose-300 border-rose-500/40'
+                          : 'bg-amber-500/15 text-amber-300 border-amber-500/40'
+                      }`}
+                    >
+                      <Flame className="w-3 h-3 fill-current" />
+                      <span>{cluster.risk_score.toFixed(1)}</span>
+                    </div>
                   </div>
                 </div>
 

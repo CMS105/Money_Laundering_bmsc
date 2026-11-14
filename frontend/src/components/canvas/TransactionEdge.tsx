@@ -14,6 +14,7 @@ interface TransactionEdgeData {
   amount: number;
   hop_delay_mins: number;
   timestamp?: string;
+  payment_format?: string;
 }
 
 const TransactionEdge = ({
@@ -70,6 +71,11 @@ const TransactionEdge = ({
           <div className="flex items-center gap-1 text-[10px] text-slate-400 font-mono">
             <Clock className="w-2.5 h-2.5 text-amber-400" />
             <span>{delay.toFixed(1)}m delay</span>
+            {edgeData.payment_format && (
+              <span className="text-[9px] text-slate-500 font-sans border-l border-slate-700 pl-1">
+                {edgeData.payment_format}
+              </span>
+            )}
           </div>
         </div>
       </EdgeLabelRenderer>

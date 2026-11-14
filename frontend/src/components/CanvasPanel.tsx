@@ -117,6 +117,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
         amount: e.amount,
         hop_delay_mins: e.hop_delay_mins,
         timestamp: e.timestamp,
+        payment_format: e.payment_format,
       },
       markerEnd: {
         type: MarkerType.ArrowClosed,

@@ -37,4 +37,6 @@ kaggle.json
 data/
 *.csv
 *.parquet
+*.db
+aml_ledger.db
 

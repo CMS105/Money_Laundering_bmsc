@@ -4,16 +4,25 @@ from typing import List, Dict, Any, Optional
 from backend.graph.detectors.models import DetectedAlert
 from backend.graph.temporal_graph import TemporalGraph
 from backend.data.models import TypologyType
-from .models import SARReport, TemporalTrailStep
+from backend.database import save_sar_report
+from .models import SARReport, TemporalTrailStep, XAIFeatureDriver
 
 
 class SARGenerator:
     """
     Generates regulatory-grade, FinCEN-compliant Suspicious Activity Reports (SAR)
-    with plain-language narrative summaries and chronological money trails.
+    for LaunderGraph AML with plain-language narrative summaries,
+    banking channel hops, and chronological money trails.
     """
 
-    def generate_sar(self, alert: DetectedAlert, tg: Optional[TemporalGraph] = None) -> SARReport:
+    def generate_sar(
+        self,
+        alert: DetectedAlert,
+        tg: Optional[TemporalGraph] = None,
+        xai_drivers: Optional[List[Dict[str, Any]]] = None,
+        ml_prob: float = 0.94,
+        isolation_score: float = 0.88,
+    ) -> SARReport:
         sar_id = f"SAR-{datetime.datetime.utcnow().strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
         filing_date = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
@@ -49,16 +58,29 @@ class SARGenerator:
         # Synthetic FinCEN XML snippet
         xml_snippet = f"""<SuspiciousActivityReport id="{sar_id}">
   <ActivityDate>{filing_date}</ActivityDate>
+  <FilingInstitution>LaunderGraph National Bank AML Intelligence Unit</FilingInstitution>
   <TypologyCategory>{typology_val}</TypologyCategory>
   <SuspiciousAmount Currency="USD">{total_vol:,.2f}</SuspiciousAmount>
   <SubjectCount>{len(alert.involved_accounts)}</SubjectCount>
   <RiskRating>{threat_level} ({alert.risk_score:.2f})</RiskRating>
+  <MLProbability>{ml_prob:.2f}</MLProbability>
+  <IsolationScore>{isolation_score:.2f}</IsolationScore>
 </SuspiciousActivityReport>"""
 
-        return SARReport(
+        parsed_drivers = [
+            XAIFeatureDriver(
+                feature=d.get("feature", "Topology"),
+                weight=float(d.get("weight", 0.0)),
+                description=d.get("description", ""),
+            )
+            for d in (xai_drivers or [])
+        ]
+
+        sar_obj = SARReport(
             sar_id=sar_id,
             alert_id=alert.alert_id,
             filing_date=filing_date,
+            filing_institution="LaunderGraph National Bank AML Intelligence Unit",
             primary_typology=typology_val,
             risk_score=alert.risk_score,
             threat_level=threat_level,
@@ -71,7 +93,23 @@ class SARGenerator:
             red_flag_indicators=red_flags,
             recommended_action=action,
             fincen_xml_snippet=xml_snippet,
+            xai_feature_drivers=parsed_drivers if parsed_drivers else None,
+            ml_probability=ml_prob,
+            isolation_score=isolation_score,
         )
+
+        # Persist automatically to SQLite
+        try:
+            save_sar_report({
+                "sar_id": sar_id,
+                "cluster_id": alert.alert_id,
+                "threat_level": threat_level,
+                "narrative": narrative,
+            })
+        except Exception:
+            pass
+
+        return sar_obj
 
     def _extract_trail_steps(self, alert: DetectedAlert, tg: Optional[TemporalGraph]) -> List[TemporalTrailStep]:
         steps: List[TemporalTrailStep] = []
@@ -84,7 +122,10 @@ class SARGenerator:
         for idx, row in enumerate(tx_filter.iter_rows(named=True)):
             ts = row["timestamp"]
             formatted_dt = datetime.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
-            desc = f"{row['source_account']} transferred ${row['amount']:,.2f} to {row['target_account']}"
+            from_b = str(row.get("from_bank") or "000")
+            to_b = str(row.get("to_bank") or "000")
+            p_format = str(row.get("payment_format") or "Wire")
+            desc = f"Bank {from_b}:{row['source_account']} transferred ${row['amount']:,.2f} via {p_format} to Bank {to_b}:{row['target_account']}"
             steps.append(
                 TemporalTrailStep(
                     step_number=idx + 1,
@@ -94,6 +135,9 @@ class SARGenerator:
                     target_account=row["target_account"],
                     amount=row["amount"],
                     description=desc,
+                    from_bank=from_b,
+                    to_bank=to_b,
+                    payment_format=p_format,
                 )
             )
         return steps
@@ -106,17 +150,20 @@ class SARGenerator:
                 "Transaction amounts structured immediately below the $10,000 Currency Transaction Report (CTR) filing threshold.",
                 "High out-degree/in-degree velocity with minimal operational delay across intermediary accounts.",
                 "Unusual dispersion of capital followed by reconvergence into a single destination repository.",
+                "Inter-bank cross-institution transfers evading single-bank KYC parameters.",
             ]
         elif typ == TypologyType.ROUNDTRIP_CYCLE:
             flags = [
                 "Directed circular capital flow with capital returning to original originator (round-tripping).",
                 "Transaction loop completed within an expedited temporal window with negligible economic utility.",
-                "Slight balance decay consistent with laundering commission deductions (1-5%).",
+                "Slight balance decay consistent with laundering transit fees (1-5%).",
+                "Cyclic multi-hop PageRank loop evading linear threshold monitoring.",
             ]
         elif typ == TypologyType.MULE_CHAIN:
             flags = [
                 "Rapid pass-through: Funds liquidated and forwarded within minutes of receipt (delta-t <= 1 hour).",
                 "Near-zero balance retention: account acts solely as a conduit with > 90% immediate outflow.",
+                "High transit betweenness centrality connecting disjoint subgraphs.",
                 "Lack of typical retail, payroll, or commercial transaction history.",
             ]
         else:
@@ -141,7 +188,7 @@ class SARGenerator:
             narrative = (
                 f"SUSPICIOUS ACTIVITY NARRATIVE — SMURFING / STRUCTURING SYNDICATE\n\n"
                 f"1. SUMMARY OF ACTIVITY:\n"
-                f"The GraphSleuth AML monitoring engine detected coordinated structuring activity classified as {direction} "
+                f"The LaunderGraph AML monitoring engine detected coordinated structuring activity classified as {direction} "
                 f"involving {len(alert.involved_accounts)} counterparties with an aggregate flow volume of ${total_vol:,.2f} USD "
                 f"transacted over a span of {time_hours:.1f} hours.\n\n"
                 f"2. MONEY TRAIL BREAKDOWN:\n"
@@ -175,7 +222,7 @@ class SARGenerator:
             narrative = (
                 f"SUSPICIOUS ACTIVITY NARRATIVE — RAPID PASS-THROUGH MULE CONDUIT\n\n"
                 f"1. SUMMARY OF ACTIVITY:\n"
-                f"GraphSleuth identified acute conduit behavior centered at account {mule}, involving {len(alert.involved_accounts)} "
+                f"LaunderGraph AML identified acute conduit behavior centered at account {mule}, involving {len(alert.involved_accounts)} "
                 f"counterparties and ${total_vol:,.2f} USD in rapid pass-through funds.\n\n"
                 f"2. MONEY TRAIL BREAKDOWN:\n"
                 f"Account {mule} received incoming funds and forwarded them to downstream destinations in approximately {latency_mins} minutes. "
@@ -192,4 +239,3 @@ class SARGenerator:
             )
 
         return narrative
-

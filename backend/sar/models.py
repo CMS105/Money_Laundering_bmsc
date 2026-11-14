@@ -10,13 +10,22 @@ class TemporalTrailStep(BaseModel):
     target_account: str
     amount: float
     description: str
+    from_bank: Optional[str] = "000"
+    to_bank: Optional[str] = "000"
+    payment_format: Optional[str] = "Wire"
+
+
+class XAIFeatureDriver(BaseModel):
+    feature: str
+    weight: float
+    description: str
 
 
 class SARReport(BaseModel):
     sar_id: str = Field(..., description="Unique SAR Filing ID")
     alert_id: str
     filing_date: str
-    filing_institution: str = "GraphSleuth National Bank AML Monitoring Unit"
+    filing_institution: str = "LaunderGraph National Bank AML Intelligence Unit"
     primary_typology: str
     risk_score: float
     threat_level: str  # CRITICAL, HIGH, MEDIUM
@@ -29,4 +38,6 @@ class SARReport(BaseModel):
     red_flag_indicators: List[str]
     recommended_action: str
     fincen_xml_snippet: Optional[str] = None
-
+    xai_feature_drivers: Optional[List[XAIFeatureDriver]] = None
+    ml_probability: Optional[float] = None
+    isolation_score: Optional[float] = None
