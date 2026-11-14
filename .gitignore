@@ -31,3 +31,8 @@ ENV/
 # Local env files
 .env*.local
 .env
+
+# Local datasets (never commit downloaded financial transaction data)
+data/raw/
+data/processed/
+*.parquet
