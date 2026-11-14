@@ -1,6 +1,18 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/coderabbit-overrides.v2.json
 language: "en-US"
+tone_instructions: "Prioritize strict type safety, graph algorithmic complexity (avoiding O(V!) or infinite cycle traversals), memory leak prevention in Polars/DuckDB pipelines, and FinCEN SAR compliance."
 reviews:
   profile: "assertive"
   high_level_summary: true
   auto_review:
     enabled: true
+    drafts: false
+  tools:
+    ruff:
+      enabled: true
+    eslint:
+      enabled: true
+    github-checks:
+      enabled: true
+chat:
+  auto_reply: true

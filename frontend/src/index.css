@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans;
+  }
+}
+
+/* Custom styles for React Flow in Dark Mode */
+.react-flow__background {
+  background-color: #030712 !important;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__controls button {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.react-flow__controls button:hover {
+  background-color: #334155 !important;
+}
+
+.react-flow__minimap {
+  background-color: #0f172a !important;
+  border: 1px solid #334155 !important;
+}
+
