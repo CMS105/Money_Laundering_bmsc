@@ -38,7 +38,7 @@ from backend.database import (
 )
 
 app = FastAPI(
-    title="LaunderGraph AML Engine",
+    title="LaunderyLens Engine",
     description="Graph Data Science & Explainable AI Anti-Money Laundering Platform",
     version="2.0.0",
 )
@@ -80,8 +80,8 @@ def on_startup():
 @app.get("/")
 def root():
     return {
-        "project": "LaunderGraph AML: Graph Data Science & Explainable Intelligence",
-        "service": "LaunderGraph Engine API",
+        "project": "LaunderyLens: Graph Data Science & Explainable Intelligence",
+        "service": "LaunderyLens Engine API",
         "status": "healthy",
         "version": "2.0.0",
         "docs_url": "/docs",
@@ -93,7 +93,7 @@ def root():
 def health_check():
     return {
         "status": "ok",
-        "service": "LaunderGraph AML",
+        "service": "LaunderyLens",
         "alerts_count": len(repo.alerts),
         "db_stats": get_db_stats(),
     }
