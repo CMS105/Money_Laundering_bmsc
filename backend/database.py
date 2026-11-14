@@ -5,7 +5,7 @@ Manages connection to aml_ledger.db and provides helper functions for persistenc
 import os
 import json
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from pathlib import Path
 
 from sqlalchemy import create_engine, func
@@ -13,9 +13,10 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from backend.models import Base, Transaction, DetectedCluster, SARReport
 
-# Local SQLite Database Path
 DB_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = DB_DIR / "aml_ledger.db"
+DEFAULT_DB_PATH = Path("/tmp/aml_ledger.db") if os.getenv("VERCEL") else DB_DIR / "aml_ledger.db"
+DB_PATH = Path(os.getenv("AML_DATABASE_PATH", str(DEFAULT_DB_PATH)))
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(
@@ -26,7 +27,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def init_db():
-    """Initializes tables in aml_ledger.db if they do not already exist."""
+    """Initializes tables in the configured SQLite database."""
     Base.metadata.create_all(bind=engine)
 
 
@@ -191,4 +192,4 @@ def get_db_stats() -> Dict[str, int]:
         }
     finally:
         db.close()
-
+}
