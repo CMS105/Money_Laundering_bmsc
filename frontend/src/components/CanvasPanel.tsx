@@ -16,7 +16,8 @@ import {
 import { AlertCluster } from '../types';
 import AccountNode from './canvas/AccountNode';
 import TransactionEdge from './canvas/TransactionEdge';
-import { getTypologyMeta, formatINR } from '../lib/formatters';
+import { getTypologyMeta } from '../lib/formatters';
+import { useCurrency } from '../context/CurrencyContext';
 import {
   Network,
   Play,
@@ -40,6 +41,7 @@ const edgeTypes = {
 };
 
 export default function CanvasPanel({ cluster }: CanvasPanelProps) {
+  const { formatAmount } = useCurrency();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
@@ -64,7 +66,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
     const clusterEdges = cluster.edges;
     const typology = cluster.typology;
 
-    // Topology-specific layout coordinate calculation
+    // Topology-specific layout coordinate calculation with generous clearance
     const calculatedNodes: Node[] = clusterNodes.map((n, index) => {
       let x = 200;
       let y = 200;
@@ -72,37 +74,37 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       if (typology === 'CYCLIC_ROUND_TRIPPING') {
         const total = clusterNodes.length;
         const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
-        const radius = 180;
-        const centerX = 360;
-        const centerY = 240;
+        const radius = 240;
+        const centerX = 440;
+        const centerY = 270;
         x = centerX + radius * Math.cos(angle);
         y = centerY + radius * Math.sin(angle);
       } else if (typology === 'FAN_OUT_IN') {
         const role = (n.role || '').toLowerCase();
         if (role === 'entry') {
           x = 80;
-          y = 230;
+          y = 260;
         } else if (role === 'exit') {
-          x = 640;
-          y = 230;
+          x = 880;
+          y = 260;
         } else {
           const muleNodes = clusterNodes.filter(
             (item) => item.role !== 'entry' && item.role !== 'exit'
           );
           const muleIndex = muleNodes.findIndex((m) => m.id === n.id);
           const totalMules = muleNodes.length;
-          const spacing = 120;
-          const startY = 230 - ((totalMules - 1) * spacing) / 2;
-          x = 360;
+          const spacing = 190;
+          const startY = 260 - ((totalMules - 1) * spacing) / 2;
+          x = 480;
           y = startY + (muleIndex >= 0 ? muleIndex : index) * spacing;
         }
       } else if (typology === 'MULE_CHAIN') {
-        const spacing = 260;
-        x = 60 + index * spacing;
-        y = 210 + (index % 2 === 1 ? 50 : -30);
+        const spacing = 360;
+        x = 80 + index * spacing;
+        y = 240 + (index % 2 === 1 ? 70 : -50);
       } else {
-        x = 100 + (index % 3) * 260;
-        y = 120 + Math.floor(index / 3) * 180;
+        x = 100 + (index % 3) * 360;
+        y = 120 + Math.floor(index / 3) * 220;
       }
 
       return {
@@ -197,7 +199,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           <div className="h-3 w-px bg-white/10" />
 
           <div className="text-xs font-mono font-bold text-slate-200 tabular-nums">
-            {formatINR(cluster.total_volume)}
+            {formatAmount(cluster.total_volume, true)}
           </div>
 
           <div className="h-3 w-px bg-white/10" />
@@ -324,7 +326,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
 
             {/* Amount at Current Hop */}
             <div className="text-[11px] font-mono font-bold text-emerald-400 tabular-nums">
-              {currentEdge ? formatINR(currentEdge.amount) : '₹0'}
+              {currentEdge ? formatAmount(currentEdge.amount, true) : '$0'}
             </div>
           </div>
 

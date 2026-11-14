@@ -1,23 +1,52 @@
-export function formatINR(amount: number): string {
-  if (amount >= 10000000) {
-    return `₹${(amount / 10000000).toFixed(2)} Cr`;
+export function formatCurrency(
+  amountUSD: number,
+  currency: 'USD' | 'INR' = 'USD',
+  compact: boolean = false
+): string {
+  if (isNaN(amountUSD) || amountUSD == null) return currency === 'USD' ? '$0' : '₹0';
+
+  if (currency === 'USD') {
+    if (compact) {
+      if (amountUSD >= 1000000) {
+        return `$${(amountUSD / 1000000).toFixed(2)}M`;
+      }
+      if (amountUSD >= 1000) {
+        return `$${(amountUSD / 1000).toFixed(1)}K`;
+      }
+      return `$${Math.round(amountUSD).toLocaleString('en-US')}`;
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(amountUSD);
   }
-  if (amount >= 100000) {
-    return `₹${(amount / 100000).toFixed(2)} L`;
+
+  // INR conversion (1 USD = 83.5 INR)
+  const inrVal = amountUSD * 83.5;
+  if (compact) {
+    if (inrVal >= 10000000) {
+      return `₹${(inrVal / 10000000).toFixed(2)} Cr`;
+    }
+    if (inrVal >= 100000) {
+      return `₹${(inrVal / 100000).toFixed(2)} L`;
+    }
+    return `₹${Math.round(inrVal).toLocaleString('en-IN')}`;
   }
+
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(Math.round(inrVal));
+}
+
+export function formatINR(amount: number): string {
+  return formatCurrency(amount, 'INR', true);
 }
 
 export function formatINRFull(amount: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return formatCurrency(amount, 'INR', false);
 }
 
 export function formatPercent(value: number): string {

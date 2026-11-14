@@ -4,7 +4,10 @@ import {
   ExplainResponse,
   AlertCluster,
   SarHistoryResponse,
+  SuspectsResponse,
+  SuspectRecord,
 } from '../types';
+import localSuspectsJson from '../data/police_suspects.json';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -144,32 +147,98 @@ export async function injectAttack(typology: 'CYCLIC_ROUND_TRIPPING' | 'FAN_OUT_
   } catch (error) {
     console.warn('Backend unavailable for live injection, simulating local injection:', error);
     const mockId = `CLU-LIVE-${Math.floor(100 + Math.random() * 900)}`;
-    const mockCluster: AlertCluster = {
-      cluster_id: mockId,
-      typology,
-      risk_score: 96.4,
-      total_volume: 720000,
-      dwell_time_mins: 11,
-      entry_node: '020_ACC_8819',
-      exit_node: typology === 'CYCLIC_ROUND_TRIPPING' ? '020_ACC_8819' : '070_ACC_9921',
-      ml_probability: 0.978,
-      isolation_score: 0.942,
-      xai_feature_drivers: [
-        { feature: 'Circular Loop Topology', weight: 0.45, description: 'Closed loop capital recycling across cross-bank entities' },
-        { feature: 'Rapid Pass-Through Velocity', weight: 0.32, description: 'Expedited completion with near-zero economic substance' },
-        { feature: 'Structuring Symmetry', weight: 0.23, description: 'Low volume variance avoiding automated single-tx flags' },
-      ],
-      nodes: [
-        { id: '020_ACC_8819', label: '020_ACC_8819 (Origin)', role: 'entry', risk: 96 },
-        { id: '070_ACC_3301', label: '070_ACC_3301 (Mule 1)', role: 'mule', risk: 88 },
-        { id: '070_ACC_9921', label: '070_ACC_9921 (Exit)', role: 'exit', risk: 94 },
-      ],
-      edges: [
-        { id: 'TX_SIM_1', source: '020_ACC_8819', target: '070_ACC_3301', amount: 360000, timestamp: new Date().toISOString(), hop_delay_mins: 2.5, from_bank: '020', to_bank: '070', payment_format: 'Wire' },
-        { id: 'TX_SIM_2', source: '070_ACC_3301', target: '070_ACC_9921', amount: 350000, timestamp: new Date().toISOString(), hop_delay_mins: 3.0, from_bank: '070', to_bank: '070', payment_format: 'Wire' },
-      ],
-      ai_summary: `Live simulated ${typology} attack injected: rapid flow of $720k detected across cross-bank conduit accounts.`,
-    };
+
+    let mockCluster: AlertCluster;
+
+    if (typology === 'FAN_OUT_IN') {
+      mockCluster = {
+        cluster_id: mockId,
+        typology: 'FAN_OUT_IN',
+        risk_score: 96.4,
+        total_volume: 720000,
+        dwell_time_mins: 11,
+        entry_node: '020_ACC_8819',
+        exit_node: '070_ACC_9921',
+        ml_probability: 0.978,
+        isolation_score: 0.942,
+        xai_feature_drivers: [
+          { feature: 'Structuring Fan-Out Topology', weight: 0.46, description: 'Parallel dispersion of $720k into sub-threshold tranches' },
+          { feature: 'Rapid Pass-Through Velocity', weight: 0.31, description: 'Sub-3 minute transit dwell across conduit accounts' },
+          { feature: 'Consolidator Convergence', weight: 0.23, description: 'Re-aggregation into single terminal cash-out account' },
+        ],
+        nodes: [
+          { id: '020_ACC_8819', label: '020_ACC_8819 (Origin Smurf)', role: 'entry', risk: 96 },
+          { id: '070_ACC_3301', label: '070_ACC_3301 (Conduit Mule A)', role: 'mule', risk: 88 },
+          { id: '070_ACC_3302', label: '070_ACC_3302 (Conduit Mule B)', role: 'mule', risk: 86 },
+          { id: '070_ACC_9921', label: '070_ACC_9921 (Consolidator Exit)', role: 'exit', risk: 94 },
+        ],
+        edges: [
+          { id: 'TX_SIM_FO1', source: '020_ACC_8819', target: '070_ACC_3301', amount: 360000, timestamp: new Date().toISOString(), hop_delay_mins: 2.5, from_bank: '020', to_bank: '070', payment_format: 'Wire' },
+          { id: 'TX_SIM_FO2', source: '020_ACC_8819', target: '070_ACC_3302', amount: 360000, timestamp: new Date().toISOString(), hop_delay_mins: 3.0, from_bank: '020', to_bank: '070', payment_format: 'Wire' },
+          { id: 'TX_SIM_FI1', source: '070_ACC_3301', target: '070_ACC_9921', amount: 355000, timestamp: new Date().toISOString(), hop_delay_mins: 2.8, from_bank: '070', to_bank: '070', payment_format: 'Wire' },
+          { id: 'TX_SIM_FI2', source: '070_ACC_3302', target: '070_ACC_9921', amount: 355000, timestamp: new Date().toISOString(), hop_delay_mins: 3.2, from_bank: '070', to_bank: '070', payment_format: 'Wire' },
+        ],
+        ai_summary: `Live simulated FAN_OUT_IN attack injected: structuring flow of $720k split across parallel conduits and re-aggregated into 070_ACC_9921.`,
+      };
+    } else if (typology === 'CYCLIC_ROUND_TRIPPING') {
+      mockCluster = {
+        cluster_id: mockId,
+        typology: 'CYCLIC_ROUND_TRIPPING',
+        risk_score: 95.8,
+        total_volume: 580000,
+        dwell_time_mins: 14,
+        entry_node: '020_ACC_8819',
+        exit_node: '020_ACC_8819',
+        ml_probability: 0.982,
+        isolation_score: 0.935,
+        xai_feature_drivers: [
+          { feature: 'Closed Directed Loop', weight: 0.48, description: 'Capital recycled back to origin with 94% retention' },
+          { feature: 'Cross-Bank Relay', weight: 0.32, description: 'Inter-bank circular hops across Bank 020 and Bank 070' },
+          { feature: 'Near-Zero Dwell Latency', weight: 0.20, description: 'Rapid sequential liquidation with zero commercial purpose' },
+        ],
+        nodes: [
+          { id: '020_ACC_8819', label: '020_ACC_8819 (Origin/Sink)', role: 'entry', risk: 96 },
+          { id: '070_ACC_3301', label: '070_ACC_3301 (Shell Conduit)', role: 'mule', risk: 87 },
+          { id: '012_ACC_1042', label: '012_ACC_1042 (Relay Conduit)', role: 'mule', risk: 85 },
+        ],
+        edges: [
+          { id: 'TX_SIM_CY1', source: '020_ACC_8819', target: '070_ACC_3301', amount: 580000, timestamp: new Date().toISOString(), hop_delay_mins: 3.5, from_bank: '020', to_bank: '070', payment_format: 'Wire' },
+          { id: 'TX_SIM_CY2', source: '070_ACC_3301', target: '012_ACC_1042', amount: 565000, timestamp: new Date().toISOString(), hop_delay_mins: 4.0, from_bank: '070', to_bank: '012', payment_format: 'Wire' },
+          { id: 'TX_SIM_CY3', source: '012_ACC_1042', target: '020_ACC_8819', amount: 550000, timestamp: new Date().toISOString(), hop_delay_mins: 3.0, from_bank: '012', to_bank: '020', payment_format: 'Wire' },
+        ],
+        ai_summary: `Live simulated CYCLIC_ROUND_TRIPPING attack injected: circular flow of $580k looped through 3 banks and returned to originator.`,
+      };
+    } else {
+      mockCluster = {
+        cluster_id: mockId,
+        typology: 'MULE_CHAIN',
+        risk_score: 94.2,
+        total_volume: 640000,
+        dwell_time_mins: 9.5,
+        entry_node: '020_ACC_8819',
+        exit_node: '070_ACC_9921',
+        ml_probability: 0.965,
+        isolation_score: 0.912,
+        xai_feature_drivers: [
+          { feature: 'High Transit Centrality', weight: 0.44, description: 'Linear serial passes through disposable accounts' },
+          { feature: 'Rapid Pass-Through Velocity', weight: 0.34, description: 'Less than 3 minutes retention per hop' },
+          { feature: 'Multi-Bank Hopping', weight: 0.22, description: 'Cross-institution transfers to impede single-bank AML' },
+        ],
+        nodes: [
+          { id: '020_ACC_8819', label: '020_ACC_8819 (Origin)', role: 'entry', risk: 92 },
+          { id: '070_ACC_3301', label: '070_ACC_3301 (Mule 1)', role: 'mule', risk: 84 },
+          { id: '012_ACC_5002', label: '012_ACC_5002 (Mule 2)', role: 'mule', risk: 85 },
+          { id: '070_ACC_9921', label: '070_ACC_9921 (Cash-Out Exit)', role: 'exit', risk: 95 },
+        ],
+        edges: [
+          { id: 'TX_SIM_MC1', source: '020_ACC_8819', target: '070_ACC_3301', amount: 640000, timestamp: new Date().toISOString(), hop_delay_mins: 2.0, from_bank: '020', to_bank: '070', payment_format: 'Wire' },
+          { id: 'TX_SIM_MC2', source: '070_ACC_3301', target: '012_ACC_5002', amount: 625000, timestamp: new Date().toISOString(), hop_delay_mins: 2.5, from_bank: '070', to_bank: '012', payment_format: 'Wire' },
+          { id: 'TX_SIM_MC3', source: '012_ACC_5002', target: '070_ACC_9921', amount: 610000, timestamp: new Date().toISOString(), hop_delay_mins: 2.5, from_bank: '012', to_bank: '070', payment_format: 'ACH' },
+        ],
+        ai_summary: `Live simulated MULE_CHAIN attack injected: 3-hop high-velocity relay laundering $640k through serial conduit mules.`,
+      };
+    }
+
     return {
       message: `Simulated live ${typology} injection successful.`,
       injected_cluster: mockCluster,
@@ -177,6 +246,70 @@ export async function injectAttack(typology: 'CYCLIC_ROUND_TRIPPING' | 'FAN_OUT_
     };
   }
 }
+
+export async function fetchPoliceSuspects(): Promise<SuspectsResponse> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/v1/suspects`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.warn('Backend suspects endpoint unavailable, using local suspects registry:', error);
+    const suspects = localSuspectsJson as unknown as SuspectRecord[];
+    const criticalCount = suspects.filter((s) => s.risk_level === 'CRITICAL').length;
+    const underInquiryCount = suspects.filter((s) => s.risk_level.includes('INQUIRY') || s.risk_level.includes('CLEAR')).length;
+
+    return {
+      total_suspects: suspects.length,
+      critical_count: criticalCount,
+      under_inquiry_count: underInquiryCount,
+      suspects,
+    };
+  }
+}
+
+export async function fetchSuspectTransactions(suspectId: string): Promise<Record<string, unknown>> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/v1/suspects/${suspectId}/transactions`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.warn('Backend suspect transaction endpoint unavailable, using local match:', error);
+    const suspects = localSuspectsJson as unknown as SuspectRecord[];
+    const match = suspects.find((s) => s.id.toLowerCase() === suspectId.toLowerCase());
+    if (match) {
+      return {
+        suspect_id: match.id,
+        name: match.name,
+        alias: match.alias,
+        has_malicious_transactions: match.has_malicious_transactions,
+        risk_score: match.risk_score,
+        risk_level: match.risk_level,
+        police_agency: match.police_agency,
+        police_clearance_note: match.police_clearance_note,
+        recent_scam_transactions: match.recent_scam_transactions,
+      };
+    }
+    return {
+      suspect_id: suspectId,
+      has_malicious_transactions: false,
+      recent_scam_transactions: [],
+      police_clearance_note: 'No record found in local registry.',
+    };
+  }
+}
+
 
 export async function explainCluster(cluster: AlertCluster): Promise<ExplainResponse> {
   try {

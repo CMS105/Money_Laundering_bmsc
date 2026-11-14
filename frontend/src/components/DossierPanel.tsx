@@ -20,7 +20,8 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { AlertCluster, ExplainResponse } from '../types';
-import { formatINRFull, getTypologyMeta } from '../lib/formatters';
+import { getTypologyMeta } from '../lib/formatters';
+import { useCurrency } from '../context/CurrencyContext';
 import { explainCluster } from '../services/api';
 
 interface DossierPanelProps {
@@ -28,6 +29,7 @@ interface DossierPanelProps {
 }
 
 export default function DossierPanel({ cluster }: DossierPanelProps) {
+  const { formatAmount } = useCurrency();
   const [explanation, setExplanation] = useState<ExplainResponse | null>(null);
   const [isLoadingAi, setIsLoadingAi] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
       ai_summary: cluster.ai_summary,
       pattern_description: getTypologyMeta(cluster.typology).description,
       key_findings: [
-        `High velocity transactions: ${formatINRFull(cluster.total_volume)} across ${cluster.edges.length} hops`,
+        `High velocity transactions: ${formatAmount(cluster.total_volume)} across ${cluster.edges.length} hops`,
         `Short transit dwell window of ${cluster.dwell_time_mins.toFixed(1)} minutes between counterparties`,
         `Direct transit link identified between origin ${cluster.entry_node} and destination ${cluster.exit_node}`,
       ],
@@ -57,7 +59,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
       confidence_score: 0.94,
       xai_feature_drivers: cluster.xai_feature_drivers,
     });
-  }, [cluster]);
+  }, [cluster, formatAmount]);
 
   const handleCopy = (text: string, fieldName: string) => {
     navigator.clipboard.writeText(text);
@@ -327,7 +329,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
             <div className="p-2 rounded-lg bg-black/30 border border-white/[0.04]">
               <span className="text-slate-500 text-[9px] uppercase tracking-wider block">Total Volume</span>
               <span className="font-bold text-slate-100 tabular-nums">
-                {formatINRFull(cluster.total_volume)}
+                {formatAmount(cluster.total_volume)}
               </span>
             </div>
 
@@ -426,7 +428,7 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
                   <span className="text-slate-500 text-[9px]">({e.payment_format || 'Wire'})</span>
                 </div>
                 <span className="font-bold text-slate-200 tabular-nums shrink-0">
-                  ${e.amount.toLocaleString()}
+                  {formatAmount(e.amount)}
                 </span>
               </div>
             ))}

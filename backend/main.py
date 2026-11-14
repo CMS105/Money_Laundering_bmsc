@@ -155,6 +155,8 @@ from backend.api.main import (
     explain_cluster as explain_v1_cluster,
     inject_live_attack as inject_v1_attack,
     ingest_transactions as ingest_v1_transactions,
+    get_police_suspects as get_v1_police_suspects,
+    get_suspect_transactions as get_v1_suspect_transactions,
 )
 from backend.api.schemas import (
     AnalysisResponse,
@@ -162,6 +164,7 @@ from backend.api.schemas import (
     InjectResponse,
     IngestRequest,
     IngestResponse,
+    SuspectsResponse,
 )
 
 app.add_api_route("/api/v1/analysis", get_v1_analysis, methods=["GET"], response_model=AnalysisResponse)
@@ -169,6 +172,8 @@ app.add_api_route("/api/v1/explain/{cluster_id}", explain_v1_cluster, methods=["
 app.add_api_route("/api/v1/inject", inject_v1_attack, methods=["POST"], response_model=InjectResponse)
 app.add_api_route("/api/transactions/ingest", ingest_v1_transactions, methods=["POST"], response_model=IngestResponse)
 app.add_api_route("/api/v1/transactions/ingest", ingest_v1_transactions, methods=["POST"], response_model=IngestResponse)
+app.add_api_route("/api/v1/suspects", get_v1_police_suspects, methods=["GET"], response_model=SuspectsResponse)
+app.add_api_route("/api/v1/suspects/{suspect_id}/transactions", get_v1_suspect_transactions, methods=["GET"])
 
 
 # Mount built frontend dist if present

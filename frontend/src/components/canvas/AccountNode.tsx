@@ -73,6 +73,18 @@ const AccountNode = ({ data, selected }: NodeProps) => {
           id="in-top"
           className="!w-2.5 !h-2.5 !-top-1.5 !bg-[#F8FAFC] !border !border-slate-900 !shadow-[0_0_8px_rgba(255,255,255,0.8)]"
         />
+        <Handle
+          type="source"
+          position={Position.Right}
+          id="out-right"
+          className="!w-2.5 !h-2.5 !-right-1.5 !bg-[#10B981] !border !border-slate-900 !shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+        />
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          id="out-bottom"
+          className="!w-2.5 !h-2.5 !-bottom-1.5 !bg-[#10B981] !border !border-slate-900 !shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+        />
 
         {/* Header: Role & Bank Code */}
         <div className="flex items-center justify-between gap-2 mb-2.5">

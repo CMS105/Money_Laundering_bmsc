@@ -12,6 +12,9 @@ try:
         AlertCluster,
         IngestRequest,
         IngestResponse,
+        SuspectsResponse,
+        SuspectRecord,
+        ScamTransaction,
     )
     from .mock_data import repo
     from .explainer import generate_llm_explanation
@@ -25,6 +28,9 @@ except ImportError:
         AlertCluster,
         IngestRequest,
         IngestResponse,
+        SuspectsResponse,
+        SuspectRecord,
+        ScamTransaction,
     )
     from mock_data import repo
     from explainer import generate_llm_explanation
@@ -218,6 +224,55 @@ def inject_live_attack(payload: InjectRequest):
         injected_cluster=injected,
         total_alerts=len(repo.alerts),
     )
+
+
+def _load_suspects_data() -> List[Dict[str, Any]]:
+    import json
+    from pathlib import Path
+    data_path = Path(__file__).resolve().parent.parent / "data" / "police_suspects.json"
+    if data_path.exists():
+        with open(data_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+@app.get("/api/v1/suspects", response_model=SuspectsResponse)
+@app.get("/v1/suspects", response_model=SuspectsResponse)
+def get_police_suspects():
+    """Returns directory of suspects currently under police doubt and surveillance."""
+    data = _load_suspects_data()
+    suspects = [SuspectRecord(**item) for item in data]
+    critical_count = sum(1 for s in suspects if s.risk_level == "CRITICAL")
+    under_inquiry_count = sum(1 for s in suspects if "INQUIRY" in s.risk_level or "CLEAR" in s.risk_level)
+
+    return SuspectsResponse(
+        total_suspects=len(suspects),
+        critical_count=critical_count,
+        under_inquiry_count=under_inquiry_count,
+        suspects=suspects,
+    )
+
+
+@app.get("/api/v1/suspects/{suspect_id}/transactions")
+@app.get("/v1/suspects/{suspect_id}/transactions")
+def get_suspect_transactions(suspect_id: str):
+    """Returns recent malicious scamming transactions for a specific suspect if present, else empty status."""
+    data = _load_suspects_data()
+    for item in data:
+        if item["id"].lower() == suspect_id.lower():
+            suspect = SuspectRecord(**item)
+            return {
+                "suspect_id": suspect.id,
+                "name": suspect.name,
+                "alias": suspect.alias,
+                "has_malicious_transactions": suspect.has_malicious_transactions,
+                "risk_score": suspect.risk_score,
+                "risk_level": suspect.risk_level,
+                "police_agency": suspect.police_agency,
+                "police_clearance_note": suspect.police_clearance_note,
+                "recent_scam_transactions": [t.dict() for t in suspect.recent_scam_transactions],
+            }
+    raise HTTPException(status_code=404, detail=f"Suspect with ID '{suspect_id}' not found in police registry.")
 
 
 if __name__ == "__main__":

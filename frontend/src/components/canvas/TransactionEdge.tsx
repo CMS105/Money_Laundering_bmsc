@@ -8,7 +8,7 @@ import {
   EdgeProps,
 } from '@xyflow/react';
 import { Clock } from 'lucide-react';
-import { formatINR } from '../../lib/formatters';
+import { useCurrency } from '../../context/CurrencyContext';
 
 interface TransactionEdgeData {
   amount: number;
@@ -29,6 +29,7 @@ const TransactionEdge = ({
   markerEnd,
   style,
 }: EdgeProps) => {
+  const { formatAmount } = useCurrency();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -66,7 +67,7 @@ const TransactionEdge = ({
           className="nodrag nopan z-10 flex flex-col items-center gap-0.5 rounded-lg border border-white/[0.12] bg-[#0E1016]/95 px-2.5 py-1 shadow-[0_8px_20px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl hover:border-white/30 hover:scale-105 transition-all cursor-default select-none"
         >
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#F8FAFC] font-mono tabular-nums">
-            <span>{formatINR(amount)}</span>
+            <span>{formatAmount(amount, true)}</span>
             <span className="text-[9px] font-medium text-slate-400 px-1 py-0.2 rounded bg-white/[0.06] border border-white/[0.08]">
               {paymentFormat}
             </span>

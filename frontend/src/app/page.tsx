@@ -82,6 +82,24 @@ export default function WorkbenchPage() {
     }
   };
 
+  const handleLocateCluster = (clusterId: string) => {
+    const found = alerts.find(
+      (a) => a.cluster_id.toLowerCase() === clusterId.toLowerCase()
+    );
+    if (found) {
+      setSelectedCluster(found);
+      showToast(
+        `🎯 Located & Highlighted Cluster ${found.cluster_id} on Canvas!`,
+        'success'
+      );
+    } else {
+      showToast(
+        `Cluster ${clusterId} not found in active surveillance feed.`,
+        'info'
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#070b14] text-slate-100 font-sans">
       {/* Top KPI Scoreboard & Demo Controls */}
@@ -91,6 +109,8 @@ export default function WorkbenchPage() {
         sqliteStats={sqliteStats}
         onInject={handleInject}
         isInjecting={isInjecting}
+        onLocateCluster={handleLocateCluster}
+        alerts={alerts}
       />
 
       {/* Floating Toast Notification */}

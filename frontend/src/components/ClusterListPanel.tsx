@@ -11,7 +11,8 @@ import {
   FileSearch,
 } from 'lucide-react';
 import { AlertCluster } from '../types';
-import { formatINR, getTypologyMeta } from '../lib/formatters';
+import { getTypologyMeta } from '../lib/formatters';
+import { useCurrency } from '../context/CurrencyContext';
 import SpatialCard from './SpatialCard';
 
 interface ClusterListPanelProps {
@@ -26,6 +27,7 @@ export default function ClusterListPanel({
   selectedClusterId,
   onSelectCluster,
 }: ClusterListPanelProps) {
+  const { formatAmount } = useCurrency();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTypology, setFilterTypology] = useState<string>('ALL');
 
@@ -178,7 +180,7 @@ export default function ClusterListPanel({
                   <div>
                     <span className="text-[#8B95A5] text-[10px] block">Volume Laundered</span>
                     <span className="font-semibold text-slate-100">
-                      {formatINR(cluster.total_volume)}
+                      {formatAmount(cluster.total_volume, true)}
                     </span>
                   </div>
                   <div>

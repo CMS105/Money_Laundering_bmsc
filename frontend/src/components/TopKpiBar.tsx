@@ -13,9 +13,13 @@ import {
   Layers,
   ShieldCheck,
   TrendingUp,
+  ShieldAlert,
+  Coins,
 } from 'lucide-react';
-import { ComparisonMetrics, SqliteStats } from '../types';
+import { ComparisonMetrics, SqliteStats, AlertCluster } from '../types';
 import { formatPercent } from '../lib/formatters';
+import { useCurrency } from '../context/CurrencyContext';
+import PoliceSuspectsModal from './PoliceSuspectsModal';
 
 interface TopKpiBarProps {
   metrics?: ComparisonMetrics;
@@ -23,6 +27,8 @@ interface TopKpiBarProps {
   sqliteStats?: SqliteStats;
   onInject: (typology: 'CYCLIC_ROUND_TRIPPING' | 'FAN_OUT_IN' | 'MULE_CHAIN') => Promise<void>;
   isInjecting: boolean;
+  onLocateCluster?: (clusterId: string) => void;
+  alerts?: AlertCluster[];
 }
 
 export default function TopKpiBar({
@@ -31,8 +37,12 @@ export default function TopKpiBar({
   sqliteStats,
   onInject,
   isInjecting,
+  onLocateCluster,
+  alerts,
 }: TopKpiBarProps) {
+  const { currency, toggleCurrency } = useCurrency();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [suspectsModalOpen, setSuspectsModalOpen] = useState(false);
 
   const baseline = metrics?.baseline || {
     precision: 0.105,
@@ -173,79 +183,119 @@ export default function TopKpiBar({
           </div>
         </div>
 
-        {/* Action Button: Inject Live Attack */}
-        <div className="relative">
+        {/* Action Controls: Currency Switcher, Police Watchlist & Inject Attack */}
+        <div className="flex items-center gap-2.5">
+          {/* Currency Switcher: USD ($) vs INR (₹) */}
           <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            disabled={isInjecting}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#181B26] hover:bg-[#202534] text-slate-100 border border-white/[0.12] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] transition-all active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+            onClick={toggleCurrency}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#141824] hover:bg-[#1D2232] text-slate-200 border border-white/[0.1] shadow-inner transition-all cursor-pointer"
+            title={`Active Currency: ${currency}. Click to switch between USD ($) and INR (₹).`}
           >
-            {isInjecting ? (
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
-            ) : (
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-            )}
-            <span>{isInjecting ? 'Simulating Ring...' : 'Inject Attack Motif'}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <Coins className="w-3.5 h-3.5 text-slate-400" />
+            <span className={currency === 'USD' ? 'text-emerald-400 font-black' : 'text-slate-500'}>
+              $ USD
+            </span>
+            <span className="text-slate-600">|</span>
+            <span className={currency === 'INR' ? 'text-amber-400 font-black' : 'text-slate-500'}>
+              ₹ INR
+            </span>
           </button>
 
-          {/* Attack Typology Dropdown */}
-          {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-72 rounded-xl bg-[#0E1016] border border-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.1)] p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-2.5 py-1.5 text-[10px] font-bold text-[#8B95A5] uppercase tracking-wider border-b border-white/[0.06]">
-                Synthetic Typology Simulation
+          {/* Police Suspects Watchlist Trigger Button */}
+          <button
+            onClick={() => setSuspectsModalOpen(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/30 hover:bg-rose-900/40 text-rose-200 border border-rose-500/30 shadow-[0_4px_12px_rgba(244,63,94,0.15)] transition-all active:scale-[0.98] cursor-pointer"
+            title="Open Police Suspects Watchlist & Scam Transaction Registry"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+            <span>Police Suspects</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold border border-rose-500/30">
+              6 Watchlist
+            </span>
+          </button>
+
+          {/* Action Button: Inject Live Attack */}
+          <div className="relative">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              disabled={isInjecting}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#181B26] hover:bg-[#202534] text-slate-100 border border-white/[0.12] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] transition-all active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+            >
+              {isInjecting ? (
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
+              ) : (
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+              )}
+              <span>{isInjecting ? 'Simulating Ring...' : 'Inject Attack Motif'}</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            </button>
+
+            {/* Attack Typology Dropdown */}
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-72 rounded-xl bg-[#0E1016] border border-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.1)] p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1.5 text-[10px] font-bold text-[#8B95A5] uppercase tracking-wider border-b border-white/[0.06]">
+                  Synthetic Typology Simulation
+                </div>
+
+                <div className="p-1 space-y-1 mt-1">
+                  <button
+                    onClick={() => handleSelect('CYCLIC_ROUND_TRIPPING')}
+                    className="w-full text-left p-2 rounded-lg hover:bg-white/[0.05] transition-colors flex items-start gap-2.5 cursor-pointer group"
+                  >
+                    <RefreshCw className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5 group-hover:rotate-180 transition-transform duration-500" />
+                    <div>
+                      <div className="text-xs font-semibold text-slate-200 group-hover:text-white">
+                        Cyclic Round-Tripping Loop
+                      </div>
+                      <div className="text-[10px] text-slate-400 leading-tight">
+                        Inject a 3-node wash loop returning to origin.
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelect('FAN_OUT_IN')}
+                    className="w-full text-left p-2 rounded-lg hover:bg-white/[0.05] transition-colors flex items-start gap-2.5 cursor-pointer group"
+                  >
+                    <GitFork className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold text-slate-200 group-hover:text-white">
+                        Smurfing Fan-Out / Fan-In
+                      </div>
+                      <div className="text-[10px] text-slate-400 leading-tight">
+                        Disperse high volume into parallel mules, then reconverge.
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelect('MULE_CHAIN')}
+                    className="w-full text-left p-2 rounded-lg hover:bg-white/[0.05] transition-colors flex items-start gap-2.5 cursor-pointer group"
+                  >
+                    <Link2 className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold text-slate-200 group-hover:text-white">
+                        Rapid Pass-Through Chain
+                      </div>
+                      <div className="text-[10px] text-slate-400 leading-tight">
+                        Multi-hop conduit with near-zero dwell time.
+                      </div>
+                    </div>
+                  </button>
+                </div>
               </div>
-
-              <div className="p-1 space-y-1 mt-1">
-                <button
-                  onClick={() => handleSelect('CYCLIC_ROUND_TRIPPING')}
-                  className="w-full text-left p-2 rounded-lg hover:bg-white/[0.05] transition-colors flex items-start gap-2.5 cursor-pointer group"
-                >
-                  <RefreshCw className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5 group-hover:rotate-180 transition-transform duration-500" />
-                  <div>
-                    <div className="text-xs font-semibold text-slate-200 group-hover:text-white">
-                      Cyclic Round-Tripping Loop
-                    </div>
-                    <div className="text-[10px] text-slate-400 leading-tight">
-                      Inject a 3-node wash loop returning to origin.
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => handleSelect('FAN_OUT_IN')}
-                  className="w-full text-left p-2 rounded-lg hover:bg-white/[0.05] transition-colors flex items-start gap-2.5 cursor-pointer group"
-                >
-                  <GitFork className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs font-semibold text-slate-200 group-hover:text-white">
-                      Smurfing Fan-Out / Fan-In
-                    </div>
-                    <div className="text-[10px] text-slate-400 leading-tight">
-                      Disperse high volume into parallel mules, then reconverge.
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => handleSelect('MULE_CHAIN')}
-                  className="w-full text-left p-2 rounded-lg hover:bg-white/[0.05] transition-colors flex items-start gap-2.5 cursor-pointer group"
-                >
-                  <Link2 className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs font-semibold text-slate-200 group-hover:text-white">
-                      Rapid Pass-Through Chain
-                    </div>
-                    <div className="text-[10px] text-slate-400 leading-tight">
-                      Multi-hop conduit with near-zero dwell time.
-                    </div>
-                  </div>
-                </button>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Police Suspects Watchlist Modal */}
+      <PoliceSuspectsModal
+        isOpen={suspectsModalOpen}
+        onClose={() => setSuspectsModalOpen(false)}
+        onLocateCluster={onLocateCluster}
+        alerts={alerts}
+      />
     </header>
   );
 }

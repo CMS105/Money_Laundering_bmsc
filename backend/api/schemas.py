@@ -121,3 +121,39 @@ class IngestResponse(BaseModel):
     inserted_count: int
     total_db_transactions: int
     reanalyzed: bool
+
+
+class ScamTransaction(BaseModel):
+    tx_id: str
+    timestamp: str
+    amount: float
+    victim_info: str
+    scam_category: str
+    target_account: str
+    bank: str
+    fir_number: str
+    scam_method: str
+    status: str = "CONFIRMED MALICIOUS"
+    cluster_id: Optional[str] = None
+
+
+class SuspectRecord(BaseModel):
+    id: str
+    name: str
+    alias: str
+    police_agency: str
+    doubt_description: str
+    risk_score: float
+    risk_level: str
+    avatar: str = "👤"
+    has_malicious_transactions: bool
+    linked_accounts: List[str]
+    recent_scam_transactions: List[ScamTransaction] = []
+    police_clearance_note: Optional[str] = None
+
+
+class SuspectsResponse(BaseModel):
+    total_suspects: int
+    critical_count: int
+    under_inquiry_count: int
+    suspects: List[SuspectRecord]

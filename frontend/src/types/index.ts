@@ -98,6 +98,42 @@ export interface SarReportRecord {
   created_at: string;
 }
 
+export interface ScamTransaction {
+  tx_id: string;
+  timestamp: string;
+  amount: number;
+  victim_info: string;
+  scam_category: string;
+  target_account: string;
+  bank: string;
+  fir_number: string;
+  scam_method: string;
+  status: 'CONFIRMED MALICIOUS' | 'UNDER POLICE AUDIT' | 'FLAGGED';
+  cluster_id?: string;
+}
+
+export interface SuspectRecord {
+  id: string;
+  name: string;
+  alias: string;
+  police_agency: string;
+  doubt_description: string;
+  risk_score: number;
+  risk_level: 'CRITICAL' | 'HIGH' | 'ELEVATED' | 'CLEAR / UNDER INQUIRY';
+  avatar: string;
+  has_malicious_transactions: boolean;
+  linked_accounts: string[];
+  recent_scam_transactions: ScamTransaction[];
+  police_clearance_note?: string | null;
+}
+
+export interface SuspectsResponse {
+  total_suspects: number;
+  critical_count: number;
+  under_inquiry_count: number;
+  suspects: SuspectRecord[];
+}
+
 export interface SarHistoryResponse {
   total_sars: number;
   reports: SarReportRecord[];

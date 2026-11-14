@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import '@xyflow/react/dist/style.css';
 import "./globals.css";
+import { CurrencyProvider } from "../context/CurrencyContext";
 
 export const metadata: Metadata = {
   title: "LaunderyLens — Graph Data Science & Anti-Money Laundering Platform",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full bg-slate-950 text-slate-100">
       <body className="h-full flex flex-col antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
-        {children}
+        <CurrencyProvider>
+          {children}
+        </CurrencyProvider>
       </body>
     </html>
   );
