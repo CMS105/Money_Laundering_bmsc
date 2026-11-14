@@ -7,7 +7,7 @@ import {
   getBezierPath,
   EdgeProps,
 } from '@xyflow/react';
-import { Clock, IndianRupee } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { formatINR } from '../../lib/formatters';
 
 interface TransactionEdgeData {
@@ -41,6 +41,7 @@ const TransactionEdge = ({
   const edgeData = (data || {}) as unknown as TransactionEdgeData;
   const amount = edgeData.amount ?? 0;
   const delay = edgeData.hop_delay_mins ?? 0;
+  const paymentFormat = edgeData.payment_format || 'Wire';
 
   return (
     <>
@@ -49,9 +50,9 @@ const TransactionEdge = ({
         path={edgePath}
         markerEnd={markerEnd}
         style={{
-          strokeWidth: 2.5,
-          stroke: '#38bdf8',
-          opacity: 0.85,
+          strokeWidth: 2,
+          stroke: '#64748B',
+          opacity: 0.8,
           ...style,
         }}
       />
@@ -62,20 +63,17 @@ const TransactionEdge = ({
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: 'all',
           }}
-          className="nodrag nopan z-10 flex flex-col items-center gap-0.5 rounded-lg border border-cyan-500/30 bg-slate-900/90 px-2.5 py-1 shadow-lg backdrop-blur-md hover:border-cyan-400 hover:scale-105 transition-all"
+          className="nodrag nopan z-10 flex flex-col items-center gap-0.5 rounded-lg border border-white/[0.12] bg-[#0E1016]/95 px-2.5 py-1 shadow-[0_8px_20px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl hover:border-white/30 hover:scale-105 transition-all cursor-default select-none"
         >
-          <div className="flex items-center gap-1 text-[11px] font-bold text-cyan-300 font-mono">
-            <IndianRupee className="w-3 h-3 text-cyan-400" />
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#F8FAFC] font-mono tabular-nums">
             <span>{formatINR(amount)}</span>
+            <span className="text-[9px] font-medium text-slate-400 px-1 py-0.2 rounded bg-white/[0.06] border border-white/[0.08]">
+              {paymentFormat}
+            </span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-slate-400 font-mono">
+          <div className="flex items-center gap-1 text-[10px] text-[#8B95A5] font-mono tabular-nums">
             <Clock className="w-2.5 h-2.5 text-amber-400" />
-            <span>{delay.toFixed(1)}m delay</span>
-            {edgeData.payment_format && (
-              <span className="text-[9px] text-slate-500 font-sans border-l border-slate-700 pl-1">
-                {edgeData.payment_format}
-              </span>
-            )}
+            <span>{delay.toFixed(1)}m transit</span>
           </div>
         </div>
       </EdgeLabelRenderer>

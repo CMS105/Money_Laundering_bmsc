@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
-import { ShieldAlert, ArrowUpRight, ArrowDownLeft, Shuffle } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Shuffle } from 'lucide-react';
 
 interface AccountNodeData {
   id: string;
@@ -20,99 +20,112 @@ const AccountNode = ({ data, selected }: NodeProps) => {
       case 'entry':
         return {
           badge: 'ORIGIN / ENTRY',
-          badgeClass: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
-          borderClass: selected ? 'border-cyan-400 ring-2 ring-cyan-400/50' : 'border-cyan-500/50 hover:border-cyan-400',
-          bgGradient: 'from-cyan-950/80 via-slate-900/90 to-slate-950',
-          icon: <ArrowUpRight className="w-4 h-4 text-cyan-400" />,
-          accentDot: 'bg-cyan-400',
+          badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+          accentColor: '#10B981',
+          icon: <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400" />,
         };
       case 'exit':
         return {
           badge: 'SINK / EXIT',
-          badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-400/40',
-          borderClass: selected ? 'border-rose-400 ring-2 ring-rose-400/50' : 'border-rose-500/50 hover:border-rose-400',
-          bgGradient: 'from-rose-950/80 via-slate-900/90 to-slate-950',
-          icon: <ArrowDownLeft className="w-4 h-4 text-rose-400" />,
-          accentDot: 'bg-rose-400',
+          badgeClass: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+          accentColor: '#EF4444',
+          icon: <ArrowDownLeft className="w-3.5 h-3.5 text-rose-400" />,
         };
       case 'mule':
       default:
         return {
-          badge: 'MULE / CONDUIT',
-          badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
-          borderClass: selected ? 'border-amber-400 ring-2 ring-amber-400/50' : 'border-amber-500/50 hover:border-amber-400',
-          bgGradient: 'from-amber-950/70 via-slate-900/90 to-slate-950',
-          icon: <Shuffle className="w-4 h-4 text-amber-400" />,
-          accentDot: 'bg-amber-400',
+          badge: 'MULE CONDUIT',
+          badgeClass: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
+          accentColor: '#F59E0B',
+          icon: <Shuffle className="w-3.5 h-3.5 text-amber-400" />,
         };
     }
   };
 
   const config = getRoleConfig();
+  const bankCode = nodeData.id.includes('_') ? nodeData.id.split('_')[0] : 'BNK';
 
   return (
     <div
-      className={`relative min-w-[210px] rounded-xl border p-3.5 shadow-2xl backdrop-blur-md transition-all duration-200 bg-gradient-to-b ${config.bgGradient} ${config.borderClass}`}
+      style={{ perspective: '800px' }}
+      className="relative select-none"
     >
-      {/* React Flow Connection Handles */}
-      <Handle
-        type="target"
-        position={Position.Left}
-        id="in-left"
-        className="!w-3 !h-3 !-left-1.5 !bg-sky-400 !border-2 !border-slate-900 hover:!scale-125 transition-transform"
-      />
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="in-top"
-        className="!w-3 !h-3 !-top-1.5 !bg-sky-400 !border-2 !border-slate-900 hover:!scale-125 transition-transform"
-      />
+      <div
+        className={`relative min-w-[220px] rounded-xl p-3.5 backdrop-blur-2xl transition-all duration-200 border ${
+          selected
+            ? 'border-white/40 bg-[#161B29] shadow-[0_16px_40px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.25)] ring-2 ring-white/20'
+            : 'border-white/[0.08] bg-[#0E1016]/95 shadow-[0_12px_28px_-6px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.1)] hover:border-white/[0.18]'
+        }`}
+      >
+        {/* Top Edge Specular Line */}
+        <div className="absolute top-0 left-3 right-3 h-[1px] bg-gradient-to-r from-transparent via-white/25 to-transparent" />
 
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-1.5">
-          <span className={`w-2 h-2 rounded-full ${config.accentDot} animate-ping`} />
-          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${config.badgeClass}`}>
+        {/* Connection Handles */}
+        <Handle
+          type="target"
+          position={Position.Left}
+          id="in-left"
+          className="!w-2.5 !h-2.5 !-left-1.5 !bg-[#F8FAFC] !border !border-slate-900 !shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+        />
+        <Handle
+          type="target"
+          position={Position.Top}
+          id="in-top"
+          className="!w-2.5 !h-2.5 !-top-1.5 !bg-[#F8FAFC] !border !border-slate-900 !shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+        />
+
+        {/* Header: Role & Bank Code */}
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <span className={`text-[9px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border ${config.badgeClass}`}>
             {config.badge}
           </span>
-        </div>
-        <div className="flex items-center gap-1 bg-slate-900/80 px-2 py-0.5 rounded-md border border-slate-700/60">
-          <ShieldAlert className="w-3 h-3 text-red-400" />
-          <span className="text-[11px] font-bold text-red-300">{nodeData.risk ?? 85}%</span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 mb-1">
-        <div className="p-1.5 rounded-lg bg-slate-800/80 border border-slate-700/50">
-          {config.icon}
-        </div>
-        <div className="overflow-hidden">
-          <div className="text-sm font-black text-slate-100 tracking-wide font-mono truncate">
-            {nodeData.id}
-          </div>
-          <div className="text-[11px] text-slate-400 truncate">
-            {nodeData.label || nodeData.id}
+          <div className="flex items-center gap-1.5 font-mono text-[10px] tabular-nums">
+            <span className="text-[#8B95A5] bg-white/[0.05] px-1.5 py-0.5 rounded border border-white/[0.06]">
+              Bank {bankCode}
+            </span>
+            <span className="font-semibold text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
+              {nodeData.risk ?? 85}% Risk
+            </span>
           </div>
         </div>
-      </div>
 
-      <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
-        <span>KYC Risk Score</span>
-        <span className="font-semibold text-slate-200">{nodeData.risk >= 90 ? 'Critical Severity' : 'High Alert'}</span>
-      </div>
+        {/* Node Body with 3D Depth Icon */}
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#141824] border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] shrink-0">
+            {config.icon}
+          </div>
+          <div className="overflow-hidden">
+            <div className="text-xs font-mono font-bold text-[#F8FAFC] tracking-wide truncate">
+              {nodeData.id}
+            </div>
+            <div className="text-[10px] text-[#8B95A5] truncate font-sans">
+              {nodeData.label || nodeData.id}
+            </div>
+          </div>
+        </div>
 
-      {/* Output Handles */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="out-right"
-        className="!w-3 !h-3 !-right-1.5 !bg-cyan-400 !border-2 !border-slate-900 hover:!scale-125 transition-transform"
-      />
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="out-bottom"
-        className="!w-3 !h-3 !-bottom-1.5 !bg-cyan-400 !border-2 !border-slate-900 hover:!scale-125 transition-transform"
-      />
+        {/* Footer: Surveillance Flag */}
+        <div className="pt-2 border-t border-white/[0.05] flex items-center justify-between text-[10px] font-mono tabular-nums text-slate-400">
+          <span>Surveillance Status</span>
+          <span className="font-medium text-slate-200">
+            {nodeData.risk >= 90 ? 'Critical Quarantine' : 'Active Intercept'}
+          </span>
+        </div>
+
+        {/* Output Handles */}
+        <Handle
+          type="source"
+          position={Position.Right}
+          id="out-right"
+          className="!w-2.5 !h-2.5 !-right-1.5 !bg-[#F8FAFC] !border !border-slate-900 !shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+        />
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          id="out-bottom"
+          className="!w-2.5 !h-2.5 !-bottom-1.5 !bg-[#F8FAFC] !border !border-slate-900 !shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+        />
+      </div>
     </div>
   );
 };

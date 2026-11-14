@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -17,7 +17,15 @@ import { AlertCluster } from '../types';
 import AccountNode from './canvas/AccountNode';
 import TransactionEdge from './canvas/TransactionEdge';
 import { getTypologyMeta, formatINR } from '../lib/formatters';
-import { Network } from 'lucide-react';
+import {
+  Network,
+  Play,
+  Pause,
+  RotateCcw,
+  SkipBack,
+  SkipForward,
+  Clock,
+} from 'lucide-react';
 
 interface CanvasPanelProps {
   cluster: AlertCluster | null;
@@ -35,11 +43,20 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
+  // Temporal Scrubber state
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const playTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const totalSteps = cluster?.edges?.length || 1;
+
   // Compute Layout when cluster changes
   useEffect(() => {
     if (!cluster) {
       setNodes([]);
       setEdges([]);
+      setCurrentStep(1);
+      setIsPlaying(false);
       return;
     }
 
@@ -53,16 +70,14 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       let y = 200;
 
       if (typology === 'CYCLIC_ROUND_TRIPPING') {
-        // Circular arrangement
         const total = clusterNodes.length;
-        const angle = (index / total) * 2 * Math.PI - Math.PI / 2; // start from top
-        const radius = 175;
+        const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
+        const radius = 180;
         const centerX = 360;
         const centerY = 240;
         x = centerX + radius * Math.cos(angle);
         y = centerY + radius * Math.sin(angle);
       } else if (typology === 'FAN_OUT_IN') {
-        // 3-Stage Bipartite / Layered Layout: Entry -> Intermediate Mules -> Exit Consolidator
         const role = (n.role || '').toLowerCase();
         if (role === 'entry') {
           x = 80;
@@ -71,7 +86,6 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           x = 640;
           y = 230;
         } else {
-          // Intermediate mules column
           const muleNodes = clusterNodes.filter(
             (item) => item.role !== 'entry' && item.role !== 'exit'
           );
@@ -83,13 +97,10 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           y = startY + (muleIndex >= 0 ? muleIndex : index) * spacing;
         }
       } else if (typology === 'MULE_CHAIN') {
-        // Sequential Linear Chain (Horizontal Pipeline)
         const spacing = 260;
         x = 60 + index * spacing;
-        // subtle staggered wave so edges look dynamic
         y = 210 + (index % 2 === 1 ? 50 : -30);
       } else {
-        // Generic grid layout
         x = 100 + (index % 3) * 260;
         y = 120 + Math.floor(index / 3) * 180;
       }
@@ -107,7 +118,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       };
     });
 
-    const calculatedEdges: Edge[] = clusterEdges.map((e) => ({
+    const calculatedEdges: Edge[] = clusterEdges.map((e, idx) => ({
       id: e.id,
       source: e.source,
       target: e.target,
@@ -119,71 +130,96 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
         timestamp: e.timestamp,
         payment_format: e.payment_format,
       },
+      style: {
+        opacity: idx + 1 <= currentStep ? 1 : 0.2,
+      },
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        width: 16,
-        height: 16,
-        color: '#38bdf8',
+        width: 14,
+        height: 14,
+        color: idx + 1 <= currentStep ? '#F8FAFC' : '#475569',
       },
     }));
 
     setNodes(calculatedNodes);
     setEdges(calculatedEdges);
-  }, [cluster, setNodes, setEdges]);
+  }, [cluster, currentStep, setNodes, setEdges]);
+
+  // Handle temporal playback timer
+  useEffect(() => {
+    if (isPlaying) {
+      playTimerRef.current = setInterval(() => {
+        setCurrentStep((prev) => {
+          if (prev >= totalSteps) {
+            setIsPlaying(false);
+            return totalSteps;
+          }
+          return prev + 1;
+        });
+      }, 1500);
+    } else if (playTimerRef.current) {
+      clearInterval(playTimerRef.current);
+    }
+    return () => {
+      if (playTimerRef.current) clearInterval(playTimerRef.current);
+    };
+  }, [isPlaying, totalSteps]);
 
   if (!cluster) {
     return (
-      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-slate-950 text-slate-500">
+      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-[#08090D] text-slate-500">
         <div className="text-center space-y-2">
-          <Network className="w-10 h-10 mx-auto text-slate-600 animate-pulse" />
-          <p className="text-sm font-medium">Select a cluster from the left panel to inspect graph</p>
+          <Network className="w-10 h-10 mx-auto text-slate-700 animate-pulse" />
+          <p className="text-sm font-medium font-mono text-slate-500">Select a cluster from the left panel to inspect graph</p>
         </div>
       </main>
     );
   }
 
   const meta = getTypologyMeta(cluster.typology);
+  const currentEdge = cluster.edges[currentStep - 1] || cluster.edges[0];
 
   return (
-    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-slate-950 flex flex-col overflow-hidden">
-      {/* Top Canvas Bar: Active Cluster Details & Visual Legend */}
-      <div className="absolute top-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-        {/* Cluster Pill */}
-        <div className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/70 shadow-xl backdrop-blur-md">
+    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-[#08090D] flex flex-col overflow-hidden canvas-recessed-well">
+      {/* Top Architectural Command Pill */}
+      <div className="absolute top-3.5 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+        {/* Active Cluster Pill */}
+        <div className="pointer-events-auto flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#0E1016]/95 border border-white/[0.08] shadow-[0_12px_28px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-mono font-black text-cyan-400">
+            <span className="text-xs font-mono font-bold text-[#F8FAFC]">
               {cluster.cluster_id}
             </span>
-            <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${meta.bgBadge}`}>
+            <span className={`text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded border ${meta.bgBadge}`}>
               {meta.label}
             </span>
           </div>
-          <div className="h-3 w-px bg-slate-700" />
-          <div className="text-xs font-mono font-bold text-slate-200">
-            {formatINR(cluster.total_volume)} Laundered
+
+          <div className="h-3 w-px bg-white/10" />
+
+          <div className="text-xs font-mono font-bold text-slate-200 tabular-nums">
+            {formatINR(cluster.total_volume)}
           </div>
-          <div className="h-3 w-px bg-slate-700" />
-          <div className="text-[11px] text-slate-400 font-mono">
+
+          <div className="h-3 w-px bg-white/10" />
+
+          <div className="text-[10px] text-[#8B95A5] font-mono tabular-nums">
             {cluster.nodes.length} Nodes · {cluster.edges.length} Hops
           </div>
         </div>
 
         {/* Legend */}
-        <div className="pointer-events-auto flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/70 shadow-xl backdrop-blur-md text-[11px] text-slate-300">
+        <div className="pointer-events-auto flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[#0E1016]/95 border border-white/[0.08] shadow-[0_12px_28px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl text-[11px] text-slate-300">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 border border-cyan-300 shadow-sm shadow-cyan-400/50" />
-            <span className="font-semibold text-slate-300">Origin / Entry</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.7)]" />
+            <span className="text-[10px] font-mono text-slate-300">Origin / Entry</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-amber-300 shadow-sm shadow-amber-400/50" />
-            <span className="font-semibold text-slate-300">Layering Mule</span>
+            <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.7)]" />
+            <span className="text-[10px] font-mono text-slate-300">Mule Conduit</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-400 border border-rose-300 shadow-sm shadow-rose-400/50" />
-            <span className="font-semibold text-slate-300">Exit / Cash-Out</span>
-          </div>
-          <div className="flex items-center gap-1.5 pl-1 border-l border-slate-700">
-            <span className="text-cyan-400 font-mono font-bold">⏱️ Hop Latency</span>
+            <span className="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_6px_rgba(239,68,68,0.7)]" />
+            <span className="text-[10px] font-mono text-slate-300">Sink / Exit</span>
           </div>
         </div>
       </div>
@@ -207,29 +243,115 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           defaultEdgeOptions={{
             type: 'transactionEdge',
           }}
-          className="bg-[#070b14]"
+          className="bg-[#08090D]"
           style={{ width: '100%', height: '100%' }}
         >
           <Background
             variant={BackgroundVariant.Dots}
-            gap={20}
-            size={1.5}
-            color="#1e293b"
+            gap={24}
+            size={1.2}
+            color="rgba(255, 255, 255, 0.05)"
           />
           <Controls
-            className="!bg-slate-900/90 !border-slate-800 !rounded-xl !shadow-2xl overflow-hidden [&>button]:!bg-slate-900 [&>button]:!border-slate-800 [&>button]:!fill-slate-300 hover:[&>button]:!bg-slate-800"
+            className="!bg-[#0E1016] !border-white/[0.08] !rounded-lg !shadow-2xl overflow-hidden [&>button]:!bg-[#0E1016] [&>button]:!border-white/[0.06] [&>button]:!fill-slate-300 hover:[&>button]:!bg-white/[0.06]"
           />
           <MiniMap
             nodeColor={(node) => {
               const role = (node.data?.role as string) || '';
-              if (role === 'entry') return '#22d3ee';
-              if (role === 'exit') return '#f43f5e';
-              return '#fbbf24';
+              if (role === 'entry') return '#10B981';
+              if (role === 'exit') return '#EF4444';
+              return '#F59E0B';
             }}
-            maskColor="rgba(15, 23, 42, 0.75)"
-            className="!bg-slate-950/80 !border !border-slate-800 !rounded-xl overflow-hidden !shadow-2xl"
+            maskColor="rgba(8, 9, 13, 0.85)"
+            className="!bg-[#0E1016] !border !border-white/[0.08] !rounded-lg overflow-hidden !shadow-2xl"
           />
         </ReactFlow>
+      </div>
+
+      {/* Floating Glassmorphic Temporal Scrubber Dock */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-xl pointer-events-auto">
+        <div className="rounded-xl p-2.5 bg-[#0E1016]/95 border border-white/[0.1] shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_0_0_rgba(255,255,255,0.12)] backdrop-blur-2xl space-y-2">
+          {/* Top Scrubber Row: Controls + Timestamp Info */}
+          <div className="flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setCurrentStep(1)}
+                className="p-1.5 rounded-md hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                title="Reset to Step 1"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
+                className="p-1.5 rounded-md hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                title="Previous Hop"
+              >
+                <SkipBack className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="p-1.5 rounded-md bg-white text-black hover:bg-slate-200 transition-colors cursor-pointer shadow-sm"
+                title={isPlaying ? 'Pause Playback' : 'Replay Money Trail'}
+              >
+                {isPlaying ? (
+                  <Pause className="w-3.5 h-3.5 fill-current" />
+                ) : (
+                  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                )}
+              </button>
+              <button
+                onClick={() => setCurrentStep((prev) => Math.min(totalSteps, prev + 1))}
+                className="p-1.5 rounded-md hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                title="Next Hop"
+              >
+                <SkipForward className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Current Step Readout */}
+            <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-slate-300">
+              <span className="font-bold text-white">
+                Step {currentStep} / {totalSteps}
+              </span>
+              <span className="text-slate-600">·</span>
+              <div className="flex items-center gap-1 text-[#8B95A5]">
+                <Clock className="w-3 h-3 text-amber-400" />
+                <span>
+                  {currentEdge ? `${currentEdge.hop_delay_mins.toFixed(1)}m transit` : '0m'}
+                </span>
+              </div>
+            </div>
+
+            {/* Amount at Current Hop */}
+            <div className="text-[11px] font-mono font-bold text-emerald-400 tabular-nums">
+              {currentEdge ? formatINR(currentEdge.amount) : '₹0'}
+            </div>
+          </div>
+
+          {/* Scrubber Range Track with Precision Ticks */}
+          <div className="relative pt-1">
+            <input
+              type="range"
+              min={1}
+              max={totalSteps}
+              step={1}
+              value={currentStep}
+              onChange={(e) => setCurrentStep(parseInt(e.target.value, 10))}
+              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-white"
+            />
+            {/* Precision Tick Marks */}
+            <div className="flex justify-between px-1 pt-1 text-[8px] font-mono text-slate-600">
+              {Array.from({ length: totalSteps }).map((_, i) => (
+                <span
+                  key={i}
+                  className={i + 1 <= currentStep ? 'text-slate-300 font-bold' : ''}
+                >
+                  T{i + 1}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );

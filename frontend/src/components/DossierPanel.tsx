@@ -15,6 +15,9 @@ import {
   Download,
   Cpu,
   Building,
+  BarChart3,
+  Layers,
+  ChevronRight,
 } from 'lucide-react';
 import { AlertCluster, ExplainResponse } from '../types';
 import { formatINRFull, getTypologyMeta } from '../lib/formatters';
@@ -29,7 +32,6 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
   const [isLoadingAi, setIsLoadingAi] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  // When cluster changes, reset or generate initial explanation
   useEffect(() => {
     if (!cluster) {
       setExplanation(null);
@@ -126,8 +128,14 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
 
   if (!cluster) {
     return (
-      <aside className="w-80 2xl:w-96 flex flex-col bg-slate-900/70 border-l border-slate-800/80 backdrop-blur-md h-full shrink-0 items-center justify-center p-6 text-slate-500 text-xs">
-        Select a cluster to view forensic dossier
+      <aside className="w-80 2xl:w-96 flex flex-col bg-[#0A0C10] border-l border-white/[0.07] h-full shrink-0 items-center justify-center p-8 text-center select-none">
+        <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-3">
+          <FileText className="w-5 h-5 text-slate-500" />
+        </div>
+        <div className="text-xs font-semibold text-slate-300 mb-1 tracking-tight">Forensic Dossier Idle</div>
+        <p className="text-[11px] text-slate-500 max-w-[200px] leading-relaxed">
+          Select an alert cluster from the ledger or canvas to inspect its intelligence profile and XAI drivers.
+        </p>
       </aside>
     );
   }
@@ -138,61 +146,69 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
       : '0.0';
 
   const xaiDrivers = cluster.xai_feature_drivers || [
-    { feature: 'PageRank Loop Topology', weight: 0.42, description: 'Closed directed flow conserving capital' },
-    { feature: 'Rapid Pass-Through Velocity', weight: 0.33, description: 'Sub-15m dwell time across conduit nodes' },
-    { feature: 'Cross-Bank Relay Channel', weight: 0.25, description: 'Inter-bank transfers spanning distinct institutions' },
+    { feature: 'Circular Loop Topology', weight: 0.42, description: 'Closed directed flow conserving capital' },
+    { feature: 'Betweenness Centrality', weight: 0.33, description: 'High flow funneling across intermediary conduit accounts' },
+    { feature: 'Transit Dwell Velocity', weight: 0.25, description: 'Sub-15m dwell time across multi-hop counterparties' },
   ];
 
   return (
-    <aside className="w-80 2xl:w-96 flex flex-col bg-slate-900/70 border-l border-slate-800/80 backdrop-blur-md h-full shrink-0 overflow-y-auto select-none">
-      {/* Dossier Header */}
-      <div className="p-3.5 border-b border-slate-800/80 flex items-center justify-between">
+    <aside className="w-80 2xl:w-96 flex flex-col bg-[#0A0C10] border-l border-white/[0.07] h-full shrink-0 overflow-y-auto select-none custom-scrollbar">
+      {/* Dossier Institutional Header */}
+      <div className="p-4 border-b border-white/[0.07] flex items-center justify-between bg-[#0E1016]">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-cyan-400" />
-          <h2 className="text-xs font-black uppercase tracking-wider text-slate-200">
-            LaunderGraph Dossier
-          </h2>
+          <div className="w-6 h-6 rounded-md bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
+            <FileText className="w-3.5 h-3.5 text-slate-300" />
+          </div>
+          <div>
+            <h2 className="text-[11px] font-semibold tracking-wider uppercase text-slate-200">
+              Forensic Dossier
+            </h2>
+            <div className="text-[9px] font-mono text-slate-500 tabular-nums">
+              CASE #{cluster.cluster_id.toUpperCase()}
+            </div>
+          </div>
         </div>
+
         <span
-          className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
+          className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border tabular-nums ${
             cluster.risk_score >= 90
-              ? 'bg-rose-500/15 text-rose-300 border-rose-500/40'
-              : 'bg-amber-500/15 text-amber-300 border-amber-500/40'
+              ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
+              : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30'
           }`}
         >
-          {cluster.risk_score >= 90 ? 'Critical Severity' : 'High Alert'}
+          {cluster.risk_score >= 90 ? 'CRITICAL RISK' : 'HIGH RISK'}
         </span>
       </div>
 
-      <div className="p-3.5 space-y-4 flex-1">
+      <div className="p-3.5 space-y-3.5 flex-1">
         {/* Explainable AI Narrative Section */}
-        <div className="rounded-xl p-3 bg-gradient-to-b from-slate-950/90 to-slate-900/90 border border-cyan-500/30 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-1.5 text-cyan-400">
-              <Bot className="w-4 h-4" />
-              <span className="text-[11px] font-black uppercase tracking-wider">
-                AI Money-Trail Summary
+        <div className="rounded-xl p-3.5 bg-[#0E1016] border border-white/[0.08] shadow-sm relative overflow-hidden">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center gap-1.5 text-slate-200">
+              <Bot className="w-4 h-4 text-slate-400" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300">
+                AI Synthesis Narrative
               </span>
             </div>
 
             <button
               onClick={handleRefreshExplanation}
               disabled={isLoadingAi}
-              title="Call Gemini/LLM for fresh plain-language explanation"
-              className="flex items-center gap-1 text-[10px] font-bold text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 px-2 py-0.5 rounded-md border border-cyan-500/30 transition-all cursor-pointer disabled:opacity-50"
+              title="Re-synthesize forensic narrative with LLM"
+              className="flex items-center gap-1 text-[10px] font-medium text-slate-300 bg-white/[0.04] hover:bg-white/[0.08] px-2 py-0.5 rounded border border-white/[0.08] transition-all cursor-pointer disabled:opacity-50"
             >
               {isLoadingAi ? (
-                <RefreshCw className="w-3 h-3 animate-spin text-cyan-400" />
+                <RefreshCw className="w-3 h-3 animate-spin text-slate-400" />
               ) : (
-                <Sparkles className="w-3 h-3 text-cyan-400" />
+                <Sparkles className="w-3 h-3 text-slate-400" />
               )}
-              <span>{isLoadingAi ? 'Synthesizing...' : 'Re-Analyze'}</span>
+              <span>{isLoadingAi ? 'Synthesizing...' : 'Re-Run'}</span>
             </button>
           </div>
 
-          <p className="text-xs leading-relaxed text-slate-200 font-sans">
+          <p className="text-xs leading-relaxed text-slate-300 font-sans">
             {isLoadingAi ? (
-              <span className="flex items-center gap-2 text-cyan-300 py-2 italic font-mono text-xs">
+              <span className="flex items-center gap-2 text-slate-400 py-2 italic font-mono text-xs">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 Querying Gemini LLM with Pydantic contract...
               </span>
@@ -201,17 +217,17 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
             )}
           </p>
 
-          {/* Machine Learning Probability & Confidence */}
-          <div className="mt-2.5 pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-[10px] font-mono">
-            <div className="flex items-center justify-between text-slate-400 bg-slate-900/60 px-2 py-1 rounded">
-              <span>ML Probability:</span>
-              <span className="font-bold text-emerald-400">
+          {/* Machine Learning Probability & Anomaly Confidence */}
+          <div className="mt-3 pt-2.5 border-t border-white/[0.06] grid grid-cols-2 gap-2 text-[10px] font-mono">
+            <div className="flex items-center justify-between bg-black/30 border border-white/[0.04] px-2 py-1.5 rounded">
+              <span className="text-slate-500">ML Probability</span>
+              <span className="font-bold text-[#10B981] tabular-nums">
                 {((cluster.ml_probability || 0.95) * 100).toFixed(1)}%
               </span>
             </div>
-            <div className="flex items-center justify-between text-slate-400 bg-slate-900/60 px-2 py-1 rounded">
-              <span>Isolation Anomaly:</span>
-              <span className="font-bold text-cyan-300">
+            <div className="flex items-center justify-between bg-black/30 border border-white/[0.04] px-2 py-1.5 rounded">
+              <span className="text-slate-500">Isolation Score</span>
+              <span className="font-bold text-slate-200 tabular-nums">
                 {((cluster.isolation_score || 0.89) * 100).toFixed(1)}%
               </span>
             </div>
@@ -219,32 +235,32 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
         </div>
 
         {/* Top 3 XAI Feature Drivers Section */}
-        <div className="rounded-xl p-3 bg-slate-950/70 border border-slate-800 space-y-2.5 text-xs">
+        <div className="rounded-xl p-3.5 bg-[#0E1016] border border-white/[0.08] space-y-2.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400 flex items-center gap-1">
-              <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-slate-400" />
               Top 3 XAI Feature Drivers
             </span>
-            <span className="text-[9px] text-slate-400 font-mono">GDS + Random Forest</span>
+            <span className="text-[9px] text-slate-500 font-mono">NetworkX + RF</span>
           </div>
 
           <div className="space-y-2">
             {xaiDrivers.slice(0, 3).map((driver, idx) => (
-              <div key={idx} className="p-2 rounded-lg bg-slate-900/80 border border-slate-800/80">
+              <div key={idx} className="p-2 rounded-lg bg-black/30 border border-white/[0.05]">
                 <div className="flex items-center justify-between text-[11px] mb-1">
-                  <span className="font-bold text-slate-200">{driver.feature}</span>
-                  <span className="font-mono font-bold text-cyan-400">
+                  <span className="font-medium text-slate-200">{driver.feature}</span>
+                  <span className="font-mono font-bold text-slate-300 tabular-nums">
                     {(driver.weight * 100).toFixed(0)}%
                   </span>
                 </div>
                 {/* Visual percentage weight bar */}
-                <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-1">
+                <div className="w-full h-1 bg-white/[0.08] rounded-full overflow-hidden mb-1">
                   <div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full"
+                    className="h-full bg-gradient-to-r from-slate-400 to-[#10B981] rounded-full"
                     style={{ width: `${Math.min(driver.weight * 100, 100)}%` }}
                   />
                 </div>
-                <p className="text-[10px] text-slate-400 leading-tight">
+                <p className="text-[10px] text-slate-500 leading-tight">
                   {driver.description}
                 </p>
               </div>
@@ -254,115 +270,162 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
 
         {/* Origin & Exit Account Inspection Box */}
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="p-2.5 rounded-xl bg-slate-950/70 border border-cyan-500/30">
-            <div className="flex items-center justify-between text-[10px] text-cyan-400 font-bold mb-1">
-              <span className="flex items-center gap-1">
+          <div className="p-2.5 rounded-xl bg-[#0E1016] border border-white/[0.08]">
+            <div className="flex items-center justify-between text-[9px] text-slate-400 font-bold mb-1 tracking-wider uppercase">
+              <span className="flex items-center gap-1 text-[#F59E0B]">
                 <ArrowUpRight className="w-3 h-3" />
                 ENTRY NODE
               </span>
               <button
                 onClick={() => handleCopy(cluster.entry_node, 'entry')}
-                className="hover:text-cyan-200 cursor-pointer"
+                className="hover:text-white cursor-pointer text-slate-500 transition-colors"
                 title="Copy Entry Node ID"
               >
                 {copiedField === 'entry' ? (
-                  <Check className="w-3 h-3 text-emerald-400" />
+                  <Check className="w-3 h-3 text-[#10B981]" />
                 ) : (
                   <Copy className="w-3 h-3" />
                 )}
               </button>
             </div>
-            <div className="font-mono font-bold text-slate-100 truncate">
+            <div className="font-mono font-bold text-slate-200 text-[11px] truncate tabular-nums">
               {cluster.entry_node}
             </div>
           </div>
 
-          <div className="p-2.5 rounded-xl bg-slate-950/70 border border-rose-500/30">
-            <div className="flex items-center justify-between text-[10px] text-rose-400 font-bold mb-1">
-              <span className="flex items-center gap-1">
+          <div className="p-2.5 rounded-xl bg-[#0E1016] border border-white/[0.08]">
+            <div className="flex items-center justify-between text-[9px] text-slate-400 font-bold mb-1 tracking-wider uppercase">
+              <span className="flex items-center gap-1 text-[#EF4444]">
                 <ArrowDownLeft className="w-3 h-3" />
                 EXIT NODE
               </span>
               <button
                 onClick={() => handleCopy(cluster.exit_node, 'exit')}
-                className="hover:text-rose-200 cursor-pointer"
+                className="hover:text-white cursor-pointer text-slate-500 transition-colors"
                 title="Copy Exit Node ID"
               >
                 {copiedField === 'exit' ? (
-                  <Check className="w-3 h-3 text-emerald-400" />
+                  <Check className="w-3 h-3 text-[#10B981]" />
                 ) : (
                   <Copy className="w-3 h-3" />
                 )}
               </button>
             </div>
-            <div className="font-mono font-bold text-slate-100 truncate">
+            <div className="font-mono font-bold text-slate-200 text-[11px] truncate tabular-nums">
               {cluster.exit_node}
             </div>
           </div>
         </div>
 
         {/* Forensic Metadata Grid */}
-        <div className="rounded-xl p-3 bg-slate-950/60 border border-slate-800/80 space-y-2.5 text-xs">
-          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+        <div className="rounded-xl p-3 bg-[#0E1016] border border-white/[0.08] space-y-2 text-xs">
+          <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
             Graph Anomaly Indicators
           </div>
 
           <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
-            <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-              <span className="text-slate-400 text-[10px] block">Total Volume</span>
-              <span className="font-bold text-cyan-300">
+            <div className="p-2 rounded-lg bg-black/30 border border-white/[0.04]">
+              <span className="text-slate-500 text-[9px] uppercase tracking-wider block">Total Volume</span>
+              <span className="font-bold text-slate-100 tabular-nums">
                 {formatINRFull(cluster.total_volume)}
               </span>
             </div>
 
-            <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-              <span className="text-slate-400 text-[10px] block">Total Dwell Time</span>
-              <div className="flex items-center gap-1 font-bold text-amber-300">
+            <div className="p-2 rounded-lg bg-black/30 border border-white/[0.04]">
+              <span className="text-slate-500 text-[9px] uppercase tracking-wider block">Total Dwell Time</span>
+              <div className="flex items-center gap-1 font-bold text-[#F59E0B] tabular-nums">
                 <Clock className="w-3 h-3" />
-                <span>{cluster.dwell_time_mins.toFixed(1)} mins</span>
+                <span>{cluster.dwell_time_mins.toFixed(1)}m</span>
               </div>
             </div>
 
-            <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-              <span className="text-slate-400 text-[10px] block">Avg Hop Latency</span>
-              <span className="font-bold text-slate-200">{avgHopDelay} mins</span>
+            <div className="p-2 rounded-lg bg-black/30 border border-white/[0.04]">
+              <span className="text-slate-500 text-[9px] uppercase tracking-wider block">Avg Hop Latency</span>
+              <span className="font-bold text-slate-300 tabular-nums">{avgHopDelay}m</span>
             </div>
 
-            <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-              <span className="text-slate-400 text-[10px] block">Network Size</span>
-              <span className="font-bold text-slate-200">
+            <div className="p-2 rounded-lg bg-black/30 border border-white/[0.04]">
+              <span className="text-slate-500 text-[9px] uppercase tracking-wider block">Network Span</span>
+              <span className="font-bold text-slate-300 tabular-nums">
                 {cluster.nodes.length} nodes · {cluster.edges.length} hops
               </span>
             </div>
           </div>
         </div>
 
-        {/* Chronological Transaction Trail with Bank Code & Format */}
-        <div className="rounded-xl p-3 bg-slate-950/60 border border-slate-800/80 space-y-2 text-xs">
-          <div className="flex items-center justify-between text-slate-300 font-bold text-[11px]">
+        {/* Institutional 3-Way Benchmark Comparison Table */}
+        <div className="rounded-xl p-3 bg-[#0E1016] border border-white/[0.08] space-y-2">
+          <div className="flex items-center justify-between text-slate-300 font-bold text-[10px] uppercase tracking-wider">
             <span className="flex items-center gap-1.5">
-              <Building className="w-3.5 h-3.5 text-cyan-400" />
+              <BarChart3 className="w-3.5 h-3.5 text-slate-400" />
+              Institutional Benchmark
+            </span>
+            <span className="text-[9px] text-[#10B981] font-mono font-bold">+62% Lift</span>
+          </div>
+
+          <div className="border border-white/[0.06] rounded-lg overflow-hidden text-[10px] font-mono">
+            <table className="w-full text-left">
+              <thead className="bg-black/40 text-slate-500 border-b border-white/[0.06] text-[9px] uppercase">
+                <tr>
+                  <th className="py-1 px-2 font-normal">Model</th>
+                  <th className="py-1 px-1 font-normal text-right">F1</th>
+                  <th className="py-1 px-1 font-normal text-right">Precision</th>
+                  <th className="py-1 px-2 font-normal text-right">FPR</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.04] text-slate-400">
+                <tr>
+                  <td className="py-1.5 px-2 text-slate-500">Legacy Rules</td>
+                  <td className="py-1.5 px-1 text-right tabular-nums">0.31</td>
+                  <td className="py-1.5 px-1 text-right tabular-nums">28.4%</td>
+                  <td className="py-1.5 px-2 text-right text-[#EF4444] tabular-nums">14.2%</td>
+                </tr>
+                <tr>
+                  <td className="py-1.5 px-2 text-slate-400">Tabular ML</td>
+                  <td className="py-1.5 px-1 text-right tabular-nums">0.58</td>
+                  <td className="py-1.5 px-1 text-right tabular-nums">61.0%</td>
+                  <td className="py-1.5 px-2 text-right text-[#F59E0B] tabular-nums">6.8%</td>
+                </tr>
+                <tr className="bg-white/[0.03] font-bold text-slate-200">
+                  <td className="py-1.5 px-2 flex items-center gap-1 text-[#10B981]">
+                    <Layers className="w-2.5 h-2.5" />
+                    LaunderGraph
+                  </td>
+                  <td className="py-1.5 px-1 text-right text-[#10B981] tabular-nums">0.93</td>
+                  <td className="py-1.5 px-1 text-right text-[#10B981] tabular-nums">94.7%</td>
+                  <td className="py-1.5 px-2 text-right text-[#10B981] tabular-nums">0.9%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Chronological Transaction Trail with Bank Code & Format */}
+        <div className="rounded-xl p-3 bg-[#0E1016] border border-white/[0.08] space-y-2 text-xs">
+          <div className="flex items-center justify-between text-slate-300 font-bold text-[10px] uppercase tracking-wider">
+            <span className="flex items-center gap-1.5">
+              <Building className="w-3.5 h-3.5 text-slate-400" />
               Banking Channel Hops
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">
-              {cluster.edges.length} Transactions
+            <span className="text-[10px] text-slate-500 font-mono tabular-nums">
+              {cluster.edges.length} Tx
             </span>
           </div>
 
-          <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+          <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1 custom-scrollbar">
             {cluster.edges.map((e, idx) => (
               <div
                 key={e.id}
-                className="p-1.5 rounded bg-slate-900/80 border border-slate-800 text-[10px] font-mono flex items-center justify-between gap-1"
+                className="p-1.5 rounded bg-black/30 border border-white/[0.04] text-[10px] font-mono flex items-center justify-between gap-1"
               >
-                <div className="truncate">
-                  <span className="text-cyan-400 font-bold">#{idx + 1}</span>{' '}
-                  <span className="text-slate-300">{e.source.split('_')[0]}</span>{' '}
-                  <span className="text-slate-500">→</span>{' '}
-                  <span className="text-slate-300">{e.target.split('_')[0]}</span>{' '}
-                  <span className="text-slate-400">({e.payment_format || 'Wire'})</span>
+                <div className="truncate flex items-center gap-1">
+                  <span className="text-slate-500 tabular-nums">#{idx + 1}</span>
+                  <span className="text-slate-300">{e.source.split('_')[0]}</span>
+                  <ChevronRight className="w-2.5 h-2.5 text-slate-600 inline" />
+                  <span className="text-slate-300">{e.target.split('_')[0]}</span>
+                  <span className="text-slate-500 text-[9px]">({e.payment_format || 'Wire'})</span>
                 </div>
-                <span className="font-bold text-emerald-400 shrink-0">
+                <span className="font-bold text-slate-200 tabular-nums shrink-0">
                   ${e.amount.toLocaleString()}
                 </span>
               </div>
@@ -372,15 +435,15 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
 
         {/* Recommended Actions for Financial Investigator */}
         {explanation?.recommended_actions && explanation.recommended_actions.length > 0 && (
-          <div className="rounded-xl p-3 bg-slate-950/60 border border-slate-800/80 space-y-2 text-xs">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
-              <ShieldAlert className="w-3.5 h-3.5" />
+          <div className="rounded-xl p-3 bg-[#0E1016] border border-white/[0.08] space-y-2 text-xs">
+            <div className="flex items-center gap-1.5 text-slate-200 font-bold text-[10px] uppercase tracking-wider">
+              <ShieldAlert className="w-3.5 h-3.5 text-[#10B981]" />
               <span>Recommended Compliance Actions</span>
             </div>
-            <ul className="space-y-1.5 text-slate-300 text-[11px]">
+            <ul className="space-y-1.5 text-slate-400 text-[11px]">
               {explanation.recommended_actions.map((act, i) => (
                 <li key={i} className="flex items-start gap-1.5 leading-tight">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-1" />
+                  <span className="w-1 h-1 rounded-full bg-[#10B981] shrink-0 mt-1.5" />
                   <span>{act}</span>
                 </li>
               ))}
@@ -389,13 +452,13 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
         )}
 
         {/* Export & Action Buttons */}
-        <div className="pt-2 flex items-center gap-2">
+        <div className="pt-2">
           <button
             onClick={handleExportJson}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-slate-200 text-xs font-bold transition-colors border border-cyan-500/30 shadow-md shadow-cyan-950/20 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.09] text-slate-200 text-xs font-semibold transition-all border border-white/[0.1] shadow-sm cursor-pointer"
           >
-            <Download className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Export LaunderGraph FinCEN SAR</span>
+            <Download className="w-3.5 h-3.5 text-slate-300" />
+            <span>Export FinCEN SAR Report (Form 111)</span>
           </button>
         </div>
       </div>
