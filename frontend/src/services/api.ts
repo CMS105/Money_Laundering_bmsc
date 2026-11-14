@@ -5,11 +5,8 @@ import {
   AlertCluster,
   SarHistoryResponse,
   SuspectsResponse,
-  SuspectRecord,
 } from '../types';
-// Suspect records are loaded from the backend API. Keep an empty typed fallback
-// so the frontend can still build when no local registry file is packaged.
-const localSuspectsJson: SuspectRecord[] = [];
+import { SYNTHETIC_POLICE_SUSPECTS } from '../data/suspectsData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -256,23 +253,27 @@ export async function fetchPoliceSuspects(): Promise<SuspectsResponse> {
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     });
-    if (!res.ok) {
-      throw new Error(`HTTP error ${res.status}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.suspects && data.suspects.length > 0) {
+        return data;
+      }
     }
-    return await res.json();
   } catch (error) {
-    console.warn('Backend suspects endpoint unavailable, using local suspects registry:', error);
-    const suspects = localSuspectsJson as unknown as SuspectRecord[];
-    const criticalCount = suspects.filter((s) => s.risk_level === 'CRITICAL').length;
-    const underInquiryCount = suspects.filter((s) => s.risk_level.includes('INQUIRY') || s.risk_level.includes('CLEAR')).length;
-
-    return {
-      total_suspects: suspects.length,
-      critical_count: criticalCount,
-      under_inquiry_count: underInquiryCount,
-      suspects,
-    };
+    console.warn('Backend suspects endpoint unavailable, using synthetic suspects registry:', error);
   }
+
+  // Guaranteed fallback to rich synthetic suspects
+  const suspects = SYNTHETIC_POLICE_SUSPECTS;
+  const criticalCount = suspects.filter((s) => s.risk_level === 'CRITICAL').length;
+  const underInquiryCount = suspects.filter((s) => s.risk_level.includes('INQUIRY') || s.risk_level.includes('CLEAR')).length;
+
+  return {
+    total_suspects: suspects.length,
+    critical_count: criticalCount,
+    under_inquiry_count: underInquiryCount,
+    suspects,
+  };
 }
 
 export async function fetchSuspectTransactions(suspectId: string): Promise<Record<string, unknown>> {
@@ -282,36 +283,36 @@ export async function fetchSuspectTransactions(suspectId: string): Promise<Recor
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     });
-    if (!res.ok) {
-      throw new Error(`HTTP error ${res.status}`);
+    if (res.ok) {
+      return await res.json();
     }
-    return await res.json();
   } catch (error) {
     console.warn('Backend suspect transaction endpoint unavailable, using local match:', error);
-    const suspects = localSuspectsJson as unknown as SuspectRecord[];
-    const match = suspects.find((s) => s.id.toLowerCase() === suspectId.toLowerCase());
-    if (match) {
-      return {
-        suspect_id: match.id,
-        name: match.name,
-        alias: match.alias,
-        has_malicious_transactions: match.has_malicious_transactions,
-        risk_score: match.risk_score,
-        risk_level: match.risk_level,
-        police_agency: match.police_agency,
-        police_clearance_note: match.police_clearance_note,
-        recent_scam_transactions: match.recent_scam_transactions,
-      };
-    }
+  }
+
+  const match = SYNTHETIC_POLICE_SUSPECTS.find((s) => s.id.toLowerCase() === suspectId.toLowerCase());
+  if (match) {
     return {
-      suspect_id: suspectId,
-      has_malicious_transactions: false,
-      recent_scam_transactions: [],
-      police_clearance_note: 'No record found in local registry.',
+      suspect_id: match.id,
+      name: match.name,
+      alias: match.alias,
+      has_malicious_transactions: match.has_malicious_transactions,
+      risk_score: match.risk_score,
+      risk_level: match.risk_level,
+      police_agency: match.police_agency,
+      bank_accounts: match.bank_accounts,
+      police_clearance_note: match.police_clearance_note,
+      recent_scam_transactions: match.recent_scam_transactions,
     };
   }
+  return {
+    suspect_id: suspectId,
+    has_malicious_transactions: false,
+    bank_accounts: [],
+    recent_scam_transactions: [],
+    police_clearance_note: 'No record found in local registry.',
+  };
 }
-
 
 export async function explainCluster(cluster: AlertCluster): Promise<ExplainResponse> {
   try {

@@ -112,6 +112,18 @@ export interface ScamTransaction {
   cluster_id?: string;
 }
 
+export interface SuspectBankAccount {
+  account_number: string;
+  bank_name: string;
+  bank_code: string;
+  account_type: 'Current Business' | 'Savings Conduit' | 'Escrow Mule' | 'Personal Savings' | string;
+  balance: number;
+  total_inflow: number;
+  status: 'FROZEN BY POLICE' | 'ACTIVE INTERCEPT' | 'UNDER AUDIT' | 'NORMAL' | string;
+  branch: string;
+  ifsc_swift: string;
+}
+
 export interface SuspectRecord {
   id: string;
   name: string;
@@ -123,8 +135,11 @@ export interface SuspectRecord {
   avatar: string;
   has_malicious_transactions: boolean;
   linked_accounts: string[];
+  bank_accounts: SuspectBankAccount[];
   recent_scam_transactions: ScamTransaction[];
   police_clearance_note?: string | null;
+  phone_number?: string;
+  residence_jurisdiction?: string;
 }
 
 export interface SuspectsResponse {

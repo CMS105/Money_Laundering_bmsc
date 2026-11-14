@@ -1,0 +1,300 @@
+[
+  {
+    "id": "SUSP-DEL-2024-091",
+    "name": "Rakesh 'DSP' Singhania",
+    "alias": "Cyber-DSP / Shadow Chief",
+    "police_agency": "Delhi Police Special Cyber Crime Unit & CBI",
+    "residence_jurisdiction": "Rohini Sector 14, New Delhi & Dubai Outpost",
+    "phone_number": "+91 98110-XXXXX / VoIP Intercept +1 415-XXX",
+    "doubt_description": "Alleged ringleader of nationwide 'Digital Arrest' extortion network. Sets up realistic virtual courtrooms and police station backdrops on Skype video calls, impersonating Supreme Court Chief Justices and CBI Special Directors to terrorize senior citizens into immediate RTGS fund transfers.",
+    "risk_score": 98.5,
+    "risk_level": "CRITICAL",
+    "avatar": "👮‍♂️",
+    "has_malicious_transactions": true,
+    "linked_accounts": ["020_ACC_8819", "070_ACC_3301", "020_ACC_4102"],
+    "police_clearance_note": null,
+    "bank_accounts": [
+      {
+        "account_number": "020_ACC_8819",
+        "bank_name": "Apex Global Bank",
+        "bank_code": "020",
+        "account_type": "Current Business Escrow",
+        "balance": 142500,
+        "total_inflow": 890000,
+        "status": "FROZEN BY POLICE",
+        "branch": "Connaught Place Corporate, New Delhi",
+        "ifsc_swift": "APEX0000201"
+      },
+      {
+        "account_number": "070_ACC_3301",
+        "bank_name": "Metro Credit Bank",
+        "bank_code": "070",
+        "account_type": "Savings Conduit Mule",
+        "balance": 38200,
+        "total_inflow": 350000,
+        "status": "ACTIVE INTERCEPT",
+        "branch": "Indiranagar Branch, Bengaluru",
+        "ifsc_swift": "METR0000702"
+      },
+      {
+        "account_number": "020_ACC_4102",
+        "bank_name": "Apex Global Bank",
+        "bank_code": "020",
+        "account_type": "Overdraft Shell Account",
+        "balance": 1200,
+        "total_inflow": 410000,
+        "status": "FROZEN BY POLICE",
+        "branch": "Nariman Point, Mumbai",
+        "ifsc_swift": "APEX0000209"
+      }
+    ],
+    "recent_scam_transactions": [
+      {
+        "tx_id": "SCAM-TX-9901",
+        "timestamp": "2024-11-14 13:45:00",
+        "amount": 42000,
+        "victim_info": "Retired High Court Judge (72 yrs, New Delhi)",
+        "scam_category": "Digital Arrest Skype Extortion",
+        "target_account": "020_ACC_8819",
+        "bank": "Apex Global Bank (020)",
+        "fir_number": "FIR-CYBER/2024/0981",
+        "scam_method": "36-hour psychological confinement via forged video setup. Fabricated Supreme Court money-laundering warrant demanding 'safe custody RBI verification' deposit.",
+        "status": "CONFIRMED MALICIOUS",
+        "cluster_id": "CLU-LIVE-429"
+      },
+      {
+        "tx_id": "SCAM-TX-9902",
+        "timestamp": "2024-11-14 15:10:00",
+        "amount": 28500,
+        "victim_info": "Retired Indian Air Force Officer (68 yrs, Pune)",
+        "scam_category": "Digital Arrest Courier Intercept Threat",
+        "target_account": "070_ACC_3301",
+        "bank": "Metro Credit Bank (070)",
+        "fir_number": "FIR-CYBER/2024/0984",
+        "scam_method": "Fake customs parcel notice containing forged narcotics and passport copies. Victim coerced into RTGS liquidation to avoid 'national security detention'.",
+        "status": "CONFIRMED MALICIOUS",
+        "cluster_id": "CLU-LIVE-429"
+      }
+    ]
+  },
+  {
+    "id": "SUSP-INT-2024-114",
+    "name": "Elena 'The Broker' Rostova",
+    "alias": "Crypto Matron / Saffron Queen",
+    "police_agency": "INTERPOL Financial Crime Taskforce & FinCEN",
+    "residence_jurisdiction": "Phnom Penh Special Economic Zone & Bangkok",
+    "phone_number": "+66 82-XXX-XXXX / Telegram @elena_finbroker",
+    "doubt_description": "Transnational syndicate manager operating industrial pig-butchering romance fraud and rigged cryptocurrency trading terminals across Southeast Asia. Funnels scam funds into decentralized Tether (USDT) layering pools.",
+    "risk_score": 95.0,
+    "risk_level": "CRITICAL",
+    "avatar": "👩‍💼",
+    "has_malicious_transactions": true,
+    "linked_accounts": ["012_ACC_5001", "070_ACC_5999"],
+    "police_clearance_note": null,
+    "bank_accounts": [
+      {
+        "account_number": "012_ACC_5001",
+        "bank_name": "Commercial Trust Bank",
+        "bank_code": "012",
+        "account_type": "Current Forex Merchant",
+        "balance": 295000,
+        "total_inflow": 1840000,
+        "status": "FROZEN BY POLICE",
+        "branch": "Bandra Kurla Complex, Mumbai",
+        "ifsc_swift": "CTBK0000124"
+      },
+      {
+        "account_number": "070_ACC_5999",
+        "bank_name": "Metro Credit Bank",
+        "bank_code": "070",
+        "account_type": "Crypto Liquidity Settlement",
+        "balance": 62000,
+        "total_inflow": 920000,
+        "status": "ACTIVE INTERCEPT",
+        "branch": "Cyber City, Gurugram",
+        "ifsc_swift": "METR0000709"
+      }
+    ],
+    "recent_scam_transactions": [
+      {
+        "tx_id": "SCAM-TX-9903",
+        "timestamp": "2024-11-14 11:20:00",
+        "amount": 75000,
+        "victim_info": "Senior Software Architect (Bengaluru)",
+        "scam_category": "Pig-Butchering Romance & Crypto Scam",
+        "target_account": "012_ACC_5001",
+        "bank": "Commercial Trust Bank (012)",
+        "fir_number": "INT-RED-2024-4421",
+        "scam_method": "Social engineering via dating app leading to spoofed decentralized trading portal with falsified 42% weekly ROI yields. Victim's account blocked upon withdrawal attempt.",
+        "status": "CONFIRMED MALICIOUS",
+        "cluster_id": "CLU-002"
+      }
+    ]
+  },
+  {
+    "id": "SUSP-MUM-2024-205",
+    "name": "Vikram 'Fast-Wire' Malhotra",
+    "alias": "Mule Ring Dispatcher",
+    "police_agency": "Enforcement Directorate (ED) Anti-Mule Squad",
+    "residence_jurisdiction": "Andheri West, Mumbai",
+    "phone_number": "+91 98200-XXXXX",
+    "doubt_description": "Operator of predatory instant loan applications. Deploys malware-infected Android APKs to steal borrower contact lists, then blackmails victims and their families with manipulated nude imagery to extort high-interest repayments.",
+    "risk_score": 91.4,
+    "risk_level": "HIGH",
+    "avatar": "🧑‍💻",
+    "has_malicious_transactions": true,
+    "linked_accounts": ["031_ACC_1001", "012_ACC_2002"],
+    "police_clearance_note": null,
+    "bank_accounts": [
+      {
+        "account_number": "031_ACC_1001",
+        "bank_name": "Apex Standard Bank",
+        "bank_code": "031",
+        "account_type": "Savings Micro-Loan Collection",
+        "balance": 42100,
+        "total_inflow": 560000,
+        "status": "ACTIVE INTERCEPT",
+        "branch": "Fort Branch, Mumbai",
+        "ifsc_swift": "ASBK0000311"
+      },
+      {
+        "account_number": "012_ACC_2002",
+        "bank_name": "Commercial Trust Bank",
+        "bank_code": "012",
+        "account_type": "Mule Pass-Through",
+        "balance": 8500,
+        "total_inflow": 410000,
+        "status": "FROZEN BY POLICE",
+        "branch": "Vashi, Navi Mumbai",
+        "ifsc_swift": "CTBK0000128"
+      }
+    ],
+    "recent_scam_transactions": [
+      {
+        "tx_id": "SCAM-TX-9904",
+        "timestamp": "2024-11-14 16:05:00",
+        "amount": 18200,
+        "victim_info": "University Assistant Professor (Mumbai)",
+        "scam_category": "Instant Loan App Extortion",
+        "target_account": "031_ACC_1001",
+        "bank": "Apex Standard Bank (031)",
+        "fir_number": "ED-ECIR-09/2024",
+        "scam_method": "Initial 7-day micro loan of ₹5,000 ballooned to ₹15,00,000 under daily penalty interest. Extortion accompanied by abusive VoIP threatening calls to phone contacts.",
+        "status": "CONFIRMED MALICIOUS",
+        "cluster_id": "CLU-003"
+      }
+    ]
+  },
+  {
+    "id": "SUSP-HYD-2024-412",
+    "name": "Arjun 'Hawala' Rao",
+    "alias": "Token Master / TG Relay",
+    "police_agency": "Telangana Cyber Security Bureau (TGCSB)",
+    "residence_jurisdiction": "Hitec City & Madhapur, Hyderabad",
+    "phone_number": "+91 99490-XXXXX",
+    "doubt_description": "Leader of multi-city Telegram task fraud ('Like and Earn') operation. Victims are paid trivial initial sums for rating Google maps locations, then lured into paying lakhs into tiered 'VIP cryptocurrency trading pools'.",
+    "risk_score": 89.2,
+    "risk_level": "HIGH",
+    "avatar": "🕵️‍♂️",
+    "has_malicious_transactions": true,
+    "linked_accounts": ["070_ACC_9921", "070_ACC_9922"],
+    "police_clearance_note": null,
+    "bank_accounts": [
+      {
+        "account_number": "070_ACC_9921",
+        "bank_name": "Metro Credit Bank",
+        "bank_code": "070",
+        "account_type": "Current Consolidation Hub",
+        "balance": 89400,
+        "total_inflow": 720000,
+        "status": "ACTIVE INTERCEPT",
+        "branch": "Gachibowli, Hyderabad",
+        "ifsc_swift": "METR0000705"
+      },
+      {
+        "account_number": "070_ACC_9922",
+        "bank_name": "Metro Credit Bank",
+        "bank_code": "070",
+        "account_type": "P2P Crypto Transit",
+        "balance": 14500,
+        "total_inflow": 310000,
+        "status": "UNDER AUDIT",
+        "branch": "Banjara Hills, Hyderabad",
+        "ifsc_swift": "METR0000708"
+      }
+    ],
+    "recent_scam_transactions": [
+      {
+        "tx_id": "SCAM-TX-9905",
+        "timestamp": "2024-11-14 17:30:00",
+        "amount": 32000,
+        "victim_info": "Hospital Resident Doctor (Hyderabad)",
+        "scam_category": "Telegram Part-Time Task Fraud",
+        "target_account": "070_ACC_9921",
+        "bank": "Metro Credit Bank (070)",
+        "fir_number": "TGCSB-2024-1102",
+        "scam_method": "Lured with ₹500 initial payouts for rating YouTube videos, followed by coerced deposits into crypto trading pools with frozen withdrawal requests.",
+        "status": "CONFIRMED MALICIOUS",
+        "cluster_id": "CLU-LIVE-429"
+      }
+    ]
+  },
+  {
+    "id": "SUSP-KOL-2024-340",
+    "name": "Kavita Sen (Under Watchlist Inquiry)",
+    "alias": "Proprietor / Sen Handloom Logistics",
+    "police_agency": "Kolkata Cyber Cell & Financial Intelligence Unit",
+    "residence_jurisdiction": "Salt Lake Sector V, Kolkata",
+    "phone_number": "+91 98300-XXXXX",
+    "doubt_description": "Identity flagged during branch registry cross-match. Registered commercial address matched a commercial complex housing dissolved export shell entities.",
+    "risk_score": 24.0,
+    "risk_level": "CLEAR / UNDER INQUIRY",
+    "avatar": "👤",
+    "has_malicious_transactions": false,
+    "linked_accounts": ["010_ACC_9982"],
+    "police_clearance_note": "No active malicious or scamming transactions detected in the 30-day surveillance ledger audit. Commercial export GST invoices verified authentic. Case retained on passive watchlist per FIU routine protocol.",
+    "bank_accounts": [
+      {
+        "account_number": "010_ACC_9982",
+        "bank_name": "National Mercantile Bank",
+        "bank_code": "010",
+        "account_type": "Current Business Proprietorship",
+        "balance": 18450,
+        "total_inflow": 125000,
+        "status": "NORMAL",
+        "branch": "Park Street Branch, Kolkata",
+        "ifsc_swift": "NMBL0000101"
+      }
+    ],
+    "recent_scam_transactions": []
+  },
+  {
+    "id": "SUSP-DEL-2024-550",
+    "name": "Priya Nandini Sharma",
+    "alias": "Sharma Handicrafts Pvt",
+    "police_agency": "National Crime Records Bureau (NCRB) Financial Audit",
+    "residence_jurisdiction": "Lajpat Nagar IV, New Delhi",
+    "phone_number": "+91 98101-XXXXX",
+    "doubt_description": "Triggered automated alert for sudden 300% surge in point-of-sale card payments over Diwali shopping weekend.",
+    "risk_score": 18.5,
+    "risk_level": "CLEAR / UNDER INQUIRY",
+    "avatar": "🧕",
+    "has_malicious_transactions": false,
+    "linked_accounts": ["055_ACC_3311"],
+    "police_clearance_note": "Ledger forensic scan returned ZERO malicious transactions. Merchant POS transactions reconcile with genuine seasonal retail sales receipts. Cleared of extortion or money-laundering nexus.",
+    "bank_accounts": [
+      {
+        "account_number": "055_ACC_3311",
+        "bank_name": "Imperial Capital Bank",
+        "bank_code": "055",
+        "account_type": "Merchant POS Settlement",
+        "balance": 31200,
+        "total_inflow": 210000,
+        "status": "NORMAL",
+        "branch": "South Extension, New Delhi",
+        "ifsc_swift": "ICBL0000552"
+      }
+    ],
+    "recent_scam_transactions": []
+  }
+]

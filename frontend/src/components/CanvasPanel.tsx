@@ -61,11 +61,9 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       setIsPlaying(false);
       return;
     }
-
     const clusterNodes = cluster.nodes;
     const clusterEdges = cluster.edges;
     const typology = cluster.typology;
-
     // Topology-specific layout coordinate calculation with generous clearance
     const calculatedNodes: Node[] = clusterNodes.map((n, index) => {
       let x = 200;

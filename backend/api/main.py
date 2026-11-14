@@ -226,14 +226,25 @@ def inject_live_attack(payload: InjectRequest):
     )
 
 
+try:
+    from .suspects_data import SYNTHETIC_SUSPECTS
+except ImportError:
+    from suspects_data import SYNTHETIC_SUSPECTS
+
+
 def _load_suspects_data() -> List[Dict[str, Any]]:
     import json
     from pathlib import Path
     data_path = Path(__file__).resolve().parent.parent / "data" / "police_suspects.json"
     if data_path.exists():
-        with open(data_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
+        try:
+            with open(data_path, "r", encoding="utf-8") as f:
+                loaded = json.load(f)
+                if loaded and len(loaded) > 0:
+                    return loaded
+        except Exception:
+            pass
+    return SYNTHETIC_SUSPECTS
 
 
 @app.get("/api/v1/suspects", response_model=SuspectsResponse)
@@ -269,6 +280,9 @@ def get_suspect_transactions(suspect_id: str):
                 "risk_score": suspect.risk_score,
                 "risk_level": suspect.risk_level,
                 "police_agency": suspect.police_agency,
+                "residence_jurisdiction": suspect.residence_jurisdiction,
+                "phone_number": suspect.phone_number,
+                "bank_accounts": [b.dict() for b in suspect.bank_accounts],
                 "police_clearance_note": suspect.police_clearance_note,
                 "recent_scam_transactions": [t.dict() for t in suspect.recent_scam_transactions],
             }

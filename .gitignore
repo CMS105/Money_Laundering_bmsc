@@ -33,10 +33,12 @@ ENV/
 .env
 kaggle.json
 
-# Large datasets & raw data
-data/
+# Large datasets & raw data (root data directory only)
+/data/
 *.csv
 *.parquet
 *.db
 aml_ledger.db
+!backend/data/police_suspects.json
+!frontend/src/data/police_suspects.json
 

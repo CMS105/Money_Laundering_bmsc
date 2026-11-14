@@ -137,6 +137,18 @@ class ScamTransaction(BaseModel):
     cluster_id: Optional[str] = None
 
 
+class SuspectBankAccount(BaseModel):
+    account_number: str
+    bank_name: str
+    bank_code: str
+    account_type: str = "Savings Conduit"
+    balance: float = 0.0
+    total_inflow: float = 0.0
+    status: str = "ACTIVE INTERCEPT"
+    branch: str = "Corporate Branch"
+    ifsc_swift: str = "APEX0001"
+
+
 class SuspectRecord(BaseModel):
     id: str
     name: str
@@ -148,8 +160,11 @@ class SuspectRecord(BaseModel):
     avatar: str = "👤"
     has_malicious_transactions: bool
     linked_accounts: List[str]
+    bank_accounts: List[SuspectBankAccount] = []
     recent_scam_transactions: List[ScamTransaction] = []
     police_clearance_note: Optional[str] = None
+    phone_number: Optional[str] = None
+    residence_jurisdiction: Optional[str] = None
 
 
 class SuspectsResponse(BaseModel):
