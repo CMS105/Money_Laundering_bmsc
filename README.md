@@ -1,8 +1,8 @@
-# LaunderGraph AML
+# LaunderyLens
 ### Graph-based Anti-Money Laundering Detection & Investigation Platform
 **BUILD BEYOND '26 · Problem Statement 2.1 · BMSCE AIML Department**
 
-LaunderGraph AML analyses financial transactions as a **temporal, directed, weighted graph** instead of looking at each payment in isolation. It combines graph analytics, rule-based typology detection and machine-learning models to surface suspicious transaction patterns, rank alerts and explain the money trail.
+LaunderyLens analyses financial transactions as a **temporal, directed, weighted graph** instead of looking at each payment in isolation. It combines graph analytics, rule-based typology detection and machine-learning models to surface suspicious transaction patterns, rank alerts and explain the money trail.
 
 > **Important:** This is a hackathon/research prototype, not a production AML compliance system. Alerts are investigative leads and must be reviewed by qualified people. Benchmark metrics are computed by the current pipeline on the loaded dataset; they are not an independent, held-out evaluation of real-world performance.
 
