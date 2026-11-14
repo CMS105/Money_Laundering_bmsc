@@ -192,4 +192,3 @@ def get_db_stats() -> Dict[str, int]:
         }
     finally:
         db.close()
-}
