@@ -1,8 +1,33 @@
-.venv/
-venv/
-__pycache__/
-*.pyc
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
 .next/
-.env
+out/
+build/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Misc
 .DS_Store
+*.pem
+*.log
+
+# Local env files
+.env*.local
+.env
