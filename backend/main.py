@@ -14,13 +14,13 @@ from backend.graph.temporal_graph import TemporalGraph
 from backend.graph.detectors.composite_scorer import CompositeScorer
 from backend.graph.detectors.models import ClusterAnalysisResult, DetectedAlert
 from backend.benchmark.evaluator import BenchmarkEvaluator, ComparativeBenchmarkResult
-from backend.ml_pipeline import LaunderGraphHybridEngine
+from backend.ml_pipeline import LaunderyLensHybridEngine
 from backend.sar.generator import SARGenerator
 from backend.sar.models import SARReport
 from backend.database import init_db, save_transactions_batch, get_all_sars, get_db_stats
 
 app = FastAPI(
-    title="LaunderGraph-AML Engine",
+    title="LaunderyLens Engine",
     description="Graph Data Science, Temporal Analytics & Explainable AI Anti-Money Laundering Platform",
     version="2.0.0",
 )
@@ -40,7 +40,7 @@ class AppState:
     temporal_graph: TemporalGraph = TemporalGraph()
     scorer: CompositeScorer = CompositeScorer()
     evaluator: BenchmarkEvaluator = BenchmarkEvaluator()
-    ml_engine: LaunderGraphHybridEngine = LaunderGraphHybridEngine()
+    ml_engine: LaunderyLensHybridEngine = LaunderyLensHybridEngine()
     sar_generator: SARGenerator = SARGenerator()
     dataset_source: str = "Dataset: IBM AML Benchmark"
     latest_analysis: Optional[ClusterAnalysisResult] = None
@@ -74,7 +74,7 @@ def startup_event():
 def health_check():
     return {
         "status": "healthy",
-        "service": "LaunderGraph AML",
+        "service": "LaunderyLens",
         "version": "2.0.0",
         "dataset_source": state.dataset_source,
         "total_nodes": state.temporal_graph.graph.number_of_nodes(),
