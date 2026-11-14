@@ -3,7 +3,7 @@ import '@xyflow/react/dist/style.css';
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LaunderGraph AML — Graph Data Science & Anti-Money Laundering Platform",
+  title: "LaunderyLens — Graph Data Science & Anti-Money Laundering Platform",
   description: "Temporal Graph Analytics, Machine Learning & FinCEN SAR Intelligence",
 };
 
