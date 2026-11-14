@@ -6,7 +6,7 @@
 ## 1. Vision & Executive Summary
 Traditional rule-based Anti-Money Laundering (AML) systems evaluate transactions in isolation against static threshold rules (e.g., Currency Transaction Reports for sums > $10,000), leaving financial institutions blind to sophisticated layered laundering syndicates that operate across distributed temporal networks.
 
-This project delivers **GraphSleuth-AML**: an ultra-fast, temporal-directed-weighted graph analytics and explainable intelligence platform. It mines transaction networks for structural laundering motifs—including **Fan-in/Fan-out dispersion (smurfing)**, **Cyclic round-tripping (washing loops)**, and **Rapid pass-through (mule account chains)**—ranks suspicious rings by composite risk, labels typologies, and generates regulatory-grade, audit-ready Suspicious Activity Reports (SAR) using structured LLM reasoning.
+This project delivers **LaunderyLens**: an ultra-fast, temporal-directed-weighted graph analytics and explainable intelligence platform. It mines transaction networks for structural laundering motifs—including **Fan-in/Fan-out dispersion (smurfing)**, **Cyclic round-tripping (washing loops)**, and **Rapid pass-through (mule account chains)**—ranks suspicious rings by composite risk, labels typologies, and generates regulatory-grade, audit-ready Suspicious Activity Reports (SAR) using structured LLM reasoning.
 
 A built-in quantitative benchmarking engine proves clear statistical superiority (Precision, Recall, and F1-score) over conventional threshold-based baselines on a labeled ground-truth dataset.
 
