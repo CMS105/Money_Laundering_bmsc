@@ -73,7 +73,7 @@ export default function TopKpiBar({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-black tracking-wider text-[#F8FAFC] uppercase">
-                LaunderGraph AML
+                LaunderyLens
               </span>
 
               {/* Recessed metallic pill: Dataset */}
@@ -146,11 +146,11 @@ export default function TopKpiBar({
 
           <span className="text-[10px] text-slate-600 font-bold px-0.5">→</span>
 
-          {/* 3. LaunderGraph Hybrid Engine */}
+          {/* 3. LaunderyLens Hybrid Engine */}
           <div className="flex items-center gap-2.5 px-3 py-1 rounded-md bg-gradient-to-r from-[#141824] to-[#111726] border border-white/[0.12] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)]">
             <div className="flex items-center gap-1 text-[9px] font-bold tracking-wider text-slate-100 uppercase">
               <Zap className="w-3 h-3 text-amber-400 fill-amber-400" />
-              3. LaunderGraph Hybrid
+              3. LaunderyLens Hybrid
             </div>
             <div className="flex items-center gap-2.5 text-xs font-mono tabular-nums">
               <span className="text-slate-300">
