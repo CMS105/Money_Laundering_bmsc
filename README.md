@@ -87,3 +87,8 @@ Open your browser at **[http://localhost:8000](http://localhost:8000)**.
 └── run_system.py             # Single-command launcher
 ```
 
+
+
+## IBM HI-Large external benchmark
+
+GraphSleuth includes an optional Kaggle CLI importer and benchmark runner for the IBM HI-Large AML dataset. Follow [`docs/IBM_HI_LARGE.md`](docs/IBM_HI_LARGE.md) to download the data, normalize it to Parquet, and run the existing detectors against the IBM laundering labels. Raw and processed datasets are ignored by Git and must not be committed.
