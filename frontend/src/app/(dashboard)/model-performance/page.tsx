@@ -17,7 +17,19 @@ interface BenchmarkModel {
   lift?: string;
 }
 
+interface EvaluationProtocol {
+  split_strategy: string;
+  leakage_prevention: string;
+  total_samples: number;
+  train_samples: number;
+  validation_samples: number;
+  test_samples: number;
+  test_ground_truth_positives: number;
+  tuned_decision_threshold: number;
+}
+
 interface PerformanceData {
+  evaluation_protocol?: EvaluationProtocol;
   benchmark_3way: {
     legacy_rule_engine: BenchmarkModel;
     tabular_ml_rf: BenchmarkModel;
@@ -51,57 +63,67 @@ interface PerformanceData {
 }
 
 const FALLBACK_PERF: PerformanceData = {
+  evaluation_protocol: {
+    split_strategy: 'Chronological Held-Out Split (70% Train, 15% Validation, 15% Test)',
+    leakage_prevention: 'Strict sequential temporal graph feature accumulation (G_{<t}): zero future information leakage.',
+    total_samples: 3000,
+    train_samples: 2100,
+    validation_samples: 450,
+    test_samples: 450,
+    test_ground_truth_positives: 176,
+    tuned_decision_threshold: 0.60,
+  },
   benchmark_3way: {
     legacy_rule_engine: {
-      name: '1. Traditional Threshold Rules (> $10k)',
-      precision: 0.105,
-      recall: 0.570,
-      f1: 0.180,
-      fpr: 0.373,
-      roc_auc: 0.621,
-      description: 'Static threshold alerting generating 37.3% false alarms and missing structured smurfing below $10,000.',
+      name: '1. Traditional Threshold Rules (> $10k CTR)',
+      precision: 0.424,
+      recall: 0.551,
+      f1: 0.479,
+      fpr: 0.482,
+      roc_auc: 0.535,
+      description: 'Static $10k threshold alerting generating 48.2% false alarms and missing structured smurfing below $10,000.',
     },
     tabular_ml_rf: {
       name: '2. Tabular Machine Learning (Random Forest)',
-      precision: 1.0,
-      recall: 0.766,
-      f1: 0.867,
-      fpr: 0.0,
-      roc_auc: 0.883,
-      description: 'Supervised tabular model trained on amounts and velocity; blind to multi-hop non-linear cycles.',
+      precision: 0.704,
+      recall: 0.932,
+      f1: 0.802,
+      fpr: 0.252,
+      roc_auc: 0.908,
+      description: 'Supervised tabular model trained on amounts, velocity, and time; blind to multi-hop non-linear cycles.',
     },
     launderylens_hybrid: {
-      name: '3. LaunderLens Hybrid Engine (Temporal GDS + RF)',
-      precision: 1.0,
-      recall: 0.790,
-      f1: 0.882,
-      fpr: 0.0,
+      name: '3. LaunderyLens Hybrid Engine (Temporal GDS + RF)',
+      precision: 0.963,
+      recall: 0.597,
+      f1: 0.737,
+      fpr: 0.015,
       roc_auc: 0.942,
-      lift: '+390% Lift vs Rules',
-      description: 'Temporal Graph Topology + Unsupervised Community Detection + Supervised Random Forest with zero false positives.',
+      lift: '+127.4% Precision Lift vs Rules',
+      description: 'Chronological Held-Out Partition (70/15/15) with zero future-information leakage: Temporal Graph Topology + Isolation Forest + Random Forest.',
     },
   },
   roc_curve: [
     { fpr: 0.0, tpr_hybrid: 0.0, tpr_rf: 0.0, tpr_legacy: 0.0 },
-    { fpr: 0.02, tpr_hybrid: 0.64, tpr_rf: 0.45, tpr_legacy: 0.12 },
-    { fpr: 0.05, tpr_hybrid: 0.79, tpr_rf: 0.68, tpr_legacy: 0.22 },
+    { fpr: 0.015, tpr_hybrid: 0.60, tpr_rf: 0.45, tpr_legacy: 0.12 },
+    { fpr: 0.05, tpr_hybrid: 0.78, tpr_rf: 0.68, tpr_legacy: 0.22 },
     { fpr: 0.10, tpr_hybrid: 0.88, tpr_rf: 0.76, tpr_legacy: 0.35 },
-    { fpr: 0.20, tpr_hybrid: 0.94, tpr_rf: 0.82, tpr_legacy: 0.48 },
-    { fpr: 0.37, tpr_hybrid: 0.98, tpr_rf: 0.89, tpr_legacy: 0.57 },
+    { fpr: 0.25, tpr_hybrid: 0.94, tpr_rf: 0.93, tpr_legacy: 0.48 },
+    { fpr: 0.48, tpr_hybrid: 0.98, tpr_rf: 0.96, tpr_legacy: 0.55 },
     { fpr: 1.0, tpr_hybrid: 1.0, tpr_rf: 1.0, tpr_legacy: 1.0 },
   ],
   confusion_matrix: {
     launderylens_hybrid: {
-      true_positives: 253,
-      false_positives: 0,
-      true_negatives: 2947,
-      false_negatives: 67,
+      true_positives: 105,
+      false_positives: 4,
+      true_negatives: 270,
+      false_negatives: 71,
     },
     legacy_rules: {
-      true_positives: 182,
-      false_positives: 1100,
-      true_negatives: 1847,
-      false_negatives: 138,
+      true_positives: 97,
+      false_positives: 132,
+      true_negatives: 142,
+      false_negatives: 79,
     },
   },
   feature_importances: [
@@ -145,6 +167,31 @@ export default function ModelPerformancePage() {
           </p>
         </div>
       </div>
+
+      {/* Evaluation Protocol Card */}
+      {data.evaluation_protocol && (
+        <div className="p-4 rounded-md bg-[#111114] border border-[#27272A] text-xs font-mono space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#27272A] pb-2">
+            <span className="text-white font-bold uppercase tracking-wider flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-[#10B981]"></span>
+              Zero Future-Information Leakage Protocol
+            </span>
+            <span className="text-[#A1A1AA]">
+              {data.evaluation_protocol.split_strategy}
+            </span>
+          </div>
+          <p className="text-[#A1A1AA] leading-relaxed">
+            {data.evaluation_protocol.leakage_prevention} Features for each transaction i at timestamp t_i are computed strictly using the accumulated graph prior to t_i (&ldquo;G &lt; t&rdquo;). The held-out test set ({data.evaluation_protocol.test_samples} transactions, {data.evaluation_protocol.test_ground_truth_positives} ground-truth illicit) was never seen during model training or threshold tuning.
+          </p>
+          <div className="flex flex-wrap gap-4 pt-1 text-[11px] text-[#71717A]">
+            <span>Total Dataset: <strong className="text-white">{data.evaluation_protocol.total_samples.toLocaleString()}</strong> txs</span>
+            <span>Train: <strong className="text-white">{data.evaluation_protocol.train_samples.toLocaleString()}</strong> (70%)</span>
+            <span>Val: <strong className="text-white">{data.evaluation_protocol.validation_samples.toLocaleString()}</strong> (15%)</span>
+            <span>Held-Out Test: <strong className="text-[#10B981]">{data.evaluation_protocol.test_samples.toLocaleString()}</strong> (15%)</span>
+            <span>Decision Threshold: <strong className="text-white">{data.evaluation_protocol.tuned_decision_threshold.toFixed(2)}</strong></span>
+          </div>
+        </div>
+      )}
 
       {/* 3 Model Cards Side-by-Side */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -314,18 +361,18 @@ export default function ModelPerformancePage() {
             Confusion Matrix Analysis: Hybrid Engine vs. Legacy Rules
           </h2>
           <p className="text-xs text-[#71717A] font-mono mb-4">
-            Tested on 3,200 sample IBM AML transactions
+            Evaluated on held-out test partition ({data.evaluation_protocol?.test_samples ?? 450} transactions · Zero future-information leakage)
           </p>
 
           <div className="grid grid-cols-2 gap-4 text-xs font-mono">
             {/* Hybrid Matrix */}
             <div className="p-4 rounded-lg bg-[#09090B] border border-[#27272A] space-y-2">
-              <span className="text-[#10B981] font-bold block">LaunderLens Hybrid:</span>
+              <span className="text-[#10B981] font-bold block">LaunderyLens Hybrid:</span>
               <div className="space-y-1 text-[#71717A]">
-                <p>True Positives: <strong className="text-white">253</strong></p>
-                <p>False Positives: <strong className="text-[#10B981]">0 (Zero FP)</strong></p>
-                <p>True Negatives: <strong className="text-white">2,947</strong></p>
-                <p>False Negatives: <strong className="text-[#71717A]">67</strong></p>
+                <p>True Positives: <strong className="text-white">{data.confusion_matrix.launderylens_hybrid.true_positives}</strong></p>
+                <p>False Positives: <strong className="text-[#10B981]">{data.confusion_matrix.launderylens_hybrid.false_positives} (1.5% FPR)</strong></p>
+                <p>True Negatives: <strong className="text-white">{data.confusion_matrix.launderylens_hybrid.true_negatives}</strong></p>
+                <p>False Negatives: <strong className="text-[#71717A]">{data.confusion_matrix.launderylens_hybrid.false_negatives}</strong></p>
               </div>
             </div>
 
@@ -333,17 +380,17 @@ export default function ModelPerformancePage() {
             <div className="p-4 rounded-lg bg-[#09090B] border border-[#27272A] space-y-2">
               <span className="text-[#EF4444] font-bold block">Legacy Rules (&gt; $10k):</span>
               <div className="space-y-1 text-[#71717A]">
-                <p>True Positives: <strong className="text-white">182</strong></p>
-                <p>False Positives: <strong className="text-[#EF4444]">1,100 (37.3% FP)</strong></p>
-                <p>True Negatives: <strong className="text-white">1,847</strong></p>
-                <p>False Negatives: <strong className="text-[#EF4444]">138</strong></p>
+                <p>True Positives: <strong className="text-white">{data.confusion_matrix.legacy_rules.true_positives}</strong></p>
+                <p>False Positives: <strong className="text-[#EF4444]">{data.confusion_matrix.legacy_rules.false_positives} (48.2% FPR)</strong></p>
+                <p>True Negatives: <strong className="text-white">{data.confusion_matrix.legacy_rules.true_negatives}</strong></p>
+                <p>False Negatives: <strong className="text-[#EF4444]">{data.confusion_matrix.legacy_rules.false_negatives}</strong></p>
               </div>
             </div>
           </div>
 
           <div className="p-3 rounded-lg bg-[#10B981]/10 border border-[#10B981]/30 text-xs font-mono text-[#10B981] mt-4 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>Eliminated 100% of false positive alerts while increasing laundering detection recall by +38.5%.</span>
+            <span>Slashed false positives by 97.0% (132 down to 4) while delivering a +127.4% precision lift over static CTR rules.</span>
           </div>
         </div>
       </div>

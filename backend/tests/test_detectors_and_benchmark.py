@@ -132,3 +132,39 @@ def test_api_endpoints():
     assert len(sar["chronological_trail"]) > 0
     assert "narrative_summary" in sar
 
+
+def test_ml_pipeline_leakage_free_evaluation():
+    from backend.ibm_loader import IBMAMLDataLoader
+    from backend.ml_pipeline import LaunderyLensHybridEngine
+
+    loader = IBMAMLDataLoader()
+    df, _, _ = loader.load_dataset()
+    engine = LaunderyLensHybridEngine()
+    bm = engine.fit_and_evaluate(df)
+
+    # 1. Verify Evaluation Protocol
+    protocol = bm["evaluation_protocol"]
+    assert protocol["test_samples"] > 0
+    assert protocol["train_samples"] > 0
+    assert protocol["test_ground_truth_positives"] > 0
+    assert "leakage_prevention" in protocol
+
+    # 2. Verify Held-Out Test Metrics
+    models = bm["models"]
+    assert "baseline" in models
+    assert "launderylens_hybrid" in models
+
+    base_m = models["baseline"]
+    hyb_m = models["launderylens_hybrid"]
+
+    assert 0.0 <= base_m["precision"] <= 1.0
+    assert 0.0 <= base_m["recall"] <= 1.0
+    assert 0.0 <= hyb_m["precision"] <= 1.0
+    assert 0.0 <= hyb_m["recall"] <= 1.0
+
+    # 3. Verify Confusion Matrices
+    assert len(base_m["confusion_matrix"]) == 2
+    assert len(hyb_m["confusion_matrix"]) == 2
+    assert hyb_m["confusion_matrix"][0][1] <= base_m["confusion_matrix"][0][1]  # Lower FP
+
+

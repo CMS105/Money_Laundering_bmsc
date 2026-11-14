@@ -43,17 +43,27 @@ class BenchmarkEvaluator:
         self.baseline = baseline or RuleBasedBaseline()
         self.composite_scorer = composite_scorer or CompositeScorer()
 
-    def run_benchmark(self, tg: TemporalGraph) -> ComparativeBenchmarkResult:
-        df = tg.df
-        all_tx_ids = set(df["transaction_id"].to_list())
+    def run_benchmark(
+        self, tg: TemporalGraph, held_out_test_ratio: float = 0.0
+    ) -> ComparativeBenchmarkResult:
+        df = tg.df.sort("timestamp")
         
-        # Ground truth positives
-        gt_df = df.filter(pl.col("is_laundering") == True)
+        # Support held-out chronological test partition
+        if held_out_test_ratio > 0.0:
+            n_total = len(df)
+            n_test = max(1, int(n_total * held_out_test_ratio))
+            test_df = df.slice(n_total - n_test)
+            all_tx_ids = set(test_df["transaction_id"].to_list())
+            gt_df = test_df.filter(pl.col("is_laundering") == True)
+        else:
+            all_tx_ids = set(df["transaction_id"].to_list())
+            gt_df = df.filter(pl.col("is_laundering") == True)
+
         ground_truth_positives = set(gt_df["transaction_id"].to_list())
         ground_truth_negatives = all_tx_ids - ground_truth_positives
 
         # 1. Evaluate Rule-Based Baseline
-        baseline_flagged = self.baseline.evaluate(tg)
+        baseline_flagged = self.baseline.evaluate(tg) & all_tx_ids
         baseline_metrics = self._compute_metrics(
             "Threshold Baseline Rules",
             flagged=baseline_flagged,
@@ -61,14 +71,15 @@ class BenchmarkEvaluator:
             negatives=ground_truth_negatives,
         )
 
-        # 2. Evaluate GraphSleuth Topology Engine
+        # 2. Evaluate Graph Topology Engine
         cluster_result = self.composite_scorer.analyze(tg)
         graph_flagged: Set[str] = set()
         for alert in cluster_result.top_alerts:
             graph_flagged.update(alert.involved_transactions)
+        graph_flagged = graph_flagged & all_tx_ids
 
         graph_metrics = self._compute_metrics(
-            "GraphSleuth Topology Engine",
+            "LaunderyLens Graph Engine",
             flagged=graph_flagged,
             positives=ground_truth_positives,
             negatives=ground_truth_negatives,

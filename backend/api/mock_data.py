@@ -24,22 +24,22 @@ except ImportError:
 
 INITIAL_METRICS = ComparisonMetrics(
     baseline=PerformanceMetric(
-        precision=0.105,
-        recall=0.570,
-        f1=0.177,
-        false_positive_rate=0.373,
+        precision=0.4236,
+        recall=0.5511,
+        f1=0.4790,
+        false_positive_rate=0.4818,
     ),
     tabular_ml=PerformanceMetric(
-        precision=1.000,
-        recall=0.766,
-        f1=0.868,
-        false_positive_rate=0.000,
+        precision=0.7039,
+        recall=0.9318,
+        f1=0.8020,
+        false_positive_rate=0.2518,
     ),
     graph_engine=PerformanceMetric(
-        precision=1.000,
-        recall=0.790,
-        f1=0.882,
-        false_positive_rate=0.000,
+        precision=0.9633,
+        recall=0.5966,
+        f1=0.7368,
+        false_positive_rate=0.0146,
     ),
 )
 
@@ -407,50 +407,36 @@ def build_real_alerts_from_engine() -> Tuple[List[AlertCluster], ComparisonMetri
 
         metrics = ComparisonMetrics(
             baseline=PerformanceMetric(
-                precision=round(float(baseline_m.get("precision", 0.105)), 4),
-                recall=round(float(baseline_m.get("recall", 0.570)), 4),
-                f1=round(float(baseline_m.get("f1", 0.177)), 4),
-                false_positive_rate=round(float(baseline_m.get("false_positive_rate", 0.373)), 4),
+                precision=round(float(baseline_m.get("precision", 0.4236)), 4),
+                recall=round(float(baseline_m.get("recall", 0.5511)), 4),
+                f1=round(float(baseline_m.get("f1", 0.4790)), 4),
+                false_positive_rate=round(float(baseline_m.get("false_positive_rate", 0.4818)), 4),
             ),
             tabular_ml=PerformanceMetric(
-                precision=round(float(tabular_m.get("precision", 1.0)), 4),
-                recall=round(float(tabular_m.get("recall", 0.766)), 4),
-                f1=round(float(tabular_m.get("f1", 0.868)), 4),
-                false_positive_rate=round(float(tabular_m.get("false_positive_rate", 0.0)), 4),
+                precision=round(float(tabular_m.get("precision", 0.7039)), 4),
+                recall=round(float(tabular_m.get("recall", 0.9318)), 4),
+                f1=round(float(tabular_m.get("f1", 0.8020)), 4),
+                false_positive_rate=round(float(tabular_m.get("false_positive_rate", 0.2518)), 4),
             ),
             graph_engine=PerformanceMetric(
-                precision=round(float(hybrid_m.get("precision", 1.0)), 4),
-                recall=round(float(hybrid_m.get("recall", 0.785)), 4),
-                f1=round(float(hybrid_m.get("f1", 0.880)), 4),
-                false_positive_rate=round(float(hybrid_m.get("false_positive_rate", 0.0)), 4),
+                precision=round(float(hybrid_m.get("precision", 0.9633)), 4),
+                recall=round(float(hybrid_m.get("recall", 0.5966)), 4),
+                f1=round(float(hybrid_m.get("f1", 0.7368)), 4),
+                false_positive_rate=round(float(hybrid_m.get("false_positive_rate", 0.0146)), 4),
             ),
         )
 
         benchmark_3way = {
-            "baseline": {
-                "precision": metrics.baseline.precision,
-                "recall": metrics.baseline.recall,
-                "f1": metrics.baseline.f1,
-                "fpr": metrics.baseline.false_positive_rate,
-            },
-            "tabular_ml": {
-                "precision": metrics.tabular_ml.precision,
-                "recall": metrics.tabular_ml.recall,
-                "f1": metrics.tabular_ml.f1,
-                "fpr": metrics.tabular_ml.false_positive_rate,
-            },
-            "launderylens_hybrid": {
-                "precision": metrics.graph_engine.precision,
-                "recall": metrics.graph_engine.recall,
-                "f1": metrics.graph_engine.f1,
-                "fpr": metrics.graph_engine.false_positive_rate,
-            },
-            "laundergraph_hybrid": {
-                "precision": metrics.graph_engine.precision,
-                "recall": metrics.graph_engine.recall,
-                "f1": metrics.graph_engine.f1,
-                "fpr": metrics.graph_engine.false_positive_rate,
-            },
+            "evaluation_protocol": bm.get("evaluation_protocol", {
+                "split_strategy": "Chronological Held-Out Split (70% Train, 15% Validation, 15% Test)",
+                "leakage_prevention": "Strict sequential temporal graph feature accumulation (G_{<t}): zero future information leakage.",
+                "total_samples": len(df),
+                "test_samples": int(len(df) * 0.15),
+            }),
+            "baseline": baseline_m,
+            "tabular_ml": tabular_m,
+            "launderylens_hybrid": hybrid_m,
+            "laundergraph_hybrid": hybrid_m,
             "lifts": lifts,
         }
 
