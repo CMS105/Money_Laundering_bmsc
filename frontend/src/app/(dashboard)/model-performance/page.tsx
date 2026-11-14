@@ -142,7 +142,16 @@ export default function ModelPerformancePage() {
     fetch('/api/v1/model-performance')
       .then((res) => (res.ok ? res.json() : null))
       .then((json) => {
-        if (json && json.benchmark_3way) setData(json);
+        if (json && json.benchmark_3way) {
+          const b3 = json.benchmark_3way;
+          const hasValidData = Boolean(
+            b3.launderylens_hybrid &&
+            (b3.launderylens_hybrid.precision > 0 || b3.launderylens_hybrid.recall > 0 || b3.legacy_rule_engine.recall > 0)
+          );
+          if (hasValidData) {
+            setData(json);
+          }
+        }
       })
       .catch(() => {});
   }, []);

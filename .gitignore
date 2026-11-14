@@ -41,4 +41,6 @@ kaggle.json
 aml_ledger.db
 !backend/data/police_suspects.json
 !frontend/src/data/police_suspects.json
+!backend/data/ibm_subgraph_sample.parquet
+!data/ibm_subgraph_sample.parquet
 

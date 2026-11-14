@@ -228,6 +228,24 @@ class LaunderyLensHybridEngine:
         X_hyb_val, X_tab_val, y_val = X_hyb[n_tr:n_tr + n_val], X_tab[n_tr:n_tr + n_val], y[n_tr:n_tr + n_val]
         X_hyb_te, X_tab_te, y_te = X_hyb[n_tr + n_val:], X_tab[n_tr + n_val:], y[n_tr + n_val:]
 
+        # Safeguard: Ensure held-out test and validation sets contain positive ground-truth cases
+        if (np.sum(y_te) == 0 or np.sum(y_val) == 0 or np.sum(y_tr) == 0) and actual_illicit >= 3:
+            pos_indices = np.where(y == 1)[0]
+            neg_indices = np.where(y == 0)[0]
+
+            n_pos_tr = max(1, int(len(pos_indices) * 0.70))
+            n_pos_val = max(1, int(len(pos_indices) * 0.15))
+            n_neg_tr = max(1, int(len(neg_indices) * 0.70))
+            n_neg_val = max(1, int(len(neg_indices) * 0.15))
+
+            tr_idx = np.sort(np.concatenate([pos_indices[:n_pos_tr], neg_indices[:n_neg_tr]]))
+            val_idx = np.sort(np.concatenate([pos_indices[n_pos_tr:n_pos_tr + n_pos_val], neg_indices[n_neg_tr:n_neg_tr + n_neg_val]]))
+            te_idx = np.sort(np.concatenate([pos_indices[n_pos_tr + n_pos_val:], neg_indices[n_neg_tr + n_neg_val:]]))
+
+            X_hyb_tr, X_tab_tr, y_tr = X_hyb[tr_idx], X_tab[tr_idx], y[tr_idx]
+            X_hyb_val, X_tab_val, y_val = X_hyb[val_idx], X_tab[val_idx], y[val_idx]
+            X_hyb_te, X_tab_te, y_te = X_hyb[te_idx], X_tab[te_idx], y[te_idx]
+
         # ---------------------------------------------------------------------
         # 2. Model 1: Legacy Rule Baseline (Evaluated on Held-Out Test Set)
         # ---------------------------------------------------------------------

@@ -52,25 +52,28 @@ class SyntheticAMLGenerator:
             duration_seconds=duration_days * 86400,
         )
 
+        # Distribute illicit rings across the entire duration (leaving 4h buffer for ring completion)
+        max_offset = max(0, duration_days * 86400 - 14400)
+
         # 2. Inject Smurfing Rings (Fan-out -> Fan-in)
         for i in range(num_smurfing_rings):
             self._inject_smurfing_ring(
                 ring_idx=i + 1,
-                base_time=base_timestamp + random.randint(0, (duration_days - 2) * 86400),
+                base_time=base_timestamp + random.randint(0, max_offset),
             )
 
         # 3. Inject Temporal Round-Tripping Cycles
         for i in range(num_cycle_rings):
             self._inject_cycle_ring(
                 ring_idx=i + 1,
-                base_time=base_timestamp + random.randint(0, (duration_days - 2) * 86400),
+                base_time=base_timestamp + random.randint(0, max_offset),
             )
 
         # 4. Inject Rapid Pass-Through Mule Chains
         for i in range(num_mule_chains):
             self._inject_mule_chain(
                 chain_idx=i + 1,
-                base_time=base_timestamp + random.randint(0, (duration_days - 2) * 86400),
+                base_time=base_timestamp + random.randint(0, max_offset),
             )
 
         # Sort transactions chronologically

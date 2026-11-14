@@ -51,22 +51,31 @@ class IBMAMLDataLoader:
         Returns:
             (pl.DataFrame, source_badge, metadata)
         """
-        cache_path = os.path.join("data", "ibm_subgraph_sample.parquet")
-        if use_cache and os.path.exists(cache_path):
-            try:
-                df = pl.read_parquet(cache_path)
-                illicit_count = int(df.filter(pl.col("is_laundering") == True).shape[0])
-                meta = {
-                    "source": "IBM AML Benchmark",
-                    "file_path": cache_path,
-                    "total_rows": len(df),
-                    "illicit_rows": illicit_count,
-                    "total_accounts": len(set(df["source_account"].to_list() + df["target_account"].to_list())),
-                    "scanned_raw_rows": "cached",
-                }
-                return df, "IBM AML Benchmark", meta
-            except Exception:
-                pass
+        # Candidate paths for bundled/cached benchmark parquet
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        candidate_caches = [
+            os.path.join(base_dir, "data", "ibm_subgraph_sample.parquet"),
+            os.path.join("backend", "data", "ibm_subgraph_sample.parquet"),
+            os.path.join("data", "ibm_subgraph_sample.parquet"),
+        ]
+
+        if use_cache:
+            for cache_path in candidate_caches:
+                if os.path.exists(cache_path):
+                    try:
+                        df = pl.read_parquet(cache_path)
+                        illicit_count = int(df.filter(pl.col("is_laundering") == True).shape[0])
+                        meta = {
+                            "source": "IBM AML Benchmark",
+                            "file_path": cache_path,
+                            "total_rows": len(df),
+                            "illicit_rows": illicit_count,
+                            "total_accounts": len(set(df["source_account"].to_list() + df["target_account"].to_list())),
+                            "scanned_raw_rows": "cached",
+                        }
+                        return df, "IBM AML Benchmark", meta
+                    except Exception:
+                        continue
 
         csv_path = self.find_ibm_csv()
         if not csv_path:
