@@ -38,7 +38,7 @@ def main():
     # 2. Run Uvicorn FastAPI backend on 127.0.0.1:8000
     try:
         import uvicorn
-        uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=False)
+        uvicorn.run("backend.api.main:app", host="127.0.0.1", port=8000, reload=False)
     except KeyboardInterrupt:
         print("\n[!] Shutting down LaunderyLens...")
     finally:
