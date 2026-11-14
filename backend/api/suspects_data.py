@@ -303,3 +303,4 @@ SYNTHETIC_SUSPECTS: List[Dict[str, Any]] = [
         "recent_scam_transactions": [],
     },
 ]
+

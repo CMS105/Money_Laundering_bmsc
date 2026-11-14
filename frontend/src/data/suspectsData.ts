@@ -300,3 +300,4 @@ export const SYNTHETIC_POLICE_SUSPECTS: SuspectRecord[] = [
     recent_scam_transactions: [],
   },
 ];
+
