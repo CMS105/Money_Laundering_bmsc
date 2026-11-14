@@ -133,7 +133,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
 
   if (!cluster) {
     return (
-      <main className="flex-1 flex items-center justify-center bg-slate-950 text-slate-500">
+      <main className="flex-1 min-h-0 w-full h-full min-h-[500px] flex items-center justify-center bg-slate-950 text-slate-500">
         <div className="text-center space-y-2">
           <Network className="w-10 h-10 mx-auto text-slate-600 animate-pulse" />
           <p className="text-sm font-medium">Select a cluster from the left panel to inspect graph</p>
@@ -145,7 +145,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
   const meta = getTypologyMeta(cluster.typology);
 
   return (
-    <main className="flex-1 relative h-full bg-slate-950 flex flex-col overflow-hidden">
+    <main className="flex-1 min-h-0 relative w-full h-full min-h-[500px] bg-slate-950 flex flex-col overflow-hidden">
       {/* Top Canvas Bar: Active Cluster Details & Visual Legend */}
       <div className="absolute top-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
         {/* Cluster Pill */}
@@ -188,8 +188,8 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
         </div>
       </div>
 
-      {/* React Flow Interactive Canvas */}
-      <div className="flex-1 w-full h-full">
+      {/* React Flow Interactive Canvas Wrapper */}
+      <div className="flex-1 min-h-0 w-full h-full min-h-[500px] relative">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -205,6 +205,7 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
             type: 'transactionEdge',
           }}
           className="bg-[#070b14]"
+          style={{ width: '100%', height: '100%' }}
         >
           <Background
             variant={BackgroundVariant.Dots}
