@@ -7,7 +7,9 @@ import {
   SuspectsResponse,
   SuspectRecord,
 } from '../types';
-import localSuspectsJson from '../data/police_suspects.json';
+// Suspect records are loaded from the backend API. Keep an empty typed fallback
+// so the frontend can still build when no local registry file is packaged.
+const localSuspectsJson: SuspectRecord[] = [];
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
