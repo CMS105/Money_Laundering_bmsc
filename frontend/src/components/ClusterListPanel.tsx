@@ -3,13 +3,10 @@
 import React, { useState } from 'react';
 import {
   Search,
-  Filter,
-  ShieldAlert,
   Clock,
   Layers,
   Flame,
   ArrowRight,
-  TrendingUp,
 } from 'lucide-react';
 import { AlertCluster } from '../types';
 import { formatINR, getTypologyMeta } from '../lib/formatters';

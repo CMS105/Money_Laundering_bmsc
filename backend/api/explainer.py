@@ -3,7 +3,10 @@ import json
 import logging
 from typing import Optional
 import requests
-from .schemas import AlertCluster, ExplainResponse
+try:
+    from .schemas import AlertCluster, ExplainResponse
+except ImportError:
+    from schemas import AlertCluster, ExplainResponse
 
 logger = logging.getLogger(__name__)
 

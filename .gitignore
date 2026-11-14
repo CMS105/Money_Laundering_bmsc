@@ -31,3 +31,10 @@ ENV/
 # Local env files
 .env*.local
 .env
+kaggle.json
+
+# Large datasets & raw data
+data/
+*.csv
+*.parquet
+

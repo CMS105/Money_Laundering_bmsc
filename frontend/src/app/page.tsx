@@ -7,7 +7,7 @@ import CanvasPanel from '../components/CanvasPanel';
 import DossierPanel from '../components/DossierPanel';
 import { AlertCluster, ComparisonMetrics, AnalysisResponse } from '../types';
 import { fetchAnalysis, injectAttack, FALLBACK_DATA } from '../services/api';
-import { AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react';
+import { CheckCircle2, RefreshCw } from 'lucide-react';
 
 export default function WorkbenchPage() {
   const [metrics, setMetrics] = useState<ComparisonMetrics>(FALLBACK_DATA.metrics);

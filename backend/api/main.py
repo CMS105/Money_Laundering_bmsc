@@ -1,16 +1,28 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
-from .schemas import (
-    AnalysisResponse,
-    InjectRequest,
-    InjectResponse,
-    ExplainRequest,
-    ExplainResponse,
-    AlertCluster,
-)
-from .mock_data import repo
-from .explainer import generate_llm_explanation
+try:
+    from .schemas import (
+        AnalysisResponse,
+        InjectRequest,
+        InjectResponse,
+        ExplainRequest,
+        ExplainResponse,
+        AlertCluster,
+    )
+    from .mock_data import repo
+    from .explainer import generate_llm_explanation
+except ImportError:
+    from schemas import (
+        AnalysisResponse,
+        InjectRequest,
+        InjectResponse,
+        ExplainRequest,
+        ExplainResponse,
+        AlertCluster,
+    )
+    from mock_data import repo
+    from explainer import generate_llm_explanation
 
 app = FastAPI(
     title="Build Beyond '26 — PS 2.1 Graph Laundering Detection API",
@@ -39,17 +51,20 @@ def root():
 
 
 @app.get("/health")
+@app.get("/api/health")
 def health_check():
     return {"status": "ok", "alerts_count": len(repo.alerts)}
 
 
 @app.get("/api/v1/analysis", response_model=AnalysisResponse)
+@app.get("/v1/analysis", response_model=AnalysisResponse)
 def get_analysis():
     """Returns comparative baseline vs. temporal graph engine metrics and risk-ranked suspicious clusters."""
     return repo.get_analysis()
 
 
 @app.post("/api/v1/explain/{cluster_id}", response_model=ExplainResponse)
+@app.post("/v1/explain/{cluster_id}", response_model=ExplainResponse)
 def explain_cluster(cluster_id: str, request_data: Optional[ExplainRequest] = None):
     """Takes a cluster's nodes/edges JSON or finds cluster by ID, and calls Gemini/LLM to generate a plain-language explanation."""
     # First check if cluster exists in repository
@@ -82,6 +97,7 @@ def explain_cluster(cluster_id: str, request_data: Optional[ExplainRequest] = No
 
 
 @app.post("/api/v1/inject", response_model=InjectResponse)
+@app.post("/v1/inject", response_model=InjectResponse)
 def inject_live_attack(payload: InjectRequest):
     """Accepts { "typology": "CYCLIC_ROUND_TRIPPING" | "FAN_OUT_IN" | "MULE_CHAIN" } to inject a live laundering ring during demo."""
     injected = repo.inject_attack(payload.typology)

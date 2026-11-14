@@ -1,7 +1,10 @@
 import random
 from datetime import datetime, timezone
 from typing import List
-from .schemas import AlertCluster, GraphNode, GraphEdge, ComparisonMetrics, PerformanceMetric
+try:
+    from .schemas import AlertCluster, GraphNode, GraphEdge, ComparisonMetrics, PerformanceMetric
+except ImportError:
+    from schemas import AlertCluster, GraphNode, GraphEdge, ComparisonMetrics, PerformanceMetric
 
 INITIAL_METRICS = ComparisonMetrics(
     baseline=PerformanceMetric(

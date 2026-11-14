@@ -13,11 +13,10 @@ import {
   ArrowDownLeft,
   AlertOctagon,
   RefreshCw,
-  ExternalLink,
   Download,
 } from 'lucide-react';
 import { AlertCluster, ExplainResponse } from '../types';
-import { formatINR, formatINRFull, getTypologyMeta } from '../lib/formatters';
+import { formatINRFull, getTypologyMeta } from '../lib/formatters';
 import { explainCluster } from '../services/api';
 
 interface DossierPanelProps {
@@ -115,7 +114,6 @@ export default function DossierPanel({ cluster }: DossierPanelProps) {
     );
   }
 
-  const meta = getTypologyMeta(cluster.typology);
   const avgHopDelay =
     cluster.edges.length > 0
       ? (cluster.dwell_time_mins / cluster.edges.length).toFixed(1)

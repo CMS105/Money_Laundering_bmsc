@@ -4,13 +4,11 @@ import React, { useState } from 'react';
 import {
   Activity,
   Zap,
-  TrendingUp,
   AlertTriangle,
   ChevronDown,
   RefreshCw,
   GitFork,
   Link2,
-  CheckCircle2,
 } from 'lucide-react';
 import { ComparisonMetrics } from '../types';
 import { formatPercent } from '../lib/formatters';

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   ReactFlow,
   Background,
@@ -13,11 +13,11 @@ import {
   Edge,
   BackgroundVariant,
 } from '@xyflow/react';
-import { AlertCluster, GraphNode, GraphEdge } from '../types';
+import { AlertCluster } from '../types';
 import AccountNode from './canvas/AccountNode';
 import TransactionEdge from './canvas/TransactionEdge';
 import { getTypologyMeta, formatINR } from '../lib/formatters';
-import { Maximize2, Shield, Network, Eye } from 'lucide-react';
+import { Network } from 'lucide-react';
 
 interface CanvasPanelProps {
   cluster: AlertCluster | null;
@@ -84,7 +84,6 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
         }
       } else if (typology === 'MULE_CHAIN') {
         // Sequential Linear Chain (Horizontal Pipeline)
-        const total = clusterNodes.length;
         const spacing = 260;
         x = 60 + index * spacing;
         // subtle staggered wave so edges look dynamic
