@@ -1,4 +1,4 @@
-# Hackathon Roadmap & Sprint Plan: GraphSleuth-AML
+# Hackathon Roadmap & Sprint Plan: LaunderyLens
 
 ---
 
@@ -28,7 +28,7 @@ flowchart TD
 ### Phase 3: Threshold Baseline & Evaluation Benchmark (Completed)
 - [x] Implement legacy threshold-based rule engine (CTR >$10k, velocity burst rules).
 - [x] Implement evaluation harness reporting Precision, Recall, F1, and False Positive Rate for both systems.
-- [x] Verify that GraphSleuth significantly outperforms the baseline on the labeled dataset (+655.9% F1 lift).
+- [x] Verify that LaunderyLens significantly outperforms the baseline on the labeled dataset (+655.9% F1 lift).
 
 ### Phase 4: FastAPI Microservice & Explainable SAR Generator (Completed)
 - [x] Expose REST endpoints:
