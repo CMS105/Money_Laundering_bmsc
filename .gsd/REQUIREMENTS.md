@@ -1,4 +1,4 @@
-# System Requirements Specification: GraphSleuth-AML
+# System Requirements Specification: LaunderyLens
 ## PS 2.1 | Graph-Based Detection of Layered Money Laundering Networks
 
 ---
@@ -45,7 +45,7 @@
 - **FE-01**: Interactive node-link graph viewer (React Flow) rendering accounts as nodes and money flows as directed edges with edge thickness mapped to transaction amount.
 - **FE-02**: Visual typology tagging (distinct color coding for Smurfing, Round-tripping, Mule accounts).
 - **FE-03**: Interactive Temporal Scrubber to step through time increments and visualize money propagation.
-- **FE-04**: Side-by-side metric comparison dashboard (Baseline vs. GraphSleuth).
+- **FE-04**: Side-by-side metric comparison dashboard (Baseline vs. LaunderyLens).
 - **FE-05**: 1-Click SAR viewer modal with copy/download capability.
 
 ---
