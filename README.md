@@ -190,7 +190,7 @@ The repository includes a Vercel multi-service configuration:
 - **api** service runs FastAPI using the backend.main:app entry point.
 - Requests under **/api/** are routed to the API service; other paths go to the frontend.
 
-Production URL: https://graphsleuth-aml.vercel.app
+Production URL: https://launderylens-mschirag105-5781.vercel.app
 
 ### Deployment and data limitations
 - The raw Kaggle dataset is not bundled with the repository or automatically copied to Vercel. If it is absent from the deployed runtime, the loader falls back to synthetic data.
