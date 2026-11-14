@@ -96,7 +96,10 @@ export default function WorkbenchPage() {
       )}
 
       {/* Main 3-Panel Workbench Body */}
-      <div className="flex-1 min-h-0 flex overflow-hidden relative w-full h-full">
+      <div
+        className="flex-1 min-h-0 flex overflow-hidden relative w-full h-full"
+        style={{ minHeight: 'calc(100vh - 80px)' }}
+      >
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center bg-slate-950 text-slate-400 gap-2 font-mono text-xs">
             <RefreshCw className="w-4 h-4 animate-spin text-cyan-400" />

@@ -33,7 +33,14 @@ body {
 
 /* React Flow customizations */
 .react-flow__attribution {
-  display: none !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  color: #64748b !important;
+  font-size: 9px !important;
+  border-radius: 4px !important;
+  padding: 1px 4px !important;
+}
+.react-flow__attribution a {
+  color: #64748b !important;
 }
 
 .react-flow__handle {

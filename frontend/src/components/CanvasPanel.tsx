@@ -189,7 +189,10 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
       </div>
 
       {/* React Flow Interactive Canvas Wrapper */}
-      <div className="flex-1 min-h-0 w-full h-full min-h-[500px] relative">
+      <div
+        className="flex-1 min-h-0 w-full h-full min-h-[500px] relative"
+        style={{ width: '100%', height: '100%', minHeight: '500px' }}
+      >
         <ReactFlow
           nodes={nodes}
           edges={edges}
