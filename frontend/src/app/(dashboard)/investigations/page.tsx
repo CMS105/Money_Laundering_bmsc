@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import TopKpiBar from '@/components/TopKpiBar';
 import ClusterListPanel from '@/components/ClusterListPanel';
 import CanvasPanel from '@/components/CanvasPanel';
@@ -9,7 +10,11 @@ import { AlertCluster, ComparisonMetrics, AnalysisResponse, SqliteStats } from '
 import { fetchAnalysis, injectAttack, FALLBACK_DATA } from '@/services/api';
 import { CheckCircle2 } from 'lucide-react';
 
-export default function InvestigationsPage() {
+function InvestigationsContent() {
+  const searchParams = useSearchParams();
+  const entityQuery = searchParams.get('entity');
+  const typologyQuery = searchParams.get('typology');
+
   const [metrics, setMetrics] = useState<ComparisonMetrics>(FALLBACK_DATA.metrics);
   const [alerts, setAlerts] = useState<AlertCluster[]>(FALLBACK_DATA.alerts);
   const [selectedCluster, setSelectedCluster] = useState<AlertCluster | null>(
@@ -28,12 +33,12 @@ export default function InvestigationsPage() {
     type: 'success' | 'info';
   } | null>(null);
 
-  const showToast = (text: string, type: 'success' | 'info' = 'success') => {
+  const showToast = useCallback((text: string, type: 'success' | 'info' = 'success') => {
     setToastMessage({ text, type });
     setTimeout(() => {
       setToastMessage(null);
     }, 4500);
-  };
+  }, []);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -60,6 +65,47 @@ export default function InvestigationsPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Deep-Linking handler for entity & typology query params
+  useEffect(() => {
+    if (!alerts || alerts.length === 0) return;
+
+    if (entityQuery) {
+      const q = entityQuery.toLowerCase().trim();
+      const matched = alerts.find(
+        (a) =>
+          a.entry_node.toLowerCase().includes(q) ||
+          a.exit_node.toLowerCase().includes(q) ||
+          a.nodes.some(
+            (n) =>
+              n.id.toLowerCase().includes(q) ||
+              (n.label && n.label.toLowerCase().includes(q))
+          )
+      );
+      if (matched) {
+        setSelectedCluster(matched);
+        showToast(`🎯 Isolated Ring for Account ${entityQuery} (${matched.cluster_id})`, 'success');
+        return;
+      }
+    }
+
+    if (typologyQuery) {
+      const t = typologyQuery.toLowerCase().trim();
+      const matched = alerts.find((a) => {
+        const type = a.typology.toLowerCase();
+        if (t === 'cycle' && type.includes('cyclic')) return true;
+        if (t === 'smurfing' && (type.includes('fan') || type.includes('smurf'))) return true;
+        if (t === 'mule' && type.includes('mule')) return true;
+        if (t === 'cross-border' && type.includes('cross')) return true;
+        if (t === 'asset' && type.includes('asset')) return true;
+        return type.includes(t);
+      });
+      if (matched) {
+        setSelectedCluster(matched);
+        showToast(`🎯 Focused Typology: ${matched.typology} (${matched.cluster_id})`, 'success');
+      }
+    }
+  }, [entityQuery, typologyQuery, alerts, showToast]);
 
   // Handle Live Attack Injection
   const handleInject = async (
@@ -145,3 +191,10 @@ export default function InvestigationsPage() {
   );
 }
 
+export default function InvestigationsPage() {
+  return (
+    <Suspense fallback={<div className="flex h-full w-full bg-[#09090B]" />}>
+      <InvestigationsContent />
+    </Suspense>
+  );
+}

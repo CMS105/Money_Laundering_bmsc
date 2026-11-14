@@ -86,10 +86,10 @@ DATASETS_CATALOG = [
 # 2. Executive Dashboard Overview Data
 # ==============================================================================
 DASHBOARD_METRICS = {
-    "total_monitored_volume_usd": 84250000.0,
-    "total_monitored_volume_inr": 7077000000.0,
-    "total_transactions_count": 4820,
-    "monitored_entities_count": 684,
+    "total_monitored_volume_usd": 342800000.0,
+    "total_monitored_volume_inr": 28795200000.0,
+    "total_transactions_count": 18450,
+    "monitored_entities_count": 2410,
     "active_high_risk_alerts": 42,
     "isolated_quarantine_accounts": 18,
     "avg_detection_latency_secs": 180,
