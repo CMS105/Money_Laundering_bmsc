@@ -1,5 +1,5 @@
 """
-LaunderGraph AML - One-Click Launcher
+LaunderyLens - One-Click Launcher
 Starts the FastAPI Graph Engine on http://127.0.0.1:8000 and the Next.js Dashboard on http://localhost:3000.
 """
 import sys
@@ -13,7 +13,7 @@ def main():
     frontend_dir = root_dir / "frontend"
 
     print("=" * 65)
-    print(" 🚀 Launching LaunderGraph AML Platform")
+    print(" 🚀 Launching LaunderyLens Platform")
     print(" Temporal Graph Engine, Hybrid ML Pipeline & SQLite Active")
     print("=" * 65)
     print(" 🌐 Interactive AML Dashboard: http://localhost:3000")
@@ -40,7 +40,7 @@ def main():
         import uvicorn
         uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=False)
     except KeyboardInterrupt:
-        print("\n[!] Shutting down LaunderGraph AML...")
+        print("\n[!] Shutting down LaunderyLens...")
     finally:
         if frontend_proc:
             try:
