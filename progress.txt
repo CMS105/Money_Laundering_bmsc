@@ -1,7 +1,7 @@
 ======================================================================
 BMSC HACKATHON: RALPH AUTONOMOUS EXECUTION TRACKER
 ======================================================================
-Project: GraphSleuth-AML (PS 2.1 - Graph-Based Money Laundering Detection)
+Project: LaunderyLens (PS 2.1 - Graph-Based Money Laundering Detection)
 Active Phase: Phase 6 - Demo Ready & Verified
 Last Updated: 2026-11-14T11:15:30Z
 Status: COMPLETE & VERIFIED
@@ -32,7 +32,7 @@ SESSION EXECUTION LOG:
 [PHASE 1] TemporalGraph loader and React Flow serialization operational.
 [PHASE 2] Verified Smurfing, Cycle, and Mule Chain detectors with 100% ground-truth recovery.
 [PHASE 2] Verified Benchmark Evaluator against Rule-Based Baseline:
-          - Baseline F1: 0.112 | GraphSleuth F1: 1.000 (+792.1% lift)
+          - Baseline F1: 0.112 | LaunderyLens F1: 1.000 (+792.1% lift)
           - False Positive Reduction: -100.0%
 [PHASE 3] FastAPI REST server & FinCEN SAR generator verified with 100% test coverage.
 [PHASE 4-5] Built and compiled React Flow frontend with Time Scrubber and SAR modal.
