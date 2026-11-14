@@ -138,6 +138,22 @@ def generate_sar_report(alert_id: str):
     return state.sar_generator.generate_sar(target_alert, tg=state.temporal_graph)
 
 
+# =====================================================================
+# Next.js Workbench v1 API Routes (Integrated from backend/api/main.py)
+# =====================================================================
+from backend.api.main import (
+    get_analysis as get_v1_analysis,
+    explain_cluster as explain_v1_cluster,
+    inject_live_attack as inject_v1_attack,
+)
+from backend.api.schemas import AnalysisResponse, ExplainResponse, InjectResponse
+
+app.add_api_route("/api/v1/analysis", get_v1_analysis, methods=["GET"], response_model=AnalysisResponse)
+app.add_api_route("/api/v1/explain/{cluster_id}", explain_v1_cluster, methods=["POST"], response_model=ExplainResponse)
+app.add_api_route("/api/v1/inject", inject_v1_attack, methods=["POST"], response_model=InjectResponse)
+
+
+
 # Mount built frontend dist for unified production deployment
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
