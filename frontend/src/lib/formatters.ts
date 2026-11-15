@@ -76,6 +76,22 @@ export function getTypologyMeta(typology: string) {
         bgBadge: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
         description: 'High-velocity serial hops through transient accounts with ultra-low dwell time',
       };
+    case 'CROSS_BORDER_FX':
+    case 'CROSS_BORDER':
+      return {
+        label: 'Cross-Border FX Corridor',
+        color: 'emerald',
+        bgBadge: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+        description: 'Multi-currency smurfing (INR → AED → USD) with TBML over-invoicing spread',
+      };
+    case 'ASSET_LAUNDERING':
+    case 'ASSET':
+      return {
+        label: 'Gold & Asset Laundering',
+        color: 'yellow',
+        bgBadge: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
+        description: 'Fiat to 24K gold bullion conversion & luxury escrow real estate liquidation loop',
+      };
     default:
       return {
         label: typology,

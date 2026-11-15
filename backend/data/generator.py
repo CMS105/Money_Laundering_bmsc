@@ -52,36 +52,42 @@ class SyntheticAMLGenerator:
             duration_seconds=duration_days * 86400,
         )
 
-        # Distribute illicit rings across the entire duration (leaving 4h buffer for ring completion)
-        max_offset = max(0, duration_days * 86400 - 14400)
+        # Distribute illicit rings across the entire duration (including held-out test window)
+        total_span = duration_days * 86400 - 14400
+
+        def _get_staggered_offset(idx: int, total: int) -> int:
+            # Deterministically spans 5% to 95% of timeline so all chronological splits have positive cases
+            pct = 0.05 + 0.90 * (float(idx) / max(float(total - 1), 1.0))
+            jitter = random.randint(-1800, 1800)
+            return max(0, min(int(pct * total_span) + jitter, total_span))
 
         # 2. Inject Smurfing Rings (Fan-out -> Fan-in)
         for i in range(num_smurfing_rings):
             self._inject_smurfing_ring(
                 ring_idx=i + 1,
-                base_time=base_timestamp + random.randint(0, max_offset),
+                base_time=base_timestamp + _get_staggered_offset(i, num_smurfing_rings),
             )
 
         # 3. Inject Temporal Round-Tripping Cycles
         for i in range(num_cycle_rings):
             self._inject_cycle_ring(
                 ring_idx=i + 1,
-                base_time=base_timestamp + random.randint(0, max_offset),
+                base_time=base_timestamp + _get_staggered_offset(i, num_cycle_rings),
             )
 
         # 4. Inject Rapid Pass-Through Mule Chains
         for i in range(num_mule_chains):
             self._inject_mule_chain(
                 chain_idx=i + 1,
-                base_time=base_timestamp + random.randint(0, max_offset),
+                base_time=base_timestamp + _get_staggered_offset(i, num_mule_chains),
             )
 
         # Sort transactions chronologically
         self.transactions.sort(key=lambda tx: tx.timestamp)
 
-        # Convert to Polars DataFrame
+        # Convert to Polars DataFrame with unlimited schema inference length
         records = [tx.model_dump() for tx in self.transactions]
-        df = pl.DataFrame(records)
+        df = pl.DataFrame(records, infer_schema_length=None)
         return df
 
     def _generate_normal_traffic(self, num_tx: int, base_timestamp: int, duration_seconds: int):

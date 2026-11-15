@@ -44,10 +44,13 @@ export default function TopKpiBar({
   const [suspectsModalOpen, setSuspectsModalOpen] = useState(false);
 
   const hasValidMetrics = Boolean(
-    metrics && (
-      (metrics.baseline && (metrics.baseline.precision > 0 || metrics.baseline.recall > 0)) ||
-      (metrics.graph_engine && (metrics.graph_engine.precision > 0 || metrics.graph_engine.recall > 0))
-    )
+    metrics &&
+    metrics.baseline &&
+    metrics.baseline.recall > 0.05 &&
+    metrics.baseline.f1 > 0.05 &&
+    metrics.graph_engine &&
+    metrics.graph_engine.recall > 0.05 &&
+    metrics.graph_engine.f1 > 0.05
   );
 
   const baseline = (hasValidMetrics && metrics?.baseline) ? metrics.baseline : {

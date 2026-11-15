@@ -24,6 +24,12 @@ export interface GraphNode {
   label: string;
   role: 'entry' | 'mule' | 'exit' | string;
   risk: number;
+  currency?: string;
+  jurisdiction?: string;
+  entity_name?: string;
+  bank?: string;
+  balance?: string;
+  badge?: string;
 }
 
 export interface GraphEdge {
@@ -36,6 +42,10 @@ export interface GraphEdge {
   from_bank?: string;
   to_bank?: string;
   payment_format?: string;
+  currency?: string;
+  amount_formatted?: string;
+  flag?: string;
+  spread_anomaly?: string;
 }
 
 export interface AlertCluster {

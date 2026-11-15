@@ -96,10 +96,16 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           x = 500;
           y = startY + (muleIndex >= 0 ? muleIndex : index) * spacing;
         }
-      } else if (typology === 'MULE_CHAIN') {
-        const spacing = 380;
+      } else if (
+        typology === 'MULE_CHAIN' ||
+        typology === 'CROSS_BORDER_FX' ||
+        typology === 'CROSS_BORDER' ||
+        typology === 'ASSET_LAUNDERING' ||
+        typology === 'ASSET'
+      ) {
+        const spacing = 350;
         x = 80 + index * spacing;
-        y = 240 + (index % 2 === 1 ? 80 : -40);
+        y = 240 + (index % 2 === 1 ? 60 : -30);
       } else {
         x = 100 + (index % 3) * 380;
         y = 120 + Math.floor(index / 3) * 240;
@@ -114,6 +120,12 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
           label: n.label,
           role: n.role,
           risk: n.risk,
+          currency: n.currency,
+          jurisdiction: n.jurisdiction,
+          entity_name: n.entity_name,
+          bank: n.bank,
+          balance: n.balance,
+          badge: n.badge,
         },
       };
     });
@@ -129,6 +141,10 @@ export default function CanvasPanel({ cluster }: CanvasPanelProps) {
         hop_delay_mins: e.hop_delay_mins,
         timestamp: e.timestamp,
         payment_format: e.payment_format,
+        currency: e.currency,
+        amount_formatted: e.amount_formatted,
+        flag: e.flag,
+        spread_anomaly: e.spread_anomaly,
       },
       style: {
         opacity: idx + 1 <= currentStep ? 1 : 0.2,

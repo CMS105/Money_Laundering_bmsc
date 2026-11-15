@@ -26,6 +26,9 @@ class GraphNode(BaseModel):
     label: str = Field(..., description="Human-readable node label, e.g. ACC_1042 (Origin/Exit)")
     role: str = Field(..., description="Node role in cluster: entry, mule, exit, intermediary, etc.")
     risk: float = Field(..., description="Calculated risk score (0-100)")
+    currency: Optional[str] = Field("USD", description="Account operating currency (INR, AED, USD, etc.)")
+    jurisdiction: Optional[str] = Field(None, description="Country or territory jurisdiction")
+    entity_name: Optional[str] = Field(None, description="Legal company name or individual alias")
 
 
 class GraphEdge(BaseModel):
@@ -38,6 +41,9 @@ class GraphEdge(BaseModel):
     from_bank: Optional[str] = "000"
     to_bank: Optional[str] = "000"
     payment_format: Optional[str] = "Wire"
+    currency: Optional[str] = "USD"
+    amount_formatted: Optional[str] = None
+    flag: Optional[str] = None
 
 
 class AlertCluster(BaseModel):

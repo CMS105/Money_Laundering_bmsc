@@ -96,9 +96,9 @@ function InvestigationsContent() {
         if (t === 'cycle' && type.includes('cyclic')) return true;
         if (t === 'smurfing' && (type.includes('fan') || type.includes('smurf'))) return true;
         if (t === 'mule' && type.includes('mule')) return true;
-        if (t === 'cross-border' && type.includes('cross')) return true;
-        if (t === 'asset' && type.includes('asset')) return true;
-        return type.includes(t);
+        if (t === 'cross-border' && (type.includes('cross') || a.cluster_id.includes('FX'))) return true;
+        if (t === 'asset' && (type.includes('asset') || a.cluster_id.includes('AST'))) return true;
+        return type.includes(t) || a.cluster_id.toLowerCase().includes(t);
       });
       if (matched) {
         setSelectedCluster(matched);

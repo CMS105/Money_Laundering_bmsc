@@ -1,11 +1,9 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import {
   Zap,
   CheckCircle2,
 } from 'lucide-react';
-
 interface BenchmarkModel {
   name: string;
   precision: number;
@@ -16,7 +14,6 @@ interface BenchmarkModel {
   description: string;
   lift?: string;
 }
-
 interface EvaluationProtocol {
   split_strategy: string;
   leakage_prevention: string;
@@ -146,14 +143,19 @@ export default function ModelPerformancePage() {
           const b3 = json.benchmark_3way;
           const hasValidData = Boolean(
             b3.launderylens_hybrid &&
-            (b3.launderylens_hybrid.precision > 0 || b3.launderylens_hybrid.recall > 0 || b3.legacy_rule_engine.recall > 0)
+            b3.launderylens_hybrid.precision > 0.05 &&
+            b3.launderylens_hybrid.recall > 0.05 &&
+            b3.launderylens_hybrid.f1 > 0.05 &&
+            b3.legacy_rule_engine &&
+            b3.legacy_rule_engine.recall > 0.05 &&
+            (!json.evaluation_protocol || json.evaluation_protocol.test_ground_truth_positives > 0)
           );
           if (hasValidData) {
             setData(json);
           }
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const b3 = data.benchmark_3way;
